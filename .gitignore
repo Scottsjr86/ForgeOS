@@ -1,0 +1,85 @@
+# Local tooling and editor state
+/.agents/
+/.codex/
+/.idea/
+/.vscode/
+*.code-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local.toml
+*.local.yaml
+*.local.yml
+
+# Rust / Cargo (Cargo.lock belongs in this application repository)
+target/
+rustc-ice-*.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# JavaScript / TypeScript
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+coverage/
+
+# C / C++ and general build output
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+dist/
+out/
+
+# ForgeOS runtime and generated evidence
+/artifacts/
+/exports/
+/logs/
+/tmp/
+*.log
+
+# Generated Linux, VM, and installer images
+*.iso
+*.img
+*.qcow2
+*.raw
+*.squashfs
+*.AppImage
+
+# Local AI model weights
+*.gguf
+*.safetensors
+*.onnx
+*.pt
+*.pth
+
+# Source handoff archives and patches
+*.tar
+*.tar.*
+*.tgz
+*.zip
+*.zst
+*.patch
+*.diff

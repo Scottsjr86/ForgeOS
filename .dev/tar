@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""Create a <thread>_base_<n>.tar archive and record the used name.
+
+Examples:
+    python3 .dev/tar
+    python3 .dev/tar --thread ForgeOS_V1
+    python3 .dev/tar --thread ForgeOS_V1 --base 0
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+
+THREAD_PATTERN = r"[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*"
+OUT_RE = re.compile(
+    rf'(?P<prefix>OUT_NAME="\$\{{1:-)'
+    rf"(?P<thread>{THREAD_PATTERN})"
+    r"_base_"
+    r"(?P<base>\d+)"
+    r'(?P<suffix>\.tar\}")'
+)
+
+
+def repo_root() -> Path:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        print("Run this from inside a Git repository.", file=sys.stderr)
+        if exc.stderr:
+            print(exc.stderr.strip(), file=sys.stderr)
+        raise SystemExit(exc.returncode)
+
+    return Path(result.stdout.strip())
+
+
+def normalize_thread(value: str) -> str:
+    thread = value.strip()
+    if not re.fullmatch(THREAD_PATTERN, thread):
+        raise ValueError(
+            "--thread must contain letters or numbers and may use '.', '_', or '-' "
+            "between them"
+        )
+    return thread
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Create <thread>_base_<n>.tar in the current repository root."
+    )
+    parser.add_argument(
+        "--thread",
+        help="Set the filename prefix for this run (letters/numbers with '.', '_', or '-').",
+    )
+    parser.add_argument(
+        "--base",
+        type=int,
+        dest="base_number",
+        help="Create this exact base number instead of incrementing the recorded number.",
+    )
+    args = parser.parse_args()
+
+    if args.thread is not None:
+        try:
+            args.thread = normalize_thread(args.thread)
+        except ValueError as exc:
+            parser.error(str(exc))
+    if args.base_number is not None and args.base_number < 0:
+        parser.error("--base must be zero or a positive integer")
+
+    return args
+
+
+def read_state(base_doc: Path) -> tuple[str, str, int, re.Match[str]]:
+    text = base_doc.read_text(encoding="utf-8")
+    match = OUT_RE.search(text)
+    if not match:
+        print(
+            f"Could not find <thread>_base_<n>.tar state in {base_doc}.",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+
+    return text, match.group("thread"), int(match.group("base")), match
+
+
+def main() -> int:
+    args = parse_args()
+    root = repo_root()
+    base_doc = root / ".dev" / "base.md"
+
+    text, current_thread, current_base, match = read_state(base_doc)
+    next_thread = args.thread if args.thread is not None else current_thread
+    next_base = args.base_number if args.base_number is not None else current_base + 1
+    out_name = f"{next_thread}_base_{next_base}.tar"
+    out_path = root / out_name
+
+    if out_path.exists():
+        print(f"Refusing to overwrite existing archive: {out_path}", file=sys.stderr)
+        return 1
+
+    print(f"Creating {out_name}", flush=True)
+    result = subprocess.run(["bash", str(base_doc), out_name], cwd=root)
+    if result.returncode != 0:
+        return result.returncode
+    if not out_path.is_file():
+        print(
+            f"Archive command completed but did not create {out_path}.",
+            file=sys.stderr,
+        )
+        return 1
+
+    replacement = (
+        f"{match.group('prefix')}{next_thread}_base_{next_base}{match.group('suffix')}"
+    )
+    updated = text[: match.start()] + replacement + text[match.end() :]
+    base_doc.write_text(updated, encoding="utf-8")
+    print(f"Recorded state in {base_doc}: {out_name}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
