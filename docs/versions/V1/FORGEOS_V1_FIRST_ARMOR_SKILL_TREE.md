@@ -1279,7 +1279,7 @@ never closes the node.
 
 - **Owner:** repository root
 - **Prerequisites:** none
-- **Initial state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** The Rust workspace contains the declared V1 authority crates,
   composition root, test locations, and dependency direction needed by this tree.
 - **Must not be true:** Business logic may not begin in `forge-app`, `main.rs`, Bevy
@@ -1446,23 +1446,23 @@ section ever disagree.
 The repository currently contains planning documents only. No product behavior is
 assumed from names or plans.
 
-Initial state:
+Current frontier:
 
 ```text
-ACTIVE_SKILL=null
-ACTIVE_BLOCKER=null
-ACTIVE_SLICE=null
+ACTIVE_SKILL=FORGEOS-V1-ARCH-000
+ACTIVE_BLOCKER=THE_REPOSITORY_DOES_NOT_YET_CONTAIN_THE_V1_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
+ACTIVE_SLICE=FORGEOS-V1-ARCH-000-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-ARCH-000
+  none while the root skill is active
 
 LOCKED
   every other node
 ```
 
-After `FORGEOS-V1-ARCH-000` closes, the future router may expose independent
-foundation nodes according to direct prerequisites and conflict rules. It must not
-activate them automatically.
+After `FORGEOS-V1-ARCH-000` closes, the router may expose independent foundation
+nodes according to direct prerequisites and conflict rules. It must not activate
+them automatically.
 
 ---
 

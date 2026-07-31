@@ -84,36 +84,25 @@ the router before editing. If the router conflicts with
 Current bounded state:
 
 ```text
-PROGRAM_MODE=DOCUMENT_MIGRATION
+PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-ACTIVE_SKILLS=[]
-ACTIVE_BATON_OWNER=DOCUMENTATION_AUTHORITY
-ACTIVE_REPOSITORY=Forge_OS_V1
-SOURCE_WORK_AUTHORIZED=NO
-QUEUED_FIRST_SKILL=FORGEOS-V1-ARCH-000
-NEXT_AUTHORITY_DOCUMENT=docs/versions/V1/V1_CLOSURE_EXPERIMENT.md
-FINAL_ACTIVATION_REQUIRED=FRESH_TAR_HEADER_AND_AUTHORITY_PASS
-```
-
-The first source skill is queued, not active.
-
-After the remaining bounded authority document is created and the final
-fresh-tar header pass confirms that the authority chain is complete, the router
-may transition to:
-
-```text
-PROGRAM_MODE=SLICE
-SOURCE_WORK_AUTHORIZED=YES
-ACTIVE_BATON_OWNER=FORGEOS-V1-ARCH-000
 ACTIVE_SKILLS=[FORGEOS-V1-ARCH-000]
+ACTIVE_BATON_OWNER=FORGEOS-V1-ARCH-000
+ACTIVE_REPOSITORY=Forge_OS_V1
+ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
+SOURCE_WORK_AUTHORIZED=YES
+QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
+NEXT_ACTION=EXECUTE_FORGEOS-V1-ARCH-000-SLICE-001
+FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
-That transition must occur in the final header pass. It must not require a new
-archive solely to update a base number or record a hash.
+The bounded authority chain is complete. `FORGEOS-V1-ARCH-000` is the only active
+source skill. No new document, archive label, base-number update, or hash record is
+required before inspecting the current source and executing its registered path.
 
 ---
 
@@ -767,7 +756,7 @@ The V1 worksheet declares one initial available skill.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
-state: AVAILABLE
+state: ACTIVE
 lane: ARCHITECTURE_AND_CONTRACTS
 owner: repository root
 source_repository: Forge_OS_V1
@@ -777,7 +766,7 @@ user_acceptance_status: NOT_READY
 
 All other skills remain `LOCKED`.
 
-Queued activation after final authority pass:
+Active execution packet:
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
@@ -831,8 +820,8 @@ return_path: >
 parallel_compatibility: NONE_FOR_INITIAL_ROOT
 ```
 
-This queued packet becomes active only when the final header pass changes
-`SOURCE_WORK_AUTHORIZED` to `YES`.
+This packet is active. The newest clean supplied ForgeOS archive may be inspected
+and patched immediately after the intake checks in this router pass.
 
 ---
 

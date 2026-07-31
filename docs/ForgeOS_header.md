@@ -3,13 +3,13 @@
 Status: `ACTIVE`
 Purpose: copy-paste or read this file first in every new ForgeOS build,
 capability, integration, analysis, or documentation thread.
-Mission authority: `PENDING_CREATION: docs/MISSION_FORGEOS.md`
+Mission authority: `docs/MISSION_FORGEOS.md`
 Live execution authority: `docs/workflow/WORKFLOW_AUTHORITY.md`
-Governing laws: `PENDING_CREATION: docs/GOVERNING_LAWS.md`
-Skill-tree method: `PENDING_CREATION: docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md`
+Governing laws: `docs/GOVERNING_LAWS.md`
+Skill-tree method: `docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md`
 V1 skill tree: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
-V1 execution router: `PENDING_CREATION: docs/versions/V1/V1_EXECUTION_ROUTER.md`
-V1 closure experiment: `PENDING_CREATION: docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
+V1 execution router: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
+V1 closure experiment: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
 Active release target: `FORGEOS_V1_FIRST_ARMOR`
 Four-version product contract: `docs/High_Level.md`
 
@@ -64,11 +64,11 @@ When documents, source, tools, and visual surfaces disagree, use this order:
 2. canonical Forge Core state and recorded artifacts
 3. docs/ForgeOS_header.md
 4. docs/workflow/WORKFLOW_AUTHORITY.md section 2
-5. docs/GOVERNING_LAWS.md when created
-6. docs/versions/V1/V1_EXECUTION_ROUTER.md when created
+5. docs/GOVERNING_LAWS.md
+6. docs/versions/V1/V1_EXECUTION_ROUTER.md
 7. docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 8. docs/versions/V1/V1_CLOSURE_EXPERIMENT.md when activated
-9. docs/MISSION_FORGEOS.md when created
+9. docs/MISSION_FORGEOS.md
 10. docs/High_Level.md
 11. the one selected independent capability node
 12. subsystem contracts, tests, experiments, receipts, and operator proof
@@ -292,19 +292,21 @@ activate later-version work.
 
 ## 6. Current V1 gap-closing campaign
 
-The initial ForgeOS planning and authority campaign is:
+The bounded authority migration is complete. The first V1 source capability is active:
 
 ```text
-PROGRAM_MODE=DOCUMENT_MIGRATION
-ACTIVE_QUESTION_CLASS=V1_PLANNING_AUTHORITY
+PROGRAM_MODE=SLICE
+ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=BOUNDED_AUTHORITY_SET_AND_FIRST_ROUTER_ACTIVATION
-ACTIVE_V1_CONTRIBUTION=WORKFLOW_AUTHORITY_AND_HEADER_RECONCILIATION
-ACTIVE_CAPABILITY_ID=NONE_DOCUMENT_MIGRATION_ACTIVE
-QUESTION=Can ForgeOS finish the bounded authority set without creating a documentation treadmill, then activate the first legal V1 source skill against the newest clean user-supplied archive?
-CURRENT_RESULT=WORKFLOW_AUTHORITY_CREATED_AND_HEADER_PATHS_RECONCILED
-BATON_OWNER=FORGEOS_DOCUMENTATION
-ACTIVE_SLICE=FORGEOS-WORKFLOW-AUTHORITY-001
+ACTIVE_RELEASE_GATE=FORGEOS-V1-ARCH-000
+ACTIVE_V1_CONTRIBUTION=INITIAL_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-ARCH-000
+QUESTION=Can the documentation-only ForgeOS repository become a compiling and tested Rust workspace whose crates match the declared V1 authority boundaries without placing business logic in the composition root, Bevy layer, scripts, or a monolithic crate?
+CURRENT_RESULT=FIRST_SOURCE_SKILL_ACTIVATED
+BATON_OWNER=FORGEOS-V1-ARCH-000
+ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
+ACTIVE_SLICE=FORGEOS-V1-ARCH-000-SLICE-001
+FIRST_BLOCKER=THE_REPOSITORY_DOES_NOT_YET_CONTAIN_THE_V1_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -315,8 +317,9 @@ REPOSITORY_SWITCH_NOTICE=REQUIRED
 PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
 FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_ARCHIVE
 SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
+SOURCE_WORK_AUTHORIZED=YES
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-ARCH-000
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
-NEXT_REQUIRED_DOCUMENT=docs/GOVERNING_LAWS.md
 ```
 
 The four-version product boundary is already defined by
@@ -329,13 +332,13 @@ V3 earns supervised autonomy.
 V4 earns the full spatial developer operating system.
 ```
 
-The V1 First Armor skill tree now exists and is the canonical V1 worksheet.
-The next required authority document is `docs/GOVERNING_LAWS.md`.
+The complete bounded authority set now exists and agrees. The V1 First Armor skill
+tree is the canonical worksheet, the V1 router owns live selection, and
+`FORGEOS-V1-ARCH-000` is the only active source skill.
 
-After the bounded authority set is complete, the V1 router selects the first
-`AVAILABLE` node. No source node is active until the final header pass changes the
-program mode and the router explicitly records the skill, lane, repository, write
-boundary, pass edge, block edge, and return path.
+Source work may begin immediately after the newest supplied ForgeOS archive is
+verified as the current clean repository. No additional documentation, archive
+renaming, base-number update, hash recording, or repackaging step is required.
 
 The V1 closure journey is:
 
@@ -354,9 +357,9 @@ boot into ForgeOS
   -> complete one real ForgeOS or Nyx feature without leaving ForgeOS
 ```
 
-The exact pass edges, block edges, activation rules, and closure experiment belong
-in the V1 execution router and V1 closure experiment after those documents are
-created.
+The exact write boundaries, commands, pass edge, block edge, user-acceptance path,
+and return path for the active skill are recorded in the V1 execution router. The
+V1 closure experiment remains dormant until every required lower skill is closed.
 
 ---
 
@@ -619,34 +622,36 @@ For every new ForgeOS build, audit, planning, or integration thread:
 
 ```text
 1. read this header
-2. read docs/workflow/WORKFLOW_AUTHORITY.md
-3. identify the current program mode and baton owner
-4. use only the newest clean archive supplied for the baton repository
-5. delete or ignore every older archive extraction in the active work area
-6. extract the newest archive into an empty directory
-7. verify that the repository is coherent, clean, and matches the user's claim
-8. inspect current source before relying on prior plans
-9. during DOCUMENT_MIGRATION, create only the declared next authority document
-10. after source activation, read the V1 router and selected skill
-11. verify prerequisites, active-skill conflicts, repository ownership, and write
-    boundaries
-12. if the baton points to nyx_server, require the newest separate clean Nyx archive
+2. read docs/MISSION_FORGEOS.md
+3. read docs/GOVERNING_LAWS.md
+4. read docs/workflow/WORKFLOW_AUTHORITY.md section 2
+5. read docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md
+6. read docs/versions/V1/V1_EXECUTION_ROUTER.md
+7. identify the current program mode, active skill, lane, repository, and baton owner
+8. use only the newest clean archive supplied for the baton repository
+9. delete or ignore every older archive extraction in the active work area
+10. extract the newest archive into an empty directory
+11. verify that the repository is coherent, clean, and matches the user's claim
+12. inspect current source before relying on prior plans
+13. verify source work is authorized and every direct prerequisite is CLOSED
+14. read only the active skill's full contract in the canonical V1 worksheet
+15. verify active-skill conflicts, repository ownership, write boundaries, public
+    contracts, required commands, and user-acceptance path
+16. if the baton points to nyx_server, require the newest separate clean Nyx archive
     unless an explicit vendored-source contract proves otherwise
-13. open the active experiment, public product path, or journey step
-14. inspect current source, commands, run records, patches, receipts, and artifacts
-15. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
+17. inspect or run the active originating path and confirm the first blocker
+18. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
     pass edge, block edge, and return path
-16. only then edit source
+19. only then edit source
 ```
 
 The newest verified archive is canonical regardless of its filename or base
 number. Do not demand a new archive, updated header token, matching hash, or
 repackaging ritual before working from clean current source.
 
-During the bounded documentation-migration state, this header, the workflow
-authority, `docs/High_Level.md`, and the V1 skill tree determine the next document.
-They are not authority to begin implementation before the final router/header pass
-activates the first source capability.
+The bounded documentation migration is closed and may not be resurrected to avoid
+source work. The active router packet is authority to begin only
+`FORGEOS-V1-ARCH-000`; every other skill remains locked or inactive.
 
 Do not scan unrelated roadmap sections, future-version features, project-world
 concept art, Nyx engine lists, or neighboring skill nodes to choose work.

@@ -5,7 +5,7 @@ Authority ID: `FORGEOS-WORKFLOW-AUTHORITY-V1`
 Applies to: ForgeOS V1 planning, source work, integration, testing, user acceptance, and release closure
 Canonical V1 worksheet: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 Fresh-session header: `docs/ForgeOS_header.md`
-Current program mode: `DOCUMENT_MIGRATION`
+Current program mode: `SLICE`
 Current release target: `FORGEOS_V1_FIRST_ARMOR`
 
 ---
@@ -48,8 +48,8 @@ order:
 2. canonical Forge Core state and recorded product artifacts
 3. docs/ForgeOS_header.md
 4. this document
-5. docs/GOVERNING_LAWS.md when created
-6. docs/versions/V1/V1_EXECUTION_ROUTER.md when created
+5. docs/GOVERNING_LAWS.md
+6. docs/versions/V1/V1_EXECUTION_ROUTER.md
 7. docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 8. docs/versions/V1/V1_CLOSURE_EXPERIMENT.md when activated
 9. docs/High_Level.md
@@ -71,25 +71,26 @@ or visual proximity in the skill graph has no scheduling authority.
 
 ## 2. Current live state
 
-The current authority-building campaign is:
+The bounded authority migration is complete and source execution is active:
 
 ```text
-PROGRAM_MODE=DOCUMENT_MIGRATION
+PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS_DOCUMENTATION
-ACTIVE_DOCUMENT=docs/workflow/WORKFLOW_AUTHORITY.md
-CURRENT_RESULT=WORKFLOW_AUTHORITY_CREATED_HEADER_RECONCILIATION_INCLUDED
-NEXT_REQUIRED_DOCUMENT=docs/GOVERNING_LAWS.md
-SOURCE_IMPLEMENTATION_ALLOWED=NO
-REASON=REMAINING_GOVERNING_AND_ROUTING_DOCUMENTS_NOT_YET_CREATED
+BATON_OWNER=FORGEOS-V1-ARCH-000
+ACTIVE_REPOSITORY=Forge_OS_V1
+ACTIVE_SKILLS=[FORGEOS-V1-ARCH-000]
+ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
+ACTIVE_QUESTION=Can the documentation-only repository become a compiling and tested Rust workspace whose crates match the declared V1 authority boundaries without placing business logic in the composition root, Bevy layer, scripts, or a monolithic crate?
+FIRST_BLOCKER=THE_REPOSITORY_DOES_NOT_YET_CONTAIN_THE_V1_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
+ACTIVE_SLICE=FORGEOS-V1-ARCH-000-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES
+CURRENT_RESULT=FIRST_SOURCE_SKILL_ACTIVATED
+RETURN_PATH=CLOSE_ONLY_FORGEOS-V1-ARCH-000_THEN_REEVALUATE_DIRECT_UNLOCKS
 ```
 
-Source implementation remains blocked only until the declared authority set is
-finished and the final fresh-header pass activates the first V1 skill.
-
-This is a bounded documentation migration, not an open-ended documentation
-phase. No model may invent additional authority documents, prose validators, or
-checklists merely because another document might be useful.
+The authority set is closed. No model may invent additional authority documents,
+prose validators, checklists, or migration gates before beginning the active source
+skill.
 
 The planned authority set is:
 
@@ -776,23 +777,31 @@ routing gates.
 
 ---
 
-## 18. Migration exit and next action
+## 18. Migration exit and current action
 
-The current migration exits only when:
+The bounded documentation migration is complete because:
 
 - every planned authority document exists;
-- all header paths resolve;
+- every header path resolves;
 - the V1 skill graph is structurally valid;
-- the router selects the first legal V1 skill;
-- the first skill has no unresolved prerequisite or active conflict;
-- the final fresh-header pass changes the mode from `DOCUMENT_MIGRATION` to the
-  appropriate source mode.
+- the router has selected the first legal V1 skill;
+- the active skill has no prerequisite or concurrency conflict;
+- this authority, the router, the worksheet, and the header agree on source mode.
 
-The next authorized document is:
+Current authorized action:
 
-`docs/GOVERNING_LAWS.md`
+```text
+verify the newest clean ForgeOS source
+  -> inspect or attempt the initial workspace build path
+  -> confirm the declared missing-workspace blocker
+  -> implement only FORGEOS-V1-ARCH-000-SLICE-001
+  -> run the registered commands
+  -> present the workspace boundaries for user acceptance
+  -> close only FORGEOS-V1-ARCH-000 if every closure edge passes
+```
 
-No product source work is authorized before that later final header pass.
+`DOCUMENT_MIGRATION` may not be reactivated merely because source work becomes
+difficult or another planning document would be convenient.
 
 ---
 
