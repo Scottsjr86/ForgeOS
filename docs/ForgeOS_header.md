@@ -3,18 +3,15 @@
 Status: `ACTIVE`
 Purpose: copy-paste or read this file first in every new ForgeOS build,
 capability, integration, analysis, or documentation thread.
-Mission authority: `docs/MISSION_FORGEOS.md`
+Mission authority: `PENDING_CREATION: docs/MISSION_FORGEOS.md`
 Live execution authority: `docs/workflow/WORKFLOW_AUTHORITY.md`
-Skill-tree method: `docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md`
+Governing laws: `PENDING_CREATION: docs/GOVERNING_LAWS.md`
+Skill-tree method: `PENDING_CREATION: docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md`
 V1 skill tree: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
-V1 execution router: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
-V1 closure experiment: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
-Nyx host contract: `docs/contracts/NYX_SERVER_HOST_CONTRACT.md`
-Forge Core authority contract: `docs/contracts/FORGE_CORE_AUTHORITY.md`
-Forge World presentation contract: `docs/contracts/FORGE_WORLD_PRESENTATION_CONTRACT.md`
-Developer bridge contract: `docs/contracts/DEVELOPER_BRIDGE_CONTRACT.md`
+V1 execution router: `PENDING_CREATION: docs/versions/V1/V1_EXECUTION_ROUTER.md`
+V1 closure experiment: `PENDING_CREATION: docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
 Active release target: `FORGEOS_V1_FIRST_ARMOR`
-Four-version product contract: `docs/releases/FORGEOS_V1_V4_HIGH_LEVEL_PLAN.md`
+Four-version product contract: `docs/High_Level.md`
 
 ---
 
@@ -65,15 +62,17 @@ When documents, source, tools, and visual surfaces disagree, use this order:
 ```text
 1. current source behavior and real tool outputs
 2. canonical Forge Core state and recorded artifacts
-3. docs/MISSION_FORGEOS.md
+3. docs/ForgeOS_header.md
 4. docs/workflow/WORKFLOW_AUTHORITY.md section 2
-5. docs/versions/V1/V1_EXECUTION_ROUTER.md
-6. docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
-7. docs/versions/V1/V1_CLOSURE_EXPERIMENT.md when activated
-8. docs/releases/FORGEOS_V1_V4_HIGH_LEVEL_PLAN.md
-9. the one selected independent capability node
-10. subsystem contracts, tests, experiments, receipts, and operator proof
-11. historical plans, concept notes, prototypes, and legacy archives
+5. docs/GOVERNING_LAWS.md when created
+6. docs/versions/V1/V1_EXECUTION_ROUTER.md when created
+7. docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
+8. docs/versions/V1/V1_CLOSURE_EXPERIMENT.md when activated
+9. docs/MISSION_FORGEOS.md when created
+10. docs/High_Level.md
+11. the one selected independent capability node
+12. subsystem contracts, tests, experiments, receipts, and operator proof
+13. historical plans, concept notes, prototypes, and legacy archives
 ```
 
 Only `WORKFLOW_AUTHORITY.md` and the live V1 router select active work. The
@@ -299,29 +298,29 @@ The initial ForgeOS planning and authority campaign is:
 PROGRAM_MODE=DOCUMENT_MIGRATION
 ACTIVE_QUESTION_CLASS=V1_PLANNING_AUTHORITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=V1_APEX_AND_DEPENDENCY_GRAPH_DEFINITION
-ACTIVE_V1_CONTRIBUTION=FORGEOS_GOVERNING_HEADER_AND_FIRST_ARMOR_SKILL_TREE
-ACTIVE_CAPABILITY_ID=UNASSIGNED_UNTIL_V1_SKILL_TREE_EXISTS
-QUESTION=Can ForgeOS receive one coherent authority header and one falsifiable V1 skill tree that route all later work through real product paths, first blockers, narrow slices, and proof?
-CURRENT_RESULT=FORGEOS_HEADER_REWRITTEN_V1_SKILL_TREE_PENDING
+ACTIVE_RELEASE_GATE=BOUNDED_AUTHORITY_SET_AND_FIRST_ROUTER_ACTIVATION
+ACTIVE_V1_CONTRIBUTION=WORKFLOW_AUTHORITY_AND_HEADER_RECONCILIATION
+ACTIVE_CAPABILITY_ID=NONE_DOCUMENT_MIGRATION_ACTIVE
+QUESTION=Can ForgeOS finish the bounded authority set without creating a documentation treadmill, then activate the first legal V1 source skill against the newest clean user-supplied archive?
+CURRENT_RESULT=WORKFLOW_AUTHORITY_CREATED_AND_HEADER_PATHS_RECONCILED
 BATON_OWNER=FORGEOS_DOCUMENTATION
-ACTIVE_SLICE=FORGEOS-HEADER-001
-ACTIVE_FORGEOS_BASE=NEWEST_USER_SUPPLIED_FORGEOS_BASE
-ACTIVE_FORGEOS_BASE_SHA256=VERIFY_SUPPLIED_ARCHIVE_SHA256_AT_INTAKE
-ACTIVE_FORGEOS_BASE_STATE=NOT_YET_SUPPLIED_OR_CREATED
-ACTIVE_NYX_BASE=NEWEST_USER_SUPPLIED_NYX_SERVER_BASE
-ACTIVE_NYX_BASE_SHA256=VERIFY_SUPPLIED_ARCHIVE_SHA256_AT_INTAKE
+ACTIVE_SLICE=FORGEOS-WORKFLOW-AUTHORITY-001
+CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
+CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
+OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
+ARCHIVE_FILENAME_AND_HASH_POLICY=ORIENTATION_ONLY_NOT_A_WORKFLOW_GATE
 ACTIVE_NYX_ROLE=AI_MODEL_HOST_AND_BOUNDED_AGENT_RUNTIME
 NYX_SOURCE_IN_FORGEOS_ARCHIVE=NO_UNLESS_EXPLICITLY_VENDOR_LOCKED
 REPOSITORY_SWITCH_NOTICE=REQUIRED
 PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
-FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_BASE
-NEWER_BASE_POLICY=INSPECT_SOURCE_AND_RECONCILE_ROUTER_BEFORE_IMPLEMENTATION
+FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_ARCHIVE
+SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
+NEXT_REQUIRED_DOCUMENT=docs/GOVERNING_LAWS.md
 ```
 
 The four-version product boundary is already defined by
-`FORGEOS_V1_V4_HIGH_LEVEL_PLAN.md`:
+`docs/High_Level.md`:
 
 ```text
 V1 earns daily usability.
@@ -330,14 +329,13 @@ V3 earns supervised autonomy.
 V4 earns the full spatial developer operating system.
 ```
 
-The next planning artifact is the V1 First Armor skill tree. It must decompose the
-V1 apex into falsifiable capabilities and direct dependencies without silently
-starting source implementation.
+The V1 First Armor skill tree now exists and is the canonical V1 worksheet.
+The next required authority document is `docs/GOVERNING_LAWS.md`.
 
-After the V1 tree exists, the router selects the first AVAILABLE node. The first
-likely implementation frontier may include session boot, repository registration,
-PTY command execution, or Nyx service integration, but no node is active until the
-router explicitly selects it.
+After the bounded authority set is complete, the V1 router selects the first
+`AVAILABLE` node. No source node is active until the final header pass changes the
+program mode and the router explicitly records the skill, lane, repository, write
+boundary, pass edge, block edge, and return path.
 
 The V1 closure journey is:
 
@@ -404,30 +402,40 @@ release guards. Release closure may not invent missing capability proof.
 
 ---
 
-## 8. Base, repository, and patch laws
+## 8. Archive, repository, and patch laws
 
-The newest user-supplied base for each repository is filesystem authority.
+The newest clean archive explicitly supplied by the user for a repository is the
+sole source authority for that repository in the current conversation.
 
 ```text
+NEWEST_USER_SUPPLIED_CLEAN_ARCHIVE = CANONICAL_SOURCE
+ALL_PREVIOUS_ARCHIVES = SUPERSEDED_AND_IGNORED
+```
+
+At intake:
+
+```text
+use only the newest supplied archive
 extract into an empty directory
-never overlay repository bases
-compute and report the supplied archive SHA-256 at intake
+remove or ignore older extractions
+verify that the source is coherent and matches the user's claim
 inspect current source before editing
 source behavior outranks stale documentation
-cut one coherent behavior slice
-avoid opportunistic refactors and dependency churn
-preserve canonical records unless a versioned contract requires change
-never predict the next archive name, base number, or SHA-256
 ```
 
-Stable intake tokens are:
+Never:
 
 ```text
-ACTIVE_FORGEOS_BASE=NEWEST_USER_SUPPLIED_FORGEOS_BASE
-ACTIVE_FORGEOS_BASE_SHA256=VERIFY_SUPPLIED_ARCHIVE_SHA256_AT_INTAKE
-ACTIVE_NYX_BASE=NEWEST_USER_SUPPLIED_NYX_SERVER_BASE
-ACTIVE_NYX_BASE_SHA256=VERIFY_SUPPLIED_ARCHIVE_SHA256_AT_INTAKE
+predict the next archive filename, base number, or SHA-256
+require a renamed or incremented archive before continuing
+compare archive sequence numbers as a routing gate
+stall source work because documentation mentions an older archive
+require a new tar after every patch, skill, or green run
 ```
+
+A SHA-256 may be computed and reported as intake evidence. It is not workflow
+authority. Archive names, numbers, and hashes may help operator orientation but
+may not block work when the newest supplied source is clean and verified.
 
 ForgeOS and `nyx_server` remain separate source authorities unless an explicit,
 versioned vendoring decision changes that boundary.
@@ -452,13 +460,12 @@ WHY
 ACTIVE_CAPABILITY
 FIRST_BLOCKER
 PASS_OR_BLOCK_EDGE
-REQUIRED_TARGET_BASE
 REQUIRED_HANDOFF_INPUTS
 PATCH_POLICY=SEPARATE_TARGET_REPOSITORY_PATCH
 ```
 
-If the target base is absent, stop before source edits and request the newest
-user-supplied target base.
+If the target repository source is absent, stop before source edits and request
+the newest clean user-supplied archive for that repository.
 
 Before delivery:
 
@@ -468,12 +475,14 @@ run negative proof where applicable
 run broader guards required by the seam
 run git diff --check or equivalent
 create an apply-ready unified patch
-run git apply --check against a fresh extraction
+run git apply --check against a fresh extraction of the same supplied archive
 apply independently when practical
 compare the independently applied copy
-package from the verified copy
-provide exact commands, results, and SHA-256 hashes
+provide exact commands and actual results
 ```
+
+Creating a new source tar is optional and controlled by the user. It is not part
+of skill closure or patch acceptance.
 
 Never claim a build, test, experiment, install, boot, session, or stranger check
 passed unless it actually ran.
@@ -538,16 +547,15 @@ until green or until a new first blocker is honestly recorded.
 Once green:
 
 ```text
-package the newest source base using the repository's declared packaging command
-record the exact archive filename and SHA-256
-commit with a truthful message
+commit with a truthful message when the operator chooses
 push only when the operator chooses
 run the originating official capability experiment or V1 journey step
+package a new source archive only when the user chooses
 ```
 
-Upload or hand off only the inputs required by the independent audit or next
-repository owner. The audit may award only the bounded result supported by the
-package.
+Hand off only the inputs required by the independent audit or next repository
+owner. No audit or next slice may demand archive renumbering as a substitute for
+verifying the supplied source.
 
 ---
 
@@ -611,39 +619,34 @@ For every new ForgeOS build, audit, planning, or integration thread:
 
 ```text
 1. read this header
-2. identify the repository named by the current baton owner
-3. extract the newest supplied target repository archive into an empty directory
-4. compute its SHA-256 and report its exact supplied filename and repository kind
-5. compare the repository and hash with the live router
-   - on an exact match, continue
-   - on a newer same-repository base, report the mismatch, inspect current source,
-     and reconcile the router before implementation; never reapply an old patch
-   - on a different repository, emit the repository-switch notice and stop before
-     source edits
-6. read docs/MISSION_FORGEOS.md
-7. read docs/workflow/WORKFLOW_AUTHORITY.md section 2
-8. read docs/versions/V1/V1_EXECUTION_ROUTER.md and verify the baton owner
-9. if the baton owner is not the supplied repository, name the required target
-   base and handoff inputs and stop before editing
-10. if the target is nyx_server, require the newest separate Nyx base unless an
-    explicit vendored-source contract proves otherwise
-11. read only the selected capability node and its direct prerequisites in the V1
-    skill tree
-12. read the V1 closure experiment only when the router activates it
-13. read the four-version plan only when a release boundary or out-of-scope dispute
-    requires it
-14. open the active experiment, public product path, or journey step named by the
-    live router
-15. inspect current source, commands, run records, patches, receipts, and artifacts
-16. restate the one V1 gap, active capability, first blocker, owner, pass edge,
-    block edge, and patch repository
-17. only then edit source
+2. read docs/workflow/WORKFLOW_AUTHORITY.md
+3. identify the current program mode and baton owner
+4. use only the newest clean archive supplied for the baton repository
+5. delete or ignore every older archive extraction in the active work area
+6. extract the newest archive into an empty directory
+7. verify that the repository is coherent, clean, and matches the user's claim
+8. inspect current source before relying on prior plans
+9. during DOCUMENT_MIGRATION, create only the declared next authority document
+10. after source activation, read the V1 router and selected skill
+11. verify prerequisites, active-skill conflicts, repository ownership, and write
+    boundaries
+12. if the baton points to nyx_server, require the newest separate clean Nyx archive
+    unless an explicit vendored-source contract proves otherwise
+13. open the active experiment, public product path, or journey step
+14. inspect current source, commands, run records, patches, receipts, and artifacts
+15. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
+    pass edge, block edge, and return path
+16. only then edit source
 ```
 
-During the initial documentation-migration state, when the router and V1 tree do
-not yet exist, this header plus the four-version high-level plan are sufficient to
-create them. They are not authority to begin implementation before the graph and
-router select the first capability.
+The newest verified archive is canonical regardless of its filename or base
+number. Do not demand a new archive, updated header token, matching hash, or
+repackaging ritual before working from clean current source.
+
+During the bounded documentation-migration state, this header, the workflow
+authority, `docs/High_Level.md`, and the V1 skill tree determine the next document.
+They are not authority to begin implementation before the final router/header pass
+activates the first source capability.
 
 Do not scan unrelated roadmap sections, future-version features, project-world
 concept art, Nyx engine lists, or neighboring skill nodes to choose work.
