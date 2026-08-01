@@ -7,3 +7,7 @@ publish.workspace = true
 
 [lints]
 workspace = true
+
+[[bin]]
+name = "forge-source-size"
+path = "src/bin/forge-source-size.rs"

@@ -90,22 +90,22 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-GUARD-000,FORGEOS-V1-CONTRACT-000]
-ACTIVE_SKILLS=[FORGEOS-V1-ARCH-001]
-ACTIVE_BATON_OWNER=FORGEOS-V1-ARCH-001
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001]
+AVAILABLE_SKILLS=[FORGEOS-V1-GUARD-001,FORGEOS-V1-CONTRACT-000]
+ACTIVE_SKILLS=[FORGEOS-V1-GUARD-000]
+ACTIVE_BATON_OWNER=FORGEOS-V1-GUARD-000
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-ARCH-001-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-GUARD-000-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
-The bounded authority chain is complete and `FORGEOS-V1-ARCH-000` is closed.
-`FORGEOS-V1-ARCH-001` is the only active source skill. No new archive label,
-base-number update, or hash record is required before executing its registered
-path.
+The bounded authority chain is complete and both architecture foundation skills
+are closed. `FORGEOS-V1-GUARD-000` is the only active source skill. No new archive
+label, base-number update, or hash record is required before executing its
+registered path.
 
 ---
 
@@ -774,7 +774,8 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-The initial root is closed and its required closure records exist.
+The architecture root and scoped module routing are closed with their required
+closure records.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
@@ -785,52 +786,65 @@ source_repository: Forge_OS_V1
 user_acceptance_status: APPROVED_2026-07-31
 closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-ARCH-000/CLOSURE_AND_SPEC.md
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-ARCH-000/USER_GUIDE_SOURCE.md
+---
+skill_id: FORGEOS-V1-ARCH-001
+state: CLOSED
+lane: ARCHITECTURE_AND_CONTRACTS
+owner: all production crates
+source_repository: Forge_OS_V1
+user_acceptance_status: APPROVED_2026-07-31
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-ARCH-001/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-ARCH-001/USER_GUIDE_SOURCE.md
 ```
 
-Direct prerequisite evaluation makes these nodes available:
+Direct prerequisite evaluation leaves these nodes available:
 
 ```yaml
 available_skills:
-  - FORGEOS-V1-GUARD-000
+  - FORGEOS-V1-GUARD-001
   - FORGEOS-V1-CONTRACT-000
 ```
 
-Only the scoped module-routing skill is active.
+Only the authored source-size verifier is active.
 
 ```yaml
-skill_id: FORGEOS-V1-ARCH-001
+skill_id: FORGEOS-V1-GUARD-000
 state: ACTIVE
 originating_path_or_probe: >
-  Inspect every production crate root and the executable entrypoint, then compile
-  representative public module imports through the real Cargo workspace.
+  Execute the forge-source-size binary against the real workspace and controlled
+  500, 1000, 1001, 1200, and 1201 physical-line Rust source fixtures.
 first_blocker: >
-  The crates exist but do not yet expose scoped named module routes and main does
-  not delegate through an explicit composition module.
-active_slice: FORGEOS-V1-ARCH-001-SLICE-001
+  forge-guards exposes only a source-size namespace and has no executable verifier,
+  stable authored-source discovery policy, or exact boundary fixtures.
+active_slice: FORGEOS-V1-GUARD-000-SLICE-001
 lane: ARCHITECTURE_AND_CONTRACTS
 source_repository: Forge_OS_V1
 worktree_or_branch: current single-skill worktree
 allowed_paths:
-  - crates/**
-  - tests/**
+  - crates/forge-guards/**
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
-  - docs/versions/V1/skills/FORGEOS-V1-ARCH-000/**
+  - docs/versions/V1/skills/FORGEOS-V1-ARCH-001/**
 forbidden_paths:
   - docs/versions/V2/**
   - docs/versions/V3/**
   - docs/versions/V4/**
-  - nyx_server source outside an explicit later Nyx repository handoff
-  - functional subsystem implementations not owned by this architecture skill
-  - generic catch-all production modules
+  - nyx_server source
+  - functional subsystem implementations outside forge-guards
+  - configurable source-size exclusion or allowlist files
+  - Markdown status scanning
 public_contracts_touched:
-  - crate-root public module routes
-  - executable-to-composition entry route
+  - forge_guards::source_size scan and classification API
+  - forge-source-size executable command
+  - stable module and summary output records
+  - PASS, WARN, FAIL, deny-warning, usage-error, and scan-error exit semantics
 required_commands:
   - cargo fmt --all -- --check
   - cargo check --workspace
+  - cargo test -p forge-guards
+  - cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings
   - cargo test --workspace
 regression_commands:
   - git diff --check
@@ -839,45 +853,48 @@ validation_execution_policy: >
   prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
   exact commands to the user without blocking source implementation.
 pass_edge: >
-  The user can inspect and compile explicit named module routes for every production
-  crate, main delegates only through the composition route, crate roots contain no
-  business logic, and no uncontrolled public re-export or catch-all module exists.
+  The executable scans every authored .rs file in stable relative-path order,
+  reports PASS through 1000 lines, WARN from 1001 through 1200, exits failure for
+  1201 or more, excludes only fixed generated, vendored, target, third-party, and
+  VCS source classes, rejects symlink omissions, and the five exact boundary
+  fixtures pass.
 block_edge: >
-  Stop on ambiguous module ownership, a generic catch-all module, product logic in a
-  crate root or composition module, an uncontrolled public re-export, a broken public
-  import, or a user-run validation failure.
+  Stop on a missed authored module, configurable exclusion, Markdown scanning,
+  generated or vendored source counted as authored, unstable ordering, incorrect
+  line boundary, silent symlink skip, warning in the real workspace, or user-run
+  validation failure.
 user_acceptance_path: >
-  The user inspects representative imports and module paths, confirms the naming and
-  organization, runs the workspace command chain, and explicitly approves the routes.
+  The user runs the focused forge-guards tests, executes forge-source-size against
+  the repository root, confirms the workspace summary is PASS with zero warnings
+  and failures, and explicitly approves the five boundary outcomes.
 return_path: >
-  Close only FORGEOS-V1-ARCH-001, then reevaluate its direct dependents together with
-  the already available foundation nodes without automatically activating more work.
+  Close only FORGEOS-V1-GUARD-000, then reevaluate FORGEOS-V1-GUARD-001 and
+  FORGEOS-V1-CONTRACT-000 without automatically activating either.
 parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
 ```
 
-This packet is active. `FORGEOS-V1-GUARD-000` and
+This packet is active. `FORGEOS-V1-GUARD-001` and
 `FORGEOS-V1-CONTRACT-000` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for scoped module routing
+## 17. Direct unlock handling for the source-size guard
 
-After `FORGEOS-V1-ARCH-001` closes, reevaluate only its direct dependents and the
-already available frontier.
+After `FORGEOS-V1-GUARD-000` closes, reevaluate only the available foundation
+frontier. The guard becomes a mandatory regression command for every later source
+skill, but its closure does not automatically activate unrelated product work.
 
 Expected frontier:
 
 ```text
-FORGEOS-V1-GUARD-000      AVAILABLE
+FORGEOS-V1-GUARD-001      AVAILABLE
 FORGEOS-V1-CONTRACT-000   AVAILABLE
-FORGEOS-V1-GUARD-001      AVAILABLE after ARCH-001 closes
-FORGEOS-V1-GUARD-002      remains LOCKED until CONTRACT-000 also closes
+FORGEOS-V1-GUARD-002      remains LOCKED until CONTRACT-000 closes
 ```
 
-The router should normally select `FORGEOS-V1-GUARD-000` next because every later
-source skill requires the source-size closure guard. This is a default routing
-preference, not permission to activate it before `FORGEOS-V1-ARCH-001` closes or
-to bypass current source evidence.
+The next node must be selected from current source evidence and direct dependency
+value. No warning above 1000 physical lines may remain when any later source skill
+closes.
 
 ---
 

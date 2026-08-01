@@ -1296,7 +1296,7 @@ never closes the node.
 
 - **Owner:** all production crates
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** Each crate routes public APIs through `lib.rs`; nested behavior is
   organized through named submodules and `mod.rs` where directories are used.
 - **Must not be true:** Production logic may not accumulate in crate roots, giant
@@ -1310,7 +1310,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** One executable verifier counts physical lines in every authored
   Rust source module, warns at 1001-1200, and fails at 1201 or more.
 - **Must not be true:** The verifier may not treat 1200 as the design target, scan
@@ -1325,7 +1325,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`, `FORGEOS-V1-ARCH-001`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** An automated guard rejects forbidden effect, UI, Nyx transport,
   Git, PTY, filesystem-adapter, LSP, DAP, provider, and session dependencies from
   Forge Core.
@@ -1446,7 +1446,7 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The initial Rust workspace and authority crate skeleton is closed. The repository
+The initial Rust workspace and scoped module routing are closed. The repository
 contains structural source only; no functional product capability is inferred from
 crate or module names.
 
@@ -1455,20 +1455,21 @@ Current frontier:
 ```text
 CLOSED
   FORGEOS-V1-ARCH-000
+  FORGEOS-V1-ARCH-001
 
-ACTIVE_SKILL=FORGEOS-V1-ARCH-001
-ACTIVE_BLOCKER=THE_CRATES_EXIST_BUT_DO_NOT_YET_EXPOSE_SCOPED_NAMED_MODULE_ROUTES_AND_MAIN_DOES_NOT_DELEGATE_THROUGH_AN_EXPLICIT_COMPOSITION_MODULE
-ACTIVE_SLICE=FORGEOS-V1-ARCH-001-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-GUARD-000
+ACTIVE_BLOCKER=FORGE_GUARDS_EXPOSES_ONLY_A_SOURCE_SIZE_NAMESPACE_AND_HAS_NO_EXECUTABLE_VERIFIER_OR_BOUNDARY_FIXTURES
+ACTIVE_SLICE=FORGEOS-V1-GUARD-000-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-GUARD-000
+  FORGEOS-V1-GUARD-001
   FORGEOS-V1-CONTRACT-000
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-ARCH-001` is active. Available nodes remain inactive until the
+Only `FORGEOS-V1-GUARD-000` is active. Available nodes remain inactive until the
 router selects them after conflict and write-boundary checks.
 
 ---
