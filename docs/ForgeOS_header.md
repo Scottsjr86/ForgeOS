@@ -318,6 +318,9 @@ PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
 FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_ARCHIVE
 SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 SOURCE_WORK_AUTHORIZED=YES
+VALIDATION_EXECUTION_POLICY=ASSISTANT_RUN_WHEN_AVAILABLE_OTHERWISE_OPERATOR_HANDOFF
+MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
+OPERATOR_VALIDATION_STATE=NOT_YET_REQUESTED
 NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-ARCH-000
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
@@ -559,6 +562,44 @@ package a new source archive only when the user chooses
 Hand off only the inputs required by the independent audit or next repository
 owner. No audit or next slice may demand archive renumbering as a substitute for
 verifying the supplied source.
+
+
+
+### 8.3 Assistant and operator validation split
+
+The assistant execution environment may not provide `rustc`, `cargo`, `rustfmt`,
+`rustup`, a display manager, a real ForgeOS login session, or other host tooling
+required by the active capability.
+
+Missing tooling in the assistant environment is not a ForgeOS source blocker and
+must not produce `BLOCKED_ENVIRONMENT_TOOLCHAIN_MISSING` when the user has agreed
+to execute the required commands on the real development host.
+
+In that case the assistant must:
+
+```text
+inspect the newest supplied source
+  -> prepare the bounded source patch
+  -> run every available non-toolchain check
+  -> run git diff --check or equivalent
+  -> apply-check the patch against a fresh extraction
+  -> report every check it actually ran
+  -> provide the exact Rust, build, test, guard, or host commands for the user
+  -> mark the skill OPERATOR_VALIDATION_PENDING
+```
+
+`OPERATOR_VALIDATION_PENDING` keeps the skill `ACTIVE`. It does not mean
+`SOURCE_PROVED`, `CLOSED`, or blocked.
+
+The user runs the handed-off commands and returns the exact results. Those results
+are operator-executed validation evidence. The assistant must identify them as
+user-run and may never claim it ran commands that were unavailable in its own
+environment.
+
+A green operator report allows the workflow to continue to user acceptance and
+closure. A failed operator command becomes the next real blocker. Toolchain absence
+on the assistant host never justifies generating fake success, but it also never
+justifies refusing to prepare an otherwise bounded source patch.
 
 ---
 

@@ -681,6 +681,36 @@ A proof document is not automatically functionality.
 Never claim that a command, build, test, install, boot, recovery path, experiment,
 or stranger test passed unless it actually ran.
 
+### 14.1 Assistant toolchain absence and operator validation
+
+The assistant sandbox is not required to contain Rust or the host services needed
+by ForgeOS. Missing `rustc`, `cargo`, `rustfmt`, `rustup`, display-manager access,
+GPU/session access, or equivalent tooling in the assistant environment does not
+block a bounded source slice.
+
+When required validation cannot run in the assistant environment:
+
+```text
+source implementation remains authorized
+skill state remains ACTIVE
+validation state becomes OPERATOR_VALIDATION_PENDING
+assistant prepares and apply-checks the patch
+assistant reports available checks actually run
+assistant hands off exact unavailable commands
+user runs them on the canonical development host
+```
+
+The assistant must not claim those commands passed before the user reports their
+results. The user report must be recorded as operator-executed validation.
+
+A user-reported failure replaces the current blocker with the first actual source,
+toolchain, guard, or behavior defect exposed by that command. A user-reported green
+chain permits the same skill to advance toward acceptance and closure.
+
+Do not stop source work solely to ask the user to install Rust in the assistant
+sandbox, expose a hidden toolchain, regenerate the tar, or begin another document
+cycle.
+
 ---
 
 ## 15. Patch and validation law

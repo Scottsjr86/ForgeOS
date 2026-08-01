@@ -600,6 +600,25 @@ verifier that awards behavior from document wording are forbidden.
 A later skill may not close by weakening any already-closed skill's test,
 negative path, acceptance, guard, schema meaning, or real product behavior.
 
+### 11.1 Validation execution authority
+
+Each active skill records one validation execution state:
+
+```text
+ASSISTANT_VALIDATED
+OPERATOR_VALIDATION_PENDING
+OPERATOR_VALIDATED
+```
+
+Use `ASSISTANT_VALIDATED` only for commands actually executed in the assistant
+environment. Use `OPERATOR_VALIDATION_PENDING` when the assistant has prepared and
+apply-checked the bounded patch but cannot run required host tooling. Use
+`OPERATOR_VALIDATED` only after the user returns the exact command results.
+
+The lack of Rust or host tooling in the assistant environment may not move an
+otherwise actionable skill to `BLOCKED`. The skill remains `ACTIVE` until the
+operator results expose a real blocker or satisfy the required validation.
+
 ---
 
 ## 12. Source-proved, user acceptance, and closure routing
@@ -803,14 +822,19 @@ required_commands:
   - cargo test --workspace
 regression_commands:
   - git diff --check
+validation_execution_policy: >
+  Run required commands in the assistant environment when available. Otherwise
+  prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
+  exact commands to the user without blocking source implementation.
 pass_edge: >
   The user can inspect a compiling and tested Rust workspace whose crates match
   the declared V1 authority boundaries, whose composition root contains no
   business logic, and whose initial module organization is approved.
 block_edge: >
-  Stop on missing toolchain support, ambiguous crate ownership, an invalid
-  dependency direction, or a proposed structure that begins product behavior in
-  the composition root, Bevy layer, script, or monolithic crate.
+  Stop on ambiguous crate ownership, an invalid dependency direction, a user-run
+  validation failure, or a proposed structure that begins product behavior in the
+  composition root, Bevy layer, script, or monolithic crate. Missing Rust tooling
+  in the assistant environment is an operator-validation handoff, not a blocker.
 user_acceptance_path: >
   The user reviews the workspace and crate responsibilities, runs the initial
   workspace commands, and explicitly approves the boundaries.

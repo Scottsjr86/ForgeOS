@@ -785,6 +785,51 @@ Examples include:
 A capability is incomplete when its expected failure behavior is missing,
 misclassified, hidden, or destructive.
 
+### 13.4 Assistant and operator validation law
+
+ForgeOS development may be coordinated from an assistant environment that does not
+contain the Rust toolchain, desktop-session services, GPU stack, local model
+runtime, or other host dependencies required by the active skill.
+
+Absence of those tools in the assistant environment is not a product defect and is
+not a valid reason to block source implementation when the user can execute the
+required validation on the canonical development host.
+
+The permitted split is:
+
+```text
+assistant
+  -> inspects source
+  -> writes the bounded patch
+  -> runs available structural, diff, graph, and patch-application checks
+  -> declares exactly what was and was not executed
+  -> hands off exact validation commands
+
+operator
+  -> applies the patch
+  -> runs the unavailable compiler, formatter, test, guard, boot, display-session,
+     hardware, or integration commands
+  -> returns exact results
+```
+
+The router records this intermediate state as:
+
+```text
+OPERATOR_VALIDATION_PENDING
+```
+
+That state keeps the skill `ACTIVE`. It awards no proof and no closure, but it may
+not be treated as `BLOCKED_ENVIRONMENT_TOOLCHAIN_MISSING` merely because the
+assistant sandbox lacks the toolchain.
+
+The assistant may rely on user-returned logs and results as operator-executed
+evidence, but must label them honestly and must never state that it personally ran
+those commands.
+
+If operator validation fails, the failure becomes the next first blocker. If it
+passes, the skill may continue through its remaining user-acceptance and closure
+requirements.
+
 ---
 
 ## 14. Test and guard anti-tampering law
