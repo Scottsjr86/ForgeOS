@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use forge_guards::source_size::{ModuleStatus, scan_authored_rust};
+use forge_guards::source_size::{scan_authored_rust, ModuleStatus};
 
 static FIXTURE_SEQUENCE: AtomicUsize = AtomicUsize::new(0);
 
@@ -56,7 +56,9 @@ fn executable_reports_boundary_status_and_exit_code() {
             "{stdout}"
         );
         assert!(
-            stdout.contains(&format!("FORGE_SOURCE_SIZE_SUMMARY status={expected_status}")),
+            stdout.contains(&format!(
+                "FORGE_SOURCE_SIZE_SUMMARY status={expected_status}"
+            )),
             "{stdout}"
         );
     }
@@ -96,7 +98,10 @@ fn fixed_policy_excludes_generated_vendored_and_build_output_source() {
 
     let report = scan_authored_rust(fixture.path()).expect("fixture scan should succeed");
     assert_eq!(report.modules().len(), 1);
-    assert_eq!(report.modules()[0].relative_path(), Path::new("src/authored.rs"));
+    assert_eq!(
+        report.modules()[0].relative_path(),
+        Path::new("src/authored.rs")
+    );
     assert_eq!(report.modules()[0].physical_lines(), 12);
     assert_eq!(report.overall_status(), ModuleStatus::Pass);
 }

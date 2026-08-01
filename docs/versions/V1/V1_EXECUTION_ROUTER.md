@@ -90,22 +90,22 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001]
-AVAILABLE_SKILLS=[FORGEOS-V1-GUARD-001,FORGEOS-V1-CONTRACT-000]
-ACTIVE_SKILLS=[FORGEOS-V1-GUARD-000]
-ACTIVE_BATON_OWNER=FORGEOS-V1-GUARD-000
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-CONTRACT-000]
+ACTIVE_SKILLS=[FORGEOS-V1-GUARD-001]
+ACTIVE_BATON_OWNER=FORGEOS-V1-GUARD-001
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-GUARD-000-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-GUARD-001-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
-The bounded authority chain is complete and both architecture foundation skills
-are closed. `FORGEOS-V1-GUARD-000` is the only active source skill. No new archive
-label, base-number update, or hash record is required before executing its
-registered path.
+The bounded authority chain is complete, both architecture foundation skills and
+the authored source-size guard are closed, and `FORGEOS-V1-GUARD-001` is the only
+active source skill. No new archive label, base-number update, or hash record is
+required before executing its registered path.
 
 ---
 
@@ -774,8 +774,8 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-The architecture root and scoped module routing are closed with their required
-closure records.
+The architecture root, scoped module routing, and authored source-size verifier are
+closed with their required closure records.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
@@ -795,28 +795,37 @@ source_repository: Forge_OS_V1
 user_acceptance_status: APPROVED_2026-07-31
 closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-ARCH-001/CLOSURE_AND_SPEC.md
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-ARCH-001/USER_GUIDE_SOURCE.md
+---
+skill_id: FORGEOS-V1-GUARD-000
+state: CLOSED
+lane: ARCHITECTURE_AND_CONTRACTS
+owner: forge-guards
+source_repository: Forge_OS_V1
+user_acceptance_status: APPROVED_2026-08-01
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-GUARD-000/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-GUARD-000/USER_GUIDE_SOURCE.md
 ```
 
-Direct prerequisite evaluation leaves these nodes available:
+Direct prerequisite evaluation leaves one node available:
 
 ```yaml
 available_skills:
-  - FORGEOS-V1-GUARD-001
   - FORGEOS-V1-CONTRACT-000
 ```
 
-Only the authored source-size verifier is active.
+The Forge Core purity guard is active.
 
 ```yaml
-skill_id: FORGEOS-V1-GUARD-000
+skill_id: FORGEOS-V1-GUARD-001
 state: ACTIVE
 originating_path_or_probe: >
-  Execute the forge-source-size binary against the real workspace and controlled
-  500, 1000, 1001, 1200, and 1201 physical-line Rust source fixtures.
+  Execute forge-core-purity against the real workspace and controlled legal,
+  forbidden-direct, and forbidden-transitive Cargo dependency graphs.
 first_blocker: >
-  forge-guards exposes only a source-size namespace and has no executable verifier,
-  stable authored-source discovery policy, or exact boundary fixtures.
-active_slice: FORGEOS-V1-GUARD-000-SLICE-001
+  forge-guards exposes only a placeholder core_purity namespace and cannot inspect
+  the normal and build dependency graph reachable from forge-core or reject an
+  effectful package hidden behind a generically named adapter.
+active_slice: FORGEOS-V1-GUARD-001-SLICE-001
 lane: ARCHITECTURE_AND_CONTRACTS
 source_repository: Forge_OS_V1
 worktree_or_branch: current single-skill worktree
@@ -826,24 +835,26 @@ allowed_paths:
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
-  - docs/versions/V1/skills/FORGEOS-V1-ARCH-001/**
+  - docs/versions/V1/skills/FORGEOS-V1-GUARD-000/**
 forbidden_paths:
   - docs/versions/V2/**
   - docs/versions/V3/**
   - docs/versions/V4/**
   - nyx_server source
-  - functional subsystem implementations outside forge-guards
-  - configurable source-size exclusion or allowlist files
-  - Markdown status scanning
+  - functional Forge Core behavior
+  - production dependency changes outside forge-guards
+  - documentation parsing as dependency evidence
+  - package-name substring denylists that allow unknown packages by default
 public_contracts_touched:
-  - forge_guards::source_size scan and classification API
-  - forge-source-size executable command
-  - stable module and summary output records
-  - PASS, WARN, FAIL, deny-warning, usage-error, and scan-error exit semantics
+  - forge_guards::core_purity inspection and report API
+  - forge-core-purity executable command
+  - stable allowed, forbidden, summary, and execution-error output records
+  - exact reviewed production/build package graph policy
 required_commands:
   - cargo fmt --all -- --check
   - cargo check --workspace
   - cargo test -p forge-guards
+  - cargo run -p forge-guards --bin forge-core-purity -- --root .
   - cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings
   - cargo test --workspace
 regression_commands:
@@ -853,47 +864,46 @@ validation_execution_policy: >
   prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
   exact commands to the user without blocking source implementation.
 pass_edge: >
-  The executable scans every authored .rs file in stable relative-path order,
-  reports PASS through 1000 lines, WARN from 1001 through 1200, exits failure for
-  1201 or more, excludes only fixed generated, vendored, target, third-party, and
-  VCS source classes, rejects symlink omissions, and the five exact boundary
-  fixtures pass.
+  The executable obtains the real Cargo normal/build graph rooted at forge-core,
+  reports only forge-core and forge-protocol as currently reviewed pure packages,
+  passes the real workspace, rejects representative effect, UI, Nyx transport,
+  Git, PTY, filesystem-adapter, LSP, DAP, provider, and session packages, and
+  rejects both a generic adapter and its forbidden transitive dependency.
 block_edge: >
-  Stop on a missed authored module, configurable exclusion, Markdown scanning,
-  generated or vendored source counted as authored, unstable ordering, incorrect
-  line boundary, silent symlink skip, warning in the real workspace, or user-run
-  validation failure.
+  Stop on incomplete dependency traversal, documentation-derived evidence,
+  allow-by-default policy, accepted unknown package, missed transitive adapter,
+  unstable output, a source-size warning, or user-run validation failure.
 user_acceptance_path: >
-  The user runs the focused forge-guards tests, executes forge-source-size against
-  the repository root, confirms the workspace summary is PASS with zero warnings
-  and failures, and explicitly approves the five boundary outcomes.
+  The user runs the focused forge-guards tests, observes controlled forbidden
+  direct and transitive graphs rejected, runs forge-core-purity against the real
+  repository, confirms PASS with two allowed packages and zero forbidden packages,
+  and explicitly approves the guard behavior.
 return_path: >
-  Close only FORGEOS-V1-GUARD-000, then reevaluate FORGEOS-V1-GUARD-001 and
-  FORGEOS-V1-CONTRACT-000 without automatically activating either.
+  Close only FORGEOS-V1-GUARD-001, then reevaluate FORGEOS-V1-CONTRACT-000 and
+  direct unlocks without automatically activating unrelated work.
 parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
 ```
 
-This packet is active. `FORGEOS-V1-GUARD-001` and
-`FORGEOS-V1-CONTRACT-000` remain available but inactive.
+This packet is active. `FORGEOS-V1-CONTRACT-000` remains available but inactive.
 
 ---
 
-## 17. Direct unlock handling for the source-size guard
+## 17. Direct unlock handling for the Forge Core purity guard
 
-After `FORGEOS-V1-GUARD-000` closes, reevaluate only the available foundation
-frontier. The guard becomes a mandatory regression command for every later source
-skill, but its closure does not automatically activate unrelated product work.
+After `FORGEOS-V1-GUARD-001` closes, reevaluate only the available foundation
+frontier and direct unlocks. The guard becomes a mandatory regression command for
+every later dependency change.
 
 Expected frontier:
 
 ```text
-FORGEOS-V1-GUARD-001      AVAILABLE
 FORGEOS-V1-CONTRACT-000   AVAILABLE
 FORGEOS-V1-GUARD-002      remains LOCKED until CONTRACT-000 closes
 ```
 
 The next node must be selected from current source evidence and direct dependency
-value. No warning above 1000 physical lines may remain when any later source skill
+value. No unreviewed package may enter the Forge Core normal or build graph, and no
+source-size warning above 1000 physical lines may remain when a later source skill
 closes.
 
 ---

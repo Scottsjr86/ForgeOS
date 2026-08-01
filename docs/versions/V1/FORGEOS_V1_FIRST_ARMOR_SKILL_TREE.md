@@ -1310,7 +1310,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** One executable verifier counts physical lines in every authored
   Rust source module, warns at 1001-1200, and fails at 1201 or more.
 - **Must not be true:** The verifier may not treat 1200 as the design target, scan
@@ -1325,7 +1325,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`, `FORGEOS-V1-ARCH-001`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** An automated guard rejects forbidden effect, UI, Nyx transport,
   Git, PTY, filesystem-adapter, LSP, DAP, provider, and session dependencies from
   Forge Core.
@@ -1446,9 +1446,9 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The initial Rust workspace and scoped module routing are closed. The repository
-contains structural source only; no functional product capability is inferred from
-crate or module names.
+The initial Rust workspace, scoped module routing, and authored source-size guard
+are closed. The repository still contains structural source only; no functional
+product capability is inferred from crate or module names.
 
 Current frontier:
 
@@ -1456,21 +1456,21 @@ Current frontier:
 CLOSED
   FORGEOS-V1-ARCH-000
   FORGEOS-V1-ARCH-001
+  FORGEOS-V1-GUARD-000
 
-ACTIVE_SKILL=FORGEOS-V1-GUARD-000
-ACTIVE_BLOCKER=FORGE_GUARDS_EXPOSES_ONLY_A_SOURCE_SIZE_NAMESPACE_AND_HAS_NO_EXECUTABLE_VERIFIER_OR_BOUNDARY_FIXTURES
-ACTIVE_SLICE=FORGEOS-V1-GUARD-000-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-GUARD-001
+ACTIVE_BLOCKER=FORGE_GUARDS_EXPOSES_ONLY_A_PLACEHOLDER_CORE_PURITY_NAMESPACE_AND_CANNOT_INSPECT_OR_REJECT_THE_REAL_TRANSITIVE_CARGO_GRAPH
+ACTIVE_SLICE=FORGEOS-V1-GUARD-001-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-GUARD-001
   FORGEOS-V1-CONTRACT-000
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-GUARD-000` is active. Available nodes remain inactive until the
-router selects them after conflict and write-boundary checks.
+Only `FORGEOS-V1-GUARD-001` is active. `FORGEOS-V1-CONTRACT-000` remains
+available but inactive until the router selects it after this guard closes.
 
 ---
 

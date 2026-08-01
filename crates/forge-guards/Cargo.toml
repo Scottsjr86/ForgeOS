@@ -11,3 +11,7 @@ workspace = true
 [[bin]]
 name = "forge-source-size"
 path = "src/bin/forge-source-size.rs"
+
+[[bin]]
+name = "forge-core-purity"
+path = "src/bin/forge-core-purity.rs"

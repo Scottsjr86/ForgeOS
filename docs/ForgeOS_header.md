@@ -292,25 +292,25 @@ activate later-version work.
 
 ## 6. Current V1 gap-closing campaign
 
-The bounded authority migration, initial workspace root, and scoped module routing
-are closed. The authored Rust source-size verifier is the only active V1 source
-capability:
+The bounded authority migration, both architecture foundations, and the authored
+source-size guard are closed. The Forge Core purity guard is the only active V1
+source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-GUARD-000
-ACTIVE_V1_CONTRIBUTION=AUTHORED_RUST_SOURCE_MODULE_SIZE_VERIFIER
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-GUARD-000
-QUESTION=Can ForgeOS execute one deterministic verifier that scans every authored Rust source module, reports PASS through 1000 physical lines, WARN from 1001 through 1200, fails at 1201 or more, and excludes only fixed generated, vendored, build-output, and version-control source classes?
-CURRENT_RESULT=SCOPED_MODULE_ROUTING_CLOSED_SOURCE_SIZE_GUARD_ACTIVE
-BATON_OWNER=FORGEOS-V1-GUARD-000
+ACTIVE_RELEASE_GATE=FORGEOS-V1-GUARD-001
+ACTIVE_V1_CONTRIBUTION=FORGE_CORE_TRANSITIVE_DEPENDENCY_PURITY_GUARD
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-GUARD-001
+QUESTION=Can ForgeOS deterministically reject every unreviewed normal or build dependency reachable from forge-core, including effectful UI, Nyx transport, Git, PTY, filesystem adapter, LSP, DAP, provider, session, and generically named transitive adapter packages?
+CURRENT_RESULT=SOURCE_SIZE_GUARD_CLOSED_CORE_PURITY_GUARD_ACTIVE
+BATON_OWNER=FORGEOS-V1-GUARD-001
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
-ACTIVE_SLICE=FORGEOS-V1-GUARD-000-SLICE-001
-FIRST_BLOCKER=FORGE_GUARDS_EXPOSES_ONLY_A_SOURCE_SIZE_NAMESPACE_AND_HAS_NO_EXECUTABLE_VERIFIER_OR_BOUNDARY_FIXTURES
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001]
-AVAILABLE_SKILLS=[FORGEOS-V1-GUARD-001,FORGEOS-V1-CONTRACT-000]
+ACTIVE_SLICE=FORGEOS-V1-GUARD-001-SLICE-001
+FIRST_BLOCKER=FORGE_GUARDS_EXPOSES_ONLY_A_PLACEHOLDER_CORE_PURITY_NAMESPACE_AND_CANNOT_INSPECT_OR_REJECT_THE_REAL_TRANSITIVE_CARGO_GRAPH
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-CONTRACT-000]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -324,8 +324,8 @@ SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=ASSISTANT_RUN_WHEN_AVAILABLE_OTHERWISE_OPERATOR_HANDOFF
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-GUARD-000
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-GUARD-000-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-GUARD-001
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-GUARD-001-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -341,8 +341,8 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set now exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, both architecture
-foundation skills are closed, and `FORGEOS-V1-GUARD-000` is the only active source
-skill.
+foundation skills and the source-size guard are closed, and `FORGEOS-V1-GUARD-001`
+is the only active source skill.
 
 Source work may begin immediately after the newest supplied ForgeOS archive is
 verified as the current clean repository. No additional documentation, archive

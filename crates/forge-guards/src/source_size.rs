@@ -129,7 +129,11 @@ impl fmt::Display for ScanError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidRoot(path) => {
-                write!(formatter, "scan root is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "scan root is not a directory: {}",
+                    path.display()
+                )
             }
             Self::SymlinkEncountered(path) => write!(
                 formatter,
@@ -237,9 +241,7 @@ fn collect_rust_sources(
             let points_to_directory = fs::metadata(&path)
                 .map(|metadata| metadata.is_dir())
                 .unwrap_or(false);
-            let is_rust_source = path
-                .extension()
-                .is_some_and(|extension| extension == "rs");
+            let is_rust_source = path.extension().is_some_and(|extension| extension == "rs");
             if points_to_directory || is_rust_source {
                 return Err(ScanError::SymlinkEncountered(relative_or_full(root, &path)));
             }
@@ -251,10 +253,7 @@ fn collect_rust_sources(
                 continue;
             }
             collect_rust_sources(root, &path, source_paths)?;
-        } else if file_type.is_file()
-            && path
-                .extension()
-                .is_some_and(|extension| extension == "rs")
+        } else if file_type.is_file() && path.extension().is_some_and(|extension| extension == "rs")
         {
             source_paths.push(path);
         }
@@ -300,7 +299,7 @@ fn relative_or_full(root: &Path, path: &Path) -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use super::{ModuleStatus, classify_line_count, count_physical_lines};
+    use super::{classify_line_count, count_physical_lines, ModuleStatus};
 
     #[test]
     fn classifies_exact_contract_boundaries() {
