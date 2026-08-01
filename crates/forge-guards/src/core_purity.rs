@@ -77,10 +77,18 @@ impl fmt::Display for PurityError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidRoot(path) => {
-                write!(formatter, "repository root is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "repository root is not a directory: {}",
+                    path.display()
+                )
             }
             Self::MissingWorkspaceManifest(path) => {
-                write!(formatter, "workspace manifest does not exist: {}", path.display())
+                write!(
+                    formatter,
+                    "workspace manifest does not exist: {}",
+                    path.display()
+                )
             }
             Self::CargoInvocation { program, source } => {
                 write!(formatter, "failed to execute {program}: {source}")
@@ -169,7 +177,11 @@ pub fn inspect_core_dependencies_with_cargo(
 fn classify_cargo_tree(stdout: &str) -> Result<PurityReport, PurityError> {
     let mut packages = BTreeSet::new();
 
-    for line in stdout.lines().map(str::trim).filter(|line| !line.is_empty()) {
+    for line in stdout
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+    {
         let package = line.split_whitespace().next().ok_or_else(|| {
             PurityError::MalformedCargoTree("package line has no package name".to_owned())
         })?;

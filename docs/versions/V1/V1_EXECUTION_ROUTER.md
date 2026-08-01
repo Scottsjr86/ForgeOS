@@ -90,21 +90,21 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-CONTRACT-000]
-ACTIVE_SKILLS=[FORGEOS-V1-GUARD-001]
-ACTIVE_BATON_OWNER=FORGEOS-V1-GUARD-001
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001]
+AVAILABLE_SKILLS=[]
+ACTIVE_SKILLS=[FORGEOS-V1-CONTRACT-000]
+ACTIVE_BATON_OWNER=FORGEOS-V1-CONTRACT-000
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-GUARD-001-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-CONTRACT-000-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
 The bounded authority chain is complete, both architecture foundation skills and
-the authored source-size guard are closed, and `FORGEOS-V1-GUARD-001` is the only
-active source skill. No new archive label, base-number update, or hash record is
+both mandatory foundation guards are closed, and `FORGEOS-V1-CONTRACT-000` is the
+only active source skill. No new archive label, base-number update, or hash record is
 required before executing its registered path.
 
 ---
@@ -774,8 +774,9 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-The architecture root, scoped module routing, and authored source-size verifier are
-closed with their required closure records.
+The architecture root, scoped module routing, authored source-size verifier, and
+Forge Core dependency-purity verifier are closed with their required closure
+records.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
@@ -804,56 +805,68 @@ source_repository: Forge_OS_V1
 user_acceptance_status: APPROVED_2026-08-01
 closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-GUARD-000/CLOSURE_AND_SPEC.md
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-GUARD-000/USER_GUIDE_SOURCE.md
-```
-
-Direct prerequisite evaluation leaves one node available:
-
-```yaml
-available_skills:
-  - FORGEOS-V1-CONTRACT-000
-```
-
-The Forge Core purity guard is active.
-
-```yaml
+---
 skill_id: FORGEOS-V1-GUARD-001
-state: ACTIVE
-originating_path_or_probe: >
-  Execute forge-core-purity against the real workspace and controlled legal,
-  forbidden-direct, and forbidden-transitive Cargo dependency graphs.
-first_blocker: >
-  forge-guards exposes only a placeholder core_purity namespace and cannot inspect
-  the normal and build dependency graph reachable from forge-core or reject an
-  effectful package hidden behind a generically named adapter.
-active_slice: FORGEOS-V1-GUARD-001-SLICE-001
+state: CLOSED
 lane: ARCHITECTURE_AND_CONTRACTS
+owner: forge-guards, forge-core
 source_repository: Forge_OS_V1
+user_acceptance_status: APPROVED_2026-08-01
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-GUARD-001/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-GUARD-001/USER_GUIDE_SOURCE.md
+```
+
+No other foundation node is available while the one-per-lane contract skill is
+active.
+
+The stable protocol contract is active.
+
+```yaml
+skill_id: FORGEOS-V1-CONTRACT-000
+state: ACTIVE
+lane: ARCHITECTURE_AND_CONTRACTS
+owning_subsystem: forge-protocol, forge-core
+source_repository: Forge_OS_V1
+source_revision: Forge_OS_V1_base_13.tar sha256 b79f1bf22dbcf800f26f60e8d9a3a0cf1cb5ac754b3269efa41a09810aecbe2b
 worktree_or_branch: current single-skill worktree
+direct_prerequisites:
+  - FORGEOS-V1-ARCH-000
+originating_path_or_probe: >
+  Compile and run the forge-protocol contract fixtures against the current public
+  identities, envelopes, errors, and events routes, then consume the same bytes
+  through forge-core's declared protocol dependency.
+first_blocker: >
+  forge-protocol exposes behavior-free placeholder namespaces and therefore cannot
+  create typed stable identities, round-trip a deterministic request, result, or
+  typed-error envelope, reject an unknown schema version, or reject duplicate IDs.
+active_slice: FORGEOS-V1-CONTRACT-000-SLICE-001
 allowed_paths:
-  - crates/forge-guards/**
+  - crates/forge-protocol/**
+  - crates/forge-core/tests/protocol_contracts.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
-  - docs/versions/V1/skills/FORGEOS-V1-GUARD-000/**
+  - docs/versions/V1/skills/FORGEOS-V1-GUARD-001/**
 forbidden_paths:
-  - docs/versions/V2/**
-  - docs/versions/V3/**
-  - docs/versions/V4/**
+  - functional project, workspace, mission, or capability behavior in forge-core
+  - persistence, filesystem path, process, terminal, Git, editor, Nyx, session, or Forge World behavior
+  - external serialization, randomness, clock, filesystem, or network dependencies
+  - canonical identity derived from display text, raw paths, list indexes, timestamps, or model wording
+  - V2, V3, or V4 source and documents
   - nyx_server source
-  - functional Forge Core behavior
-  - production dependency changes outside forge-guards
-  - documentation parsing as dependency evidence
-  - package-name substring denylists that allow unknown packages by default
 public_contracts_touched:
-  - forge_guards::core_purity inspection and report API
-  - forge-core-purity executable command
-  - stable allowed, forbidden, summary, and execution-error output records
-  - exact reviewed production/build package graph policy
+  - forge_protocol::identities typed ProjectId, RepositoryId, ProcessId, TerminalId, CommandId, SessionId, TaskId, PatchId, ResultId, and EventId values
+  - exact 16-byte identity and 32-character lowercase hexadecimal text representation
+  - deterministic duplicate-identity rejection
+  - forge_protocol::errors typed ProtocolError and stable error codes
+  - forge_protocol::envelopes RequestEnvelope, ResultEnvelope, ErrorEnvelope, envelope kind, current version, and exact V1 bytes
+  - forge_protocol::events::EventRecord
 required_commands:
   - cargo fmt --all -- --check
   - cargo check --workspace
-  - cargo test -p forge-guards
+  - cargo test -p forge-protocol
+  - cargo test -p forge-core
   - cargo run -p forge-guards --bin forge-core-purity -- --root .
   - cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings
   - cargo test --workspace
@@ -864,47 +877,53 @@ validation_execution_policy: >
   prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
   exact commands to the user without blocking source implementation.
 pass_edge: >
-  The executable obtains the real Cargo normal/build graph rooted at forge-core,
-  reports only forge-core and forge-protocol as currently reviewed pure packages,
-  passes the real workspace, rejects representative effect, UI, Nyx transport,
-  Git, PTY, filesystem-adapter, LSP, DAP, provider, and session packages, and
-  rejects both a generic adapter and its forbidden transitive dependency.
+  All ten identity types round-trip canonical lowercase text, duplicate typed IDs
+  fail deterministically, request/result/error envelopes round-trip exact locked V1
+  bytes, unknown versions and malformed bytes fail closed, typed errors survive an
+  error-envelope round trip, forge-core consumes the same public contract, the Core
+  graph remains exactly forge-core plus forge-protocol, and no source-size warning
+  remains.
 block_edge: >
-  Stop on incomplete dependency traversal, documentation-derived evidence,
-  allow-by-default policy, accepted unknown package, missed transitive adapter,
-  unstable output, a source-size warning, or user-run validation failure.
+  Stop on identity aliasing, unstable or display-derived identity, accepted uppercase
+  or malformed canonical text, accepted duplicate ID, accepted unknown version,
+  guessed malformed payload, wire-byte drift, untyped string failure, external
+  dependency entry into the Core graph, a source-size warning, or operator validation
+  failure.
 user_acceptance_path: >
-  The user runs the focused forge-guards tests, observes controlled forbidden
-  direct and transitive graphs rejected, runs forge-core-purity against the real
-  repository, confirms PASS with two allowed packages and zero forbidden packages,
-  and explicitly approves the guard behavior.
+  The user runs the focused forge-protocol and forge-core tests, observes the exact
+  round-trip, unknown-version, duplicate-ID, typed-error, malformed-wire, and locked
+  wire-byte fixtures pass, confirms both mandatory guards remain green, and explicitly
+  approves the V1 API shape.
 return_path: >
-  Close only FORGEOS-V1-GUARD-001, then reevaluate FORGEOS-V1-CONTRACT-000 and
-  direct unlocks without automatically activating unrelated work.
+  Close only FORGEOS-V1-CONTRACT-000, then reevaluate its direct unlocks without
+  automatically activating persistence, path, process, hash, or seam work.
 parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
 ```
 
-This packet is active. `FORGEOS-V1-CONTRACT-000` remains available but inactive.
+This packet is active. All direct dependents of `FORGEOS-V1-CONTRACT-000` remain
+locked until user acceptance closes this contract.
 
 ---
 
-## 17. Direct unlock handling for the Forge Core purity guard
+## 17. Direct unlock handling for the stable protocol contract
 
-After `FORGEOS-V1-GUARD-001` closes, reevaluate only the available foundation
-frontier and direct unlocks. The guard becomes a mandatory regression command for
-every later dependency change.
+After `FORGEOS-V1-CONTRACT-000` closes, reevaluate only its direct unlocks and any
+closed guard invalidated by the final dependency graph. The source-size and Core
+purity guards remain mandatory regression commands.
 
-Expected frontier:
+Expected direct unlock candidates include:
 
 ```text
-FORGEOS-V1-CONTRACT-000   AVAILABLE
-FORGEOS-V1-GUARD-002      remains LOCKED until CONTRACT-000 closes
+FORGEOS-V1-GUARD-002
+FORGEOS-V1-STATE-000
+FORGEOS-V1-PATH-000
+FORGEOS-V1-PROCESS-000
+FORGEOS-V1-HASH-000
 ```
 
-The next node must be selected from current source evidence and direct dependency
-value. No unreviewed package may enter the Forge Core normal or build graph, and no
-source-size warning above 1000 physical lines may remain when a later source skill
-closes.
+The next node must be selected by the normal dependency-depth, user-value,
+blast-radius, and conflict rules. Closure of this contract does not automatically
+activate any one of those capabilities.
 
 ---
 

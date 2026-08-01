@@ -1325,7 +1325,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`, `FORGEOS-V1-ARCH-001`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** An automated guard rejects forbidden effect, UI, Nyx transport,
   Git, PTY, filesystem-adapter, LSP, DAP, provider, and session dependencies from
   Forge Core.
@@ -1351,7 +1351,7 @@ never closes the node.
 
 - **Owner:** `forge-protocol`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Project, repository, process, terminal, command, session, task,
   patch, result, and event identities are stable typed values with versioned request,
   result, and error envelopes.
@@ -1446,9 +1446,9 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The initial Rust workspace, scoped module routing, and authored source-size guard
-are closed. The repository still contains structural source only; no functional
-product capability is inferred from crate or module names.
+The initial Rust workspace, scoped module routing, authored source-size guard, and
+Forge Core dependency-purity guard are closed. The repository still contains only
+foundation behavior; no product capability is inferred from crate or module names.
 
 Current frontier:
 
@@ -1457,20 +1457,22 @@ CLOSED
   FORGEOS-V1-ARCH-000
   FORGEOS-V1-ARCH-001
   FORGEOS-V1-GUARD-000
+  FORGEOS-V1-GUARD-001
 
-ACTIVE_SKILL=FORGEOS-V1-GUARD-001
-ACTIVE_BLOCKER=FORGE_GUARDS_EXPOSES_ONLY_A_PLACEHOLDER_CORE_PURITY_NAMESPACE_AND_CANNOT_INSPECT_OR_REJECT_THE_REAL_TRANSITIVE_CARGO_GRAPH
-ACTIVE_SLICE=FORGEOS-V1-GUARD-001-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-CONTRACT-000
+ACTIVE_BLOCKER=FORGE_PROTOCOL_IDENTITIES_ERRORS_EVENTS_AND_ENVELOPES_ARE_PLACEHOLDER_NAMESPACES_WITH_NO_TYPED_VALUES_VERSIONED_WIRE_CONTRACT_OR_NEGATIVE_BEHAVIOR
+ACTIVE_SLICE=FORGEOS-V1-CONTRACT-000-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-CONTRACT-000
+  none while CONTRACT-000 is active in this lane
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-GUARD-001` is active. `FORGEOS-V1-CONTRACT-000` remains
-available but inactive until the router selects it after this guard closes.
+Only `FORGEOS-V1-CONTRACT-000` is active. Its direct dependents remain locked
+until the contract passes its exact round-trip and negative fixtures and receives
+user approval.
 
 ---
 

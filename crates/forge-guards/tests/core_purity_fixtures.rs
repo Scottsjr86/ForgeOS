@@ -15,7 +15,11 @@ fn real_shape_with_only_protocol_dependency_passes() {
     let output = fixture.run_guard();
     let stdout = output.stdout_text();
 
-    assert!(output.status.success(), "{stdout}\n{}", output.stderr_text());
+    assert!(
+        output.status.success(),
+        "{stdout}\n{}",
+        output.stderr_text()
+    );
     assert!(
         stdout.contains("FORGE_CORE_PURITY_PACKAGE status=ALLOWED package=forge-core"),
         "{stdout}"
@@ -25,9 +29,7 @@ fn real_shape_with_only_protocol_dependency_passes() {
         "{stdout}"
     );
     assert!(
-        stdout.contains(
-            "FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0"
-        ),
+        stdout.contains("FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0"),
         "{stdout}"
     );
 }
@@ -55,7 +57,10 @@ fn representative_forbidden_direct_dependencies_are_rejected() {
         let output = fixture.run_guard();
         let stdout = output.stdout_text();
 
-        assert!(!output.status.success(), "{package} unexpectedly passed\n{stdout}");
+        assert!(
+            !output.status.success(),
+            "{package} unexpectedly passed\n{stdout}"
+        );
         assert!(
             stdout.contains(&format!(
                 "FORGE_CORE_PURITY_PACKAGE status=FORBIDDEN package={package}"
@@ -88,9 +93,7 @@ fn generic_adapter_cannot_smuggle_transitive_effect_dependency() {
 
     assert!(!output.status.success(), "{stdout}");
     assert!(
-        stdout.contains(
-            "FORGE_CORE_PURITY_PACKAGE status=FORBIDDEN package=generic-adapter"
-        ),
+        stdout.contains("FORGE_CORE_PURITY_PACKAGE status=FORBIDDEN package=generic-adapter"),
         "{stdout}"
     );
     assert!(
@@ -126,9 +129,8 @@ impl Fixture {
         fs::write(package_dir.join("src/lib.rs"), "#![forbid(unsafe_code)]\n")
             .expect("fixture source should be written");
 
-        let mut manifest = format!(
-            "[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nedition = \"2021\"\n"
-        );
+        let mut manifest =
+            format!("[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nedition = \"2021\"\n");
         if !dependencies.is_empty() {
             manifest.push_str("\n[dependencies]\n");
             for (index, dependency) in dependencies.iter().enumerate() {
