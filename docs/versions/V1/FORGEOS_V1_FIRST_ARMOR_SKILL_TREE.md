@@ -1339,7 +1339,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`
 - **Prerequisites:** `FORGEOS-V1-ARCH-001`, `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
 - **Must be true:** Guards enforce the declared dependency graph between Forge Core,
   Forge World, Developer Bridge, Nyx client, session, editor, terminal, and Git.
 - **Must not be true:** Forge World may not own project truth, ForgeOS may not host a
@@ -1351,7 +1351,7 @@ never closes the node.
 
 - **Owner:** `forge-protocol`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** Project, repository, process, terminal, command, session, task,
   patch, result, and event identities are stable typed values with versioned request,
   result, and error envelopes.
@@ -1365,7 +1365,7 @@ never closes the node.
 
 - **Owner:** `forge-core`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Canonical local records write atomically, reopen through explicit
   schema versions, reject corrupt or unsupported data, and preserve the previous
   valid state on failure.
@@ -1379,7 +1379,7 @@ never closes the node.
 
 - **Owner:** `forge-project`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Repository roots and child paths resolve canonically, preserve
   display paths separately, and reject escapes through traversal, symlink, or
   unexpected mount behavior.
@@ -1394,7 +1394,7 @@ never closes the node.
 
 - **Owner:** `forge-bridge`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Spawn request, process identity, running state, output channels,
   exit, timeout, cancellation, and failure are explicit and race-safe.
 - **Must not be true:** PID alone may not serve as durable identity, and cancellation
@@ -1407,7 +1407,7 @@ never closes the node.
 
 - **Owner:** `forge-protocol`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Files, patches, tool requests, snapshots, and result payloads can
   receive stable SHA-256 identities over declared canonical bytes.
 - **Must not be true:** Timestamps, host paths, unstable map ordering, or display text
@@ -1446,9 +1446,9 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The initial Rust workspace, scoped module routing, authored source-size guard, and
-Forge Core dependency-purity guard are closed. The repository still contains only
-foundation behavior; no product capability is inferred from crate or module names.
+The architecture foundations, mandatory source-size and Core-purity guards, and
+stable protocol contract are closed. The repository still contains foundation
+behavior only; no product capability is inferred from crate or module names.
 
 Current frontier:
 
@@ -1458,21 +1458,25 @@ CLOSED
   FORGEOS-V1-ARCH-001
   FORGEOS-V1-GUARD-000
   FORGEOS-V1-GUARD-001
+  FORGEOS-V1-CONTRACT-000
 
-ACTIVE_SKILL=FORGEOS-V1-CONTRACT-000
-ACTIVE_BLOCKER=FORGE_PROTOCOL_IDENTITIES_ERRORS_EVENTS_AND_ENVELOPES_ARE_PLACEHOLDER_NAMESPACES_WITH_NO_TYPED_VALUES_VERSIONED_WIRE_CONTRACT_OR_NEGATIVE_BEHAVIOR
-ACTIVE_SLICE=FORGEOS-V1-CONTRACT-000-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-GUARD-002
+ACTIVE_BLOCKER=FORGE_GUARDS_SEAMS_ROUTE_IS_PLACEHOLDER_AND_THE_DECLARED_AUTHORITY_GRAPH_HAS_NO_EXECUTABLE_DEFAULT_DENY_REACHABILITY_POLICY
+ACTIVE_SLICE=FORGEOS-V1-GUARD-002-SLICE-001
 
 AVAILABLE
-  none while CONTRACT-000 is active in this lane
+  FORGEOS-V1-STATE-000
+  FORGEOS-V1-PATH-000
+  FORGEOS-V1-PROCESS-000
+  FORGEOS-V1-HASH-000
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-CONTRACT-000` is active. Its direct dependents remain locked
-until the contract passes its exact round-trip and negative fixtures and receives
-user approval.
+Only `FORGEOS-V1-GUARD-002` is active. The other direct contract unlocks remain
+available but inactive while the architecture-and-contracts lane owns one active
+slice.
 
 ---
 

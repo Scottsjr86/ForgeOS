@@ -307,10 +307,7 @@ fn encode_payload(payload: &[u8], encoder: &mut Encoder) {
     encoder.write_bytes(payload);
 }
 
-fn decode_payload(
-    kind: EnvelopeKind,
-    decoder: &mut Decoder<'_>,
-) -> Result<Vec<u8>, ProtocolError> {
+fn decode_payload(kind: EnvelopeKind, decoder: &mut Decoder<'_>) -> Result<Vec<u8>, ProtocolError> {
     let length = decoder
         .read_u32()
         .map_err(|error| malformed_from_wire(kind, error))?;

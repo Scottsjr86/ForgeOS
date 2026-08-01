@@ -15,3 +15,7 @@ path = "src/bin/forge-source-size.rs"
 [[bin]]
 name = "forge-core-purity"
 path = "src/bin/forge-core-purity.rs"
+
+[[bin]]
+name = "forge-seam-direction"
+path = "src/bin/forge-seam-direction.rs"

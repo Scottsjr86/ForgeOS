@@ -90,22 +90,24 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001]
-AVAILABLE_SKILLS=[]
-ACTIVE_SKILLS=[FORGEOS-V1-CONTRACT-000]
-ACTIVE_BATON_OWNER=FORGEOS-V1-CONTRACT-000
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-CONTRACT-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-STATE-000,FORGEOS-V1-PATH-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-HASH-000]
+ACTIVE_SKILLS=[FORGEOS-V1-GUARD-002]
+ACTIVE_BATON_OWNER=FORGEOS-V1-GUARD-002
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-CONTRACT-000-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-GUARD-002-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
-The bounded authority chain is complete, both architecture foundation skills and
-both mandatory foundation guards are closed, and `FORGEOS-V1-CONTRACT-000` is the
-only active source skill. No new archive label, base-number update, or hash record is
-required before executing its registered path.
+The bounded authority chain, both architecture foundations, both mandatory
+foundation guards, and the stable protocol contract are closed.
+`FORGEOS-V1-GUARD-002` is the only active source skill. The persistence, path,
+process, and hashing foundations are available but inactive while this lane is
+occupied. No new archive label, base-number update, or hash record is required
+before executing the registered guard path.
 
 ---
 
@@ -774,9 +776,8 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-The architecture root, scoped module routing, authored source-size verifier, and
-Forge Core dependency-purity verifier are closed with their required closure
-records.
+The architecture roots, authored source-size verifier, Forge Core purity verifier,
+and stable protocol contract are closed with their required closure records.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
@@ -814,59 +815,69 @@ source_repository: Forge_OS_V1
 user_acceptance_status: APPROVED_2026-08-01
 closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-GUARD-001/CLOSURE_AND_SPEC.md
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-GUARD-001/USER_GUIDE_SOURCE.md
+---
+skill_id: FORGEOS-V1-CONTRACT-000
+state: CLOSED
+lane: ARCHITECTURE_AND_CONTRACTS
+owner: forge-protocol, forge-core
+source_repository: Forge_OS_V1
+user_acceptance_status: APPROVED_2026-08-01
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-CONTRACT-000/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-CONTRACT-000/USER_GUIDE_SOURCE.md
 ```
 
-No other foundation node is available while the one-per-lane contract skill is
-active.
-
-The stable protocol contract is active.
+The cross-subsystem seam direction guard is active.
 
 ```yaml
-skill_id: FORGEOS-V1-CONTRACT-000
+skill_id: FORGEOS-V1-GUARD-002
 state: ACTIVE
 lane: ARCHITECTURE_AND_CONTRACTS
-owning_subsystem: forge-protocol, forge-core
+owning_subsystem: forge-guards
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_13.tar sha256 b79f1bf22dbcf800f26f60e8d9a3a0cf1cb5ac754b3269efa41a09810aecbe2b
+source_revision: Forge_OS_V1_base_14.tar sha256 ce6096027606dd1e2ca831bdaa2e76604e8b1708cf6938c681817f65e41ece95
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-ARCH-000
+  - FORGEOS-V1-ARCH-001
+  - FORGEOS-V1-CONTRACT-000
 originating_path_or_probe: >
-  Compile and run the forge-protocol contract fixtures against the current public
-  identities, envelopes, errors, and events routes, then consume the same bytes
-  through forge-core's declared protocol dependency.
+  Run the seam-direction verifier against the real Cargo normal and build graph for
+  every reviewed ForgeOS authority package, then run legal, backward, unknown-
+  package, missing-package, and transitive-smuggling fixtures.
 first_blocker: >
-  forge-protocol exposes behavior-free placeholder namespaces and therefore cannot
-  create typed stable identities, round-trip a deterministic request, result, or
-  typed-error envelope, reject an unknown schema version, or reject duplicate IDs.
-active_slice: FORGEOS-V1-CONTRACT-000-SLICE-001
+  forge-guards exposes only a behavior-free seams namespace. The declared authority
+  direction exists in prose and current manifests but has no executable default-
+  deny policy over the real Cargo graph.
+active_slice: FORGEOS-V1-GUARD-002-SLICE-001
 allowed_paths:
-  - crates/forge-protocol/**
-  - crates/forge-core/tests/protocol_contracts.rs
+  - crates/forge-guards/Cargo.toml
+  - crates/forge-guards/src/seams.rs
+  - crates/forge-guards/src/bin/forge-seam-direction.rs
+  - crates/forge-guards/tests/seam_direction_fixtures.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
-  - docs/versions/V1/skills/FORGEOS-V1-GUARD-001/**
+  - docs/versions/V1/skills/FORGEOS-V1-CONTRACT-000/**
 forbidden_paths:
-  - functional project, workspace, mission, or capability behavior in forge-core
-  - persistence, filesystem path, process, terminal, Git, editor, Nyx, session, or Forge World behavior
-  - external serialization, randomness, clock, filesystem, or network dependencies
-  - canonical identity derived from display text, raw paths, list indexes, timestamps, or model wording
+  - production crate manifests or source outside forge-guards
+  - a permissive substring blacklist or user-configurable seam exemption
+  - semantic or runtime behavior checks disguised as dependency guards
+  - Forge Core, Forge World, bridge, Nyx, project, session, editor, terminal, or Git behavior
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_protocol::identities typed ProjectId, RepositoryId, ProcessId, TerminalId, CommandId, SessionId, TaskId, PatchId, ResultId, and EventId values
-  - exact 16-byte identity and 32-character lowercase hexadecimal text representation
-  - deterministic duplicate-identity rejection
-  - forge_protocol::errors typed ProtocolError and stable error codes
-  - forge_protocol::envelopes RequestEnvelope, ResultEnvelope, ErrorEnvelope, envelope kind, current version, and exact V1 bytes
-  - forge_protocol::events::EventRecord
+  - forge_guards::seams::inspect_seam_directions
+  - forge_guards::seams::inspect_seam_directions_with_cargo
+  - forge_guards::seams::SeamReport
+  - forge_guards::seams::SeamRelation
+  - forge_guards::seams::SeamViolation
+  - forge-seam-direction --root <repository-root>
+  - exact reviewed V1 subsystem reachability matrix
 required_commands:
   - cargo fmt --all -- --check
   - cargo check --workspace
-  - cargo test -p forge-protocol
-  - cargo test -p forge-core
+  - cargo test -p forge-guards
+  - cargo run -p forge-guards --bin forge-seam-direction -- --root .
   - cargo run -p forge-guards --bin forge-core-purity -- --root .
   - cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings
   - cargo test --workspace
@@ -877,53 +888,46 @@ validation_execution_policy: >
   prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
   exact commands to the user without blocking source implementation.
 pass_edge: >
-  All ten identity types round-trip canonical lowercase text, duplicate typed IDs
-  fail deterministically, request/result/error envelopes round-trip exact locked V1
-  bytes, unknown versions and malformed bytes fail closed, typed errors survive an
-  error-envelope round trip, forge-core consumes the same public contract, the Core
-  graph remains exactly forge-core plus forge-protocol, and no source-size warning
-  remains.
+  The real workspace reports exactly twelve reviewed authority packages, all
+  current legal subsystem reachability relations pass in stable order, no forbidden
+  relation exists, representative backward routes fail, a generic adapter cannot
+  smuggle Forge World backward into the bridge graph, unknown or missing reviewed
+  workspace packages fail closed, both earlier guards remain green, and no source-
+  size warning remains.
 block_edge: >
-  Stop on identity aliasing, unstable or display-derived identity, accepted uppercase
-  or malformed canonical text, accepted duplicate ID, accepted unknown version,
-  guessed malformed payload, wire-byte drift, untyped string failure, external
-  dependency entry into the Core graph, a source-size warning, or operator validation
+  Stop on an unknown ForgeOS workspace package, accepted backward or circular
+  authority reachability, accepted presentation or adapter backflow, accepted
+  transitive smuggling, a missing reviewed package treated as success, unstable
+  output, Core purity regression, source-size warning, or operator validation
   failure.
 user_acceptance_path: >
-  The user runs the focused forge-protocol and forge-core tests, observes the exact
-  round-trip, unknown-version, duplicate-ID, typed-error, malformed-wire, and locked
-  wire-byte fixtures pass, confirms both mandatory guards remain green, and explicitly
-  approves the V1 API shape.
+  The user runs the focused forge-guards tests and real seam verifier, observes the
+  legal graph pass and representative illegal direct, transitive, unknown-package,
+  and missing-package fixtures fail, confirms the Core purity and source-size guards
+  remain green, and explicitly approves the V1 seam matrix.
 return_path: >
-  Close only FORGEOS-V1-CONTRACT-000, then reevaluate its direct unlocks without
-  automatically activating persistence, path, process, hash, or seam work.
+  Close only FORGEOS-V1-GUARD-002, then reevaluate its direct unlocks and the
+  already available state, path, process, and hash foundations under normal routing.
 parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
 ```
 
-This packet is active. All direct dependents of `FORGEOS-V1-CONTRACT-000` remain
-locked until user acceptance closes this contract.
+This packet is active. `FORGEOS-V1-STATE-000`, `FORGEOS-V1-PATH-000`,
+`FORGEOS-V1-PROCESS-000`, and `FORGEOS-V1-HASH-000` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for the stable protocol contract
+## 17. Direct unlock handling for the seam direction guard
 
-After `FORGEOS-V1-CONTRACT-000` closes, reevaluate only its direct unlocks and any
-closed guard invalidated by the final dependency graph. The source-size and Core
-purity guards remain mandatory regression commands.
+After `FORGEOS-V1-GUARD-002` closes, reevaluate only its direct unlocks, the four
+already available contract foundations, and any closed guard invalidated by the
+final dependency graph. All three structural guards remain mandatory regression
+commands for later crate-graph changes.
 
-Expected direct unlock candidates include:
-
-```text
-FORGEOS-V1-GUARD-002
-FORGEOS-V1-STATE-000
-FORGEOS-V1-PATH-000
-FORGEOS-V1-PROCESS-000
-FORGEOS-V1-HASH-000
-```
-
-The next node must be selected by the normal dependency-depth, user-value,
-blast-radius, and conflict rules. Closure of this contract does not automatically
-activate any one of those capabilities.
+Expected direct unlock candidates include foundation and product nodes whose
+prerequisites name `FORGEOS-V1-GUARD-002`. The next node must still be selected by
+dependency depth, user value, blast radius, conflict rules, and current source
+reality. Guard closure does not automatically activate persistence, path, process,
+hash, project, file, terminal, Git, editor, Nyx, session, or Forge World behavior.
 
 ---
 

@@ -84,10 +84,7 @@ pub struct IdentityParseError {
 }
 
 impl IdentityParseError {
-    pub(crate) fn from_parts(
-        kind: IdentityKind,
-        failure: IdentityParseFailure,
-    ) -> Self {
+    pub(crate) fn from_parts(kind: IdentityKind, failure: IdentityParseFailure) -> Self {
         Self { kind, failure }
     }
 
@@ -244,10 +241,7 @@ where
     let mut seen = BTreeSet::new();
     for identity in identities {
         if !seen.insert(identity) {
-            return Err(DuplicateIdentity::from_parts(
-                T::KIND,
-                identity.to_string(),
-            ));
+            return Err(DuplicateIdentity::from_parts(T::KIND, identity.to_string()));
         }
     }
     Ok(())
@@ -297,10 +291,7 @@ fn decode_hex(kind: IdentityKind, byte: u8, index: usize) -> Result<u8, Identity
     }
 }
 
-fn write_identity(
-    formatter: &mut fmt::Formatter<'_>,
-    bytes: &[u8; IDENTITY_BYTES],
-) -> fmt::Result {
+fn write_identity(formatter: &mut fmt::Formatter<'_>, bytes: &[u8; IDENTITY_BYTES]) -> fmt::Result {
     for byte in bytes {
         write!(formatter, "{byte:02x}")?;
     }
@@ -324,7 +315,10 @@ mod tests {
         assert_eq!(error.kind(), IdentityKind::Project);
         assert!(matches!(
             error.failure(),
-            IdentityParseFailure::NonCanonicalHex { index: 0, byte: b'A' }
+            IdentityParseFailure::NonCanonicalHex {
+                index: 0,
+                byte: b'A'
+            }
         ));
     }
 
