@@ -292,25 +292,25 @@ activate later-version work.
 
 ## 6. Current V1 gap-closing campaign
 
-The bounded authority migration, architecture foundations, mandatory foundation
-guards, and stable protocol contract are closed. The cross-subsystem seam direction
-guard is the only active V1 source capability:
+The bounded authority migration, architecture foundations, all three mandatory
+structural guards, and stable protocol contract are closed. The stable process
+lifecycle and cancellation foundation is the only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-GUARD-002
-ACTIVE_V1_CONTRIBUTION=CROSS_SUBSYSTEM_SEAM_DIRECTION_ENFORCEMENT
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-GUARD-002
-QUESTION=Can ForgeOS enforce the declared authority direction across every reviewed subsystem package and reject unknown ForgeOS workspace crates, backward dependencies, and transitive adapter smuggling through the real Cargo graph?
-CURRENT_RESULT=PROTOCOL_CONTRACT_CLOSED_SEAM_DIRECTION_GUARD_ACTIVE
-BATON_OWNER=FORGEOS-V1-GUARD-002
+ACTIVE_RELEASE_GATE=FORGEOS-V1-PROCESS-000
+ACTIVE_V1_CONTRIBUTION=STABLE_PROCESS_LIFECYCLE_AND_CANCELLATION
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-PROCESS-000
+QUESTION=Can ForgeOS execute one real process under stable ForgeOS identity with explicit raw output channels, native exit, timeout, cancellation, spawn failure, and descendant cleanup without treating a PID as durable identity or committing competing terminal outcomes?
+CURRENT_RESULT=SEAM_DIRECTION_GUARD_CLOSED_PROCESS_FOUNDATION_ACTIVE
+BATON_OWNER=FORGEOS-V1-PROCESS-000
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
-ACTIVE_SLICE=FORGEOS-V1-GUARD-002-SLICE-001
-FIRST_BLOCKER=FORGE_GUARDS_SEAMS_ROUTE_IS_PLACEHOLDER_AND_THE_DECLARED_AUTHORITY_GRAPH_HAS_NO_EXECUTABLE_DEFAULT_DENY_REACHABILITY_POLICY
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-CONTRACT-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-STATE-000,FORGEOS-V1-PATH-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-HASH-000]
+ACTIVE_SLICE=FORGEOS-V1-PROCESS-000-SLICE-001
+FIRST_BLOCKER=FORGE_PROTOCOL_AND_FORGE_BRIDGE_HAVE_NO_PROCESS_LIFECYCLE_CONTRACT_OR_REAL_MANAGED_RUNNER
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-STATE-000,FORGEOS-V1-PATH-000,FORGEOS-V1-HASH-000,FORGEOS-V1-WORLD-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -324,8 +324,8 @@ SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=ASSISTANT_RUN_WHEN_AVAILABLE_OTHERWISE_OPERATOR_HANDOFF
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-GUARD-002
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-GUARD-002-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-PROCESS-000
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-PROCESS-000-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -341,12 +341,12 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-GUARD-002` is the only active source skill.
+`FORGEOS-V1-PROCESS-000` is the only active source skill.
 
-This slice may establish only the executable cross-subsystem dependency-direction
-guard. Atomic persistence, path boundaries, process lifecycle, artifact hashing,
-and all product behavior remain separate capabilities; the four contract
-foundations are available but inactive.
+This slice may establish only the stable process request, lifecycle, output,
+termination, timeout, cancellation, and failure path. Atomic persistence, canonical
+repository paths, artifact hashing, PTY behavior, command registration, sessions,
+Git, Nyx, and Forge World behavior remain separate capabilities.
 
 ---
 

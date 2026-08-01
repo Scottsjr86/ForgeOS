@@ -49,12 +49,7 @@ const EDITOR_REACHABILITY: &[&str] = &[
     "forge-editor",
     "forge-protocol",
 ];
-const GIT_REACHABILITY: &[&str] = &[
-    "forge-bridge",
-    "forge-core",
-    "forge-git",
-    "forge-protocol",
-];
+const GIT_REACHABILITY: &[&str] = &["forge-bridge", "forge-core", "forge-git", "forge-protocol"];
 const GUARDS_REACHABILITY: &[&str] = &["forge-guards"];
 const NYX_REACHABILITY: &[&str] = &["forge-core", "forge-nyx-client", "forge-protocol"];
 const PROJECT_REACHABILITY: &[&str] = &["forge-core", "forge-project", "forge-protocol"];
@@ -186,7 +181,10 @@ impl fmt::Display for SeamError {
                 stderr.trim()
             ),
             Self::MalformedCargoTree { package, message } => {
-                write!(formatter, "cargo tree output for {package} is invalid: {message}")
+                write!(
+                    formatter,
+                    "cargo tree output for {package} is invalid: {message}"
+                )
             }
             Self::MissingReviewedPackages(packages) => write!(
                 formatter,
@@ -244,10 +242,7 @@ pub fn inspect_seam_directions_with_cargo(
         .iter()
         .map(|package| (*package).to_owned())
         .collect();
-    let missing: Vec<_> = reviewed
-        .difference(&workspace_packages)
-        .cloned()
-        .collect();
+    let missing: Vec<_> = reviewed.difference(&workspace_packages).cloned().collect();
     if !missing.is_empty() {
         return Err(SeamError::MissingReviewedPackages(missing));
     }
@@ -342,10 +337,12 @@ fn cargo_tree_packages(
         .arg("--color")
         .arg("never");
 
-    let output = command.output().map_err(|source| SeamError::CargoInvocation {
-        program: cargo_program.to_owned(),
-        source,
-    })?;
+    let output = command
+        .output()
+        .map_err(|source| SeamError::CargoInvocation {
+            program: cargo_program.to_owned(),
+            source,
+        })?;
     if !output.status.success() {
         return Err(SeamError::CargoTreeFailure {
             package: label.to_owned(),
@@ -433,11 +430,9 @@ mod tests {
         for package in REVIEWED_SUBSYSTEM_PACKAGES {
             let allowed = reviewed_reachability(package);
             assert!(allowed.contains(package), "{package} must reach itself");
-            assert!(
-                allowed
-                    .iter()
-                    .all(|target| REVIEWED_SUBSYSTEM_PACKAGES.contains(target))
-            );
+            assert!(allowed
+                .iter()
+                .all(|target| REVIEWED_SUBSYSTEM_PACKAGES.contains(target)));
         }
     }
 
@@ -461,8 +456,8 @@ mod tests {
 
     #[test]
     fn empty_cargo_tree_is_invalid_evidence() {
-        let error = parse_cargo_tree("fixture", "\n")
-            .expect_err("empty Cargo output must be rejected");
+        let error =
+            parse_cargo_tree("fixture", "\n").expect_err("empty Cargo output must be rejected");
         assert!(error.to_string().contains("no packages were reported"));
     }
 }

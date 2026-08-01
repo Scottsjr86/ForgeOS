@@ -90,24 +90,23 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-CONTRACT-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-STATE-000,FORGEOS-V1-PATH-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-HASH-000]
-ACTIVE_SKILLS=[FORGEOS-V1-GUARD-002]
-ACTIVE_BATON_OWNER=FORGEOS-V1-GUARD-002
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-STATE-000,FORGEOS-V1-PATH-000,FORGEOS-V1-HASH-000,FORGEOS-V1-WORLD-100]
+ACTIVE_SKILLS=[FORGEOS-V1-PROCESS-000]
+ACTIVE_BATON_OWNER=FORGEOS-V1-PROCESS-000
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-GUARD-002-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-PROCESS-000-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
-The bounded authority chain, both architecture foundations, both mandatory
-foundation guards, and the stable protocol contract are closed.
-`FORGEOS-V1-GUARD-002` is the only active source skill. The persistence, path,
-process, and hashing foundations are available but inactive while this lane is
-occupied. No new archive label, base-number update, or hash record is required
-before executing the registered guard path.
+The bounded authority chain, both architecture foundations, all three structural
+guards, and the stable protocol contract are closed. `FORGEOS-V1-PROCESS-000` is
+the only active source skill. Persistence, path, hashing, and the newly available
+Forge World projection contract remain inactive while this lane is occupied. No
+archive ceremony is required before executing the registered process path.
 
 ---
 
@@ -777,7 +776,8 @@ Do not manufacture a local substitute or absorb the other repository's authority
 ## 16. Current registered frontier
 
 The architecture roots, authored source-size verifier, Forge Core purity verifier,
-and stable protocol contract are closed with their required closure records.
+cross-subsystem seam verifier, and stable protocol contract are closed with their
+required closure records.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
@@ -824,59 +824,71 @@ source_repository: Forge_OS_V1
 user_acceptance_status: APPROVED_2026-08-01
 closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-CONTRACT-000/CLOSURE_AND_SPEC.md
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-CONTRACT-000/USER_GUIDE_SOURCE.md
+---
+skill_id: FORGEOS-V1-GUARD-002
+state: CLOSED
+lane: ARCHITECTURE_AND_CONTRACTS
+owner: forge-guards
+source_repository: Forge_OS_V1
+user_acceptance_status: APPROVED_2026-08-01
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-GUARD-002/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-GUARD-002/USER_GUIDE_SOURCE.md
 ```
 
-The cross-subsystem seam direction guard is active.
+The stable process lifecycle and cancellation foundation is active.
 
 ```yaml
-skill_id: FORGEOS-V1-GUARD-002
+skill_id: FORGEOS-V1-PROCESS-000
 state: ACTIVE
 lane: ARCHITECTURE_AND_CONTRACTS
-owning_subsystem: forge-guards
+owning_subsystem: forge-bridge, forge-protocol
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_14.tar sha256 ce6096027606dd1e2ca831bdaa2e76604e8b1708cf6938c681817f65e41ece95
+source_revision: Forge_OS_V1_base_15.tar sha256 c36b73a782595f263bf8f9cc42495131885373e9b5c51f7849175524e1d63dbf
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-ARCH-001
   - FORGEOS-V1-CONTRACT-000
 originating_path_or_probe: >
-  Run the seam-direction verifier against the real Cargo normal and build graph for
-  every reviewed ForgeOS authority package, then run legal, backward, unknown-
-  package, missing-package, and transitive-smuggling fixtures.
+  Run real fast, nonzero-exit, timed-out, cancelled, spawn-failure, concurrent,
+  raw-output, and descendant-process fixtures through the public Forge Bridge
+  process runner while retaining the stable ForgeOS ProcessId across every result.
 first_blocker: >
-  forge-guards exposes only a behavior-free seams namespace. The declared authority
-  direction exists in prose and current manifests but has no executable default-
-  deny policy over the real Cargo graph.
-active_slice: FORGEOS-V1-GUARD-002-SLICE-001
+  forge-protocol has no explicit process lifecycle, output, timeout, cancellation,
+  or failure contract, and forge-bridge has no real managed process runner behind its
+  behavior-free adapter route.
+active_slice: FORGEOS-V1-PROCESS-000-SLICE-001
 allowed_paths:
-  - crates/forge-guards/Cargo.toml
-  - crates/forge-guards/src/seams.rs
-  - crates/forge-guards/src/bin/forge-seam-direction.rs
-  - crates/forge-guards/tests/seam_direction_fixtures.rs
+  - crates/forge-protocol/src/lib.rs
+  - crates/forge-protocol/src/processes.rs
+  - crates/forge-bridge/src/lib.rs
+  - crates/forge-bridge/src/processes.rs
+  - crates/forge-bridge/tests/process_lifecycle.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
-  - docs/versions/V1/skills/FORGEOS-V1-CONTRACT-000/**
+  - docs/versions/V1/skills/FORGEOS-V1-GUARD-002/**
 forbidden_paths:
-  - production crate manifests or source outside forge-guards
-  - a permissive substring blacklist or user-configurable seam exemption
-  - semantic or runtime behavior checks disguised as dependency guards
-  - Forge Core, Forge World, bridge, Nyx, project, session, editor, terminal, or Git behavior
+  - working-directory or repository-boundary behavior owned by FORGEOS-V1-PATH-000
+  - PTY, terminal, command-registry, LSP, session, Git, Nyx, or Forge World behavior
+  - PID-as-durable-identity semantics
+  - shell-string interpolation in the public spawn request
+  - cancellation or timeout reported as normal success
+  - external process-runtime dependencies or unsafe code
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_guards::seams::inspect_seam_directions
-  - forge_guards::seams::inspect_seam_directions_with_cargo
-  - forge_guards::seams::SeamReport
-  - forge_guards::seams::SeamRelation
-  - forge_guards::seams::SeamViolation
-  - forge-seam-direction --root <repository-root>
-  - exact reviewed V1 subsystem reachability matrix
+  - forge_protocol::processes::ProcessSpawnRequest
+  - forge_protocol::processes::ProcessLifecycle
+  - forge_protocol::processes::ProcessOutcome
+  - forge_protocol::processes::ProcessExecution
+  - forge_protocol::processes::ProcessOutputChunk
+  - forge_bridge::processes::CancellationToken
+  - forge_bridge::processes::ProcessRunner
 required_commands:
   - cargo fmt --all -- --check
   - cargo check --workspace
-  - cargo test -p forge-guards
+  - cargo test -p forge-protocol
+  - cargo test -p forge-bridge
   - cargo run -p forge-guards --bin forge-seam-direction -- --root .
   - cargo run -p forge-guards --bin forge-core-purity -- --root .
   - cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings
@@ -888,46 +900,47 @@ validation_execution_policy: >
   prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
   exact commands to the user without blocking source implementation.
 pass_edge: >
-  The real workspace reports exactly twelve reviewed authority packages, all
-  current legal subsystem reachability relations pass in stable order, no forbidden
-  relation exists, representative backward routes fail, a generic adapter cannot
-  smuggle Forge World backward into the bridge graph, unknown or missing reviewed
-  workspace packages fail closed, both earlier guards remain green, and no source-
-  size warning remains.
+  A real process is spawned under a stable ProcessId distinct from its native PID;
+  stdout and stderr remain separate raw-byte channels with channel-local sequence;
+  zero and nonzero exits are explicit native exits; spawn failure, timeout, and
+  cancellation are distinct terminal outcomes; cancellation and timeout terminate
+  descendants on Linux; one lifecycle accepts only one terminal outcome; concurrent
+  results retain their own identity; and all three structural guards remain green.
 block_edge: >
-  Stop on an unknown ForgeOS workspace package, accepted backward or circular
-  authority reachability, accepted presentation or adapter backflow, accepted
-  transitive smuggling, a missing reviewed package treated as success, unstable
-  output, Core purity regression, source-size warning, or operator validation
-  failure.
+  Stop on PID-owned identity, merged or normalized output channels, a nonzero exit
+  collapsed into adapter failure, cancellation or timeout reported as success,
+  surviving descendant processes, duplicate terminal commits, cross-process result
+  overwrite, path or PTY scope leakage, guard regression, source-size warning, or
+  operator validation failure.
 user_acceptance_path: >
-  The user runs the focused forge-guards tests and real seam verifier, observes the
-  legal graph pass and representative illegal direct, transitive, unknown-package,
-  and missing-package fixtures fail, confirms the Core purity and source-size guards
-  remain green, and explicitly approves the V1 seam matrix.
+  The user runs focused protocol and bridge tests plus the complete workspace suite,
+  observes real fast, failing, timed-out, cancelled, spawn-failure, concurrent, and
+  descendant fixtures pass, confirms the three structural guard summaries remain
+  clean, and explicitly approves the process lifecycle contract.
 return_path: >
-  Close only FORGEOS-V1-GUARD-002, then reevaluate its direct unlocks and the
-  already available state, path, process, and hash foundations under normal routing.
+  Close only FORGEOS-V1-PROCESS-000, then reevaluate its direct unlocks for session,
+  LSP, terminal, command, Git, Nyx, and recovery together with the still-available
+  state, path, hash, and Forge World nodes.
 parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
 ```
 
 This packet is active. `FORGEOS-V1-STATE-000`, `FORGEOS-V1-PATH-000`,
-`FORGEOS-V1-PROCESS-000`, and `FORGEOS-V1-HASH-000` remain available but inactive.
+`FORGEOS-V1-HASH-000`, and `FORGEOS-V1-WORLD-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for the seam direction guard
+## 17. Direct unlock handling for the process foundation
 
-After `FORGEOS-V1-GUARD-002` closes, reevaluate only its direct unlocks, the four
-already available contract foundations, and any closed guard invalidated by the
-final dependency graph. All three structural guards remain mandatory regression
-commands for later crate-graph changes.
+After `FORGEOS-V1-PROCESS-000` closes, reevaluate only its direct unlocks, the
+remaining available foundations, the already available Forge World contract, and
+any closed guard invalidated by the final dependency graph. All three structural
+guards remain mandatory regression commands.
 
-Expected direct unlock candidates include foundation and product nodes whose
-prerequisites name `FORGEOS-V1-GUARD-002`. The next node must still be selected by
-dependency depth, user value, blast radius, conflict rules, and current source
-reality. Guard closure does not automatically activate persistence, path, process,
-hash, project, file, terminal, Git, editor, Nyx, session, or Forge World behavior.
+Expected direct unlock candidates include session lifecycle, Rust Analyzer, and
+Nyx health because their other prerequisites are already closed. Terminal, command,
+and Git remain locked until path identity closes. Recovery remains locked until
+state and hashing close. The next node must still be selected by dependency depth,
+user value, blast radius, conflict rules, and current source reality.
 
 ---
 

@@ -1248,7 +1248,7 @@ never closes the node.
 - **Owner:** `forge-world`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-ARCH-001`, `FORGEOS-V1-CONTRACT-000`,
   `FORGEOS-V1-GUARD-001`, `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Forge World receives immutable view models and emits typed user
   intents without owning domain mutation.
 - **Must not be true:** UI widgets, scenes, or animations may not directly write
@@ -1339,7 +1339,10 @@ never closes the node.
 
 - **Owner:** `forge-guards`
 - **Prerequisites:** `FORGEOS-V1-ARCH-001`, `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-GUARD-002/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-GUARD-002/USER_GUIDE_SOURCE.md`
 - **Must be true:** Guards enforce the declared dependency graph between Forge Core,
   Forge World, Developer Bridge, Nyx client, session, editor, terminal, and Git.
 - **Must not be true:** Forge World may not own project truth, ForgeOS may not host a
@@ -1394,7 +1397,7 @@ never closes the node.
 
 - **Owner:** `forge-bridge`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Spawn request, process identity, running state, output channels,
   exit, timeout, cancellation, and failure are explicit and race-safe.
 - **Must not be true:** PID alone may not serve as durable identity, and cancellation
@@ -1446,9 +1449,10 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The architecture foundations, mandatory source-size and Core-purity guards, and
-stable protocol contract are closed. The repository still contains foundation
-behavior only; no product capability is inferred from crate or module names.
+The architecture foundations, all three mandatory structural guards, and the
+stable protocol contract are closed. The process foundation is active because it
+is the lowest-depth available node with an immediate route to session, language,
+and Nyx product behavior.
 
 Current frontier:
 
@@ -1458,25 +1462,26 @@ CLOSED
   FORGEOS-V1-ARCH-001
   FORGEOS-V1-GUARD-000
   FORGEOS-V1-GUARD-001
+  FORGEOS-V1-GUARD-002
   FORGEOS-V1-CONTRACT-000
 
-ACTIVE_SKILL=FORGEOS-V1-GUARD-002
-ACTIVE_BLOCKER=FORGE_GUARDS_SEAMS_ROUTE_IS_PLACEHOLDER_AND_THE_DECLARED_AUTHORITY_GRAPH_HAS_NO_EXECUTABLE_DEFAULT_DENY_REACHABILITY_POLICY
-ACTIVE_SLICE=FORGEOS-V1-GUARD-002-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-PROCESS-000
+ACTIVE_BLOCKER=FORGE_PROTOCOL_AND_FORGE_BRIDGE_HAVE_NO_PROCESS_LIFECYCLE_CONTRACT_OR_REAL_MANAGED_RUNNER
+ACTIVE_SLICE=FORGEOS-V1-PROCESS-000-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-STATE-000
   FORGEOS-V1-PATH-000
-  FORGEOS-V1-PROCESS-000
   FORGEOS-V1-HASH-000
+  FORGEOS-V1-WORLD-100
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-GUARD-002` is active. The other direct contract unlocks remain
-available but inactive while the architecture-and-contracts lane owns one active
-slice.
+Only `FORGEOS-V1-PROCESS-000` is active. The other available foundations and the
+newly unlocked Forge World projection contract remain inactive while the
+architecture-and-contracts lane owns one active slice.
 
 ---
 

@@ -15,7 +15,11 @@ fn reviewed_workspace_graph_passes() {
     let output = fixture.run_guard();
     let stdout = output.stdout_text();
 
-    assert!(output.status.success(), "{stdout}\n{}", output.stderr_text());
+    assert!(
+        output.status.success(),
+        "{stdout}\n{}",
+        output.stderr_text()
+    );
     assert!(
         stdout.contains(
             "FORGE_SEAM_DIRECTION_SUMMARY status=PASS packages=12 routes=42 forbidden=0 policy=exact-reviewed-subsystem-reachability-v1"
@@ -42,7 +46,10 @@ fn representative_backward_seams_are_rejected() {
         let output = fixture.run_guard();
         let stdout = output.stdout_text();
 
-        assert!(!output.status.success(), "{root} -> {target} passed\n{stdout}");
+        assert!(
+            !output.status.success(),
+            "{root} -> {target} passed\n{stdout}"
+        );
         assert!(
             stdout.contains(&format!(
                 "FORGE_SEAM_DIRECTION_ROUTE status=FORBIDDEN root={root} target={target}"
@@ -89,9 +96,7 @@ fn unknown_forgeos_workspace_package_fails_closed() {
 
     assert!(!output.status.success(), "{stdout}");
     assert!(
-        stdout.contains(
-            "FORGE_SEAM_DIRECTION_PACKAGE status=FORBIDDEN package=forge-shadow"
-        ),
+        stdout.contains("FORGE_SEAM_DIRECTION_PACKAGE status=FORBIDDEN package=forge-shadow"),
         "{stdout}"
     );
 }
@@ -226,9 +231,8 @@ impl Fixture {
             fs::write(package_dir.join("src/lib.rs"), "#![forbid(unsafe_code)]\n")
                 .expect("fixture source should be written");
 
-            let mut manifest = format!(
-                "[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nedition = \"2021\"\n"
-            );
+            let mut manifest =
+                format!("[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nedition = \"2021\"\n");
             if !package.dependencies.is_empty() {
                 manifest.push_str("\n[dependencies]\n");
                 for dependency in &package.dependencies {
@@ -261,9 +265,7 @@ impl Fixture {
         };
         fs::write(
             self.path.join("Cargo.toml"),
-            format!(
-                "[workspace]\nresolver = \"2\"\nmembers = [\n{members}\n]\n{exclude_section}"
-            ),
+            format!("[workspace]\nresolver = \"2\"\nmembers = [\n{members}\n]\n{exclude_section}"),
         )
         .expect("fixture workspace should be written");
     }
