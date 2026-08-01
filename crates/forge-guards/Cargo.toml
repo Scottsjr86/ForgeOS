@@ -1,0 +1,9 @@
+[package]
+name = "forge-guards"
+description = "Approved ForgeOS structural guards for source size, core purity, and seams."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true

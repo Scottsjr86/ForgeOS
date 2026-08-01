@@ -1,0 +1,21 @@
+[package]
+name = "forge-app"
+description = "ForgeOS composition root and executable."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+forge-bridge = { path = "../forge-bridge" }
+forge-core = { path = "../forge-core" }
+forge-editor = { path = "../forge-editor" }
+forge-git = { path = "../forge-git" }
+forge-nyx-client = { path = "../forge-nyx-client" }
+forge-project = { path = "../forge-project" }
+forge-protocol = { path = "../forge-protocol" }
+forge-session = { path = "../forge-session" }
+forge-terminal = { path = "../forge-terminal" }
+forge-world = { path = "../forge-world" }
+
+[lints]
+workspace = true

@@ -1,0 +1,14 @@
+[package]
+name = "forge-git"
+description = "ForgeOS Git inspection, mutation, and worktree control."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+forge-bridge = { path = "../forge-bridge" }
+forge-core = { path = "../forge-core" }
+forge-protocol = { path = "../forge-protocol" }
+
+[lints]
+workspace = true

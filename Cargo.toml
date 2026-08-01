@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "crates/forge-app",
+    "crates/forge-bridge",
+    "crates/forge-core",
+    "crates/forge-editor",
+    "crates/forge-git",
+    "crates/forge-guards",
+    "crates/forge-nyx-client",
+    "crates/forge-project",
+    "crates/forge-protocol",
+    "crates/forge-session",
+    "crates/forge-terminal",
+    "crates/forge-world",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace.lints.rust]
+unsafe_code = "forbid"

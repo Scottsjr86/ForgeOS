@@ -1,0 +1,12 @@
+[package]
+name = "forge-core"
+description = "Pure canonical ForgeOS project, workspace, capability, and mission state."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+forge-protocol = { path = "../forge-protocol" }
+
+[lints]
+workspace = true
