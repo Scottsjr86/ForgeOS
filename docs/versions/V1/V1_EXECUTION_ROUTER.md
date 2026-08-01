@@ -1,6 +1,6 @@
 # ForgeOS V1 Execution Router and Skill Registry
 
-Status: `ACTIVE_ROUTER_PENDING_SOURCE_ACTIVATION`
+Status: `ACTIVE_ROUTER`
 Router ID: `FORGEOS-V1-EXECUTION-ROUTER-V1`
 Release target: `FORGEOS_V1_FIRST_ARMOR`
 Canonical worksheet: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
@@ -90,19 +90,22 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-ACTIVE_SKILLS=[FORGEOS-V1-ARCH-000]
-ACTIVE_BATON_OWNER=FORGEOS-V1-ARCH-000
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-GUARD-000,FORGEOS-V1-CONTRACT-000]
+ACTIVE_SKILLS=[FORGEOS-V1-ARCH-001]
+ACTIVE_BATON_OWNER=FORGEOS-V1-ARCH-001
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-ARCH-000-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-ARCH-001-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 ```
 
-The bounded authority chain is complete. `FORGEOS-V1-ARCH-000` is the only active
-source skill. No new document, archive label, base-number update, or hash record is
-required before inspecting the current source and executing its registered path.
+The bounded authority chain is complete and `FORGEOS-V1-ARCH-000` is closed.
+`FORGEOS-V1-ARCH-001` is the only active source skill. No new archive label,
+base-number update, or hash record is required before executing its registered
+path.
 
 ---
 
@@ -769,53 +772,62 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ---
 
-## 16. Initial registered frontier
+## 16. Current registered frontier
 
-The V1 worksheet declares one initial available skill.
+The initial root is closed and its required closure records exist.
 
 ```yaml
 skill_id: FORGEOS-V1-ARCH-000
-state: ACTIVE
+state: CLOSED
 lane: ARCHITECTURE_AND_CONTRACTS
 owner: repository root
 source_repository: Forge_OS_V1
-direct_prerequisites: []
-user_acceptance_status: NOT_READY
+user_acceptance_status: APPROVED_2026-07-31
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-ARCH-000/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-ARCH-000/USER_GUIDE_SOURCE.md
 ```
 
-All other skills remain `LOCKED`.
-
-Active execution packet:
+Direct prerequisite evaluation makes these nodes available:
 
 ```yaml
-skill_id: FORGEOS-V1-ARCH-000
-future_state: ACTIVE
+available_skills:
+  - FORGEOS-V1-GUARD-000
+  - FORGEOS-V1-CONTRACT-000
+```
+
+Only the scoped module-routing skill is active.
+
+```yaml
+skill_id: FORGEOS-V1-ARCH-001
+state: ACTIVE
 originating_path_or_probe: >
-  Inspect the documentation-only repository, confirm no source workspace exists,
-  and attempt the declared initial Rust workspace build path.
+  Inspect every production crate root and the executable entrypoint, then compile
+  representative public module imports through the real Cargo workspace.
 first_blocker: >
-  The repository does not yet contain the V1 Rust workspace and authority crate
-  skeleton required by the canonical skill tree.
-active_slice: FORGEOS-V1-ARCH-000-SLICE-001
+  The crates exist but do not yet expose scoped named module routes and main does
+  not delegate through an explicit composition module.
+active_slice: FORGEOS-V1-ARCH-001-SLICE-001
 lane: ARCHITECTURE_AND_CONTRACTS
 source_repository: Forge_OS_V1
 worktree_or_branch: current single-skill worktree
 allowed_paths:
-  - Cargo.toml
-  - Cargo.lock
-  - rust-toolchain.toml
-  - rustfmt.toml
   - crates/**
   - tests/**
-  - .gitignore
+  - docs/ForgeOS_header.md
+  - docs/workflow/WORKFLOW_AUTHORITY.md
+  - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
+  - docs/versions/V1/V1_EXECUTION_ROUTER.md
+  - docs/versions/V1/skills/FORGEOS-V1-ARCH-000/**
 forbidden_paths:
   - docs/versions/V2/**
   - docs/versions/V3/**
   - docs/versions/V4/**
   - nyx_server source outside an explicit later Nyx repository handoff
-  - generated or vendored code
+  - functional subsystem implementations not owned by this architecture skill
+  - generic catch-all production modules
 public_contracts_touched:
-  - initial crate authority and dependency boundaries
+  - crate-root public module routes
+  - executable-to-composition entry route
 required_commands:
   - cargo fmt --all -- --check
   - cargo check --workspace
@@ -827,51 +839,45 @@ validation_execution_policy: >
   prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
   exact commands to the user without blocking source implementation.
 pass_edge: >
-  The user can inspect a compiling and tested Rust workspace whose crates match
-  the declared V1 authority boundaries, whose composition root contains no
-  business logic, and whose initial module organization is approved.
+  The user can inspect and compile explicit named module routes for every production
+  crate, main delegates only through the composition route, crate roots contain no
+  business logic, and no uncontrolled public re-export or catch-all module exists.
 block_edge: >
-  Stop on ambiguous crate ownership, an invalid dependency direction, a user-run
-  validation failure, or a proposed structure that begins product behavior in the
-  composition root, Bevy layer, script, or monolithic crate. Missing Rust tooling
-  in the assistant environment is an operator-validation handoff, not a blocker.
+  Stop on ambiguous module ownership, a generic catch-all module, product logic in a
+  crate root or composition module, an uncontrolled public re-export, a broken public
+  import, or a user-run validation failure.
 user_acceptance_path: >
-  The user reviews the workspace and crate responsibilities, runs the initial
-  workspace commands, and explicitly approves the boundaries.
+  The user inspects representative imports and module paths, confirms the naming and
+  organization, runs the workspace command chain, and explicitly approves the routes.
 return_path: >
-  Close only FORGEOS-V1-ARCH-000, then reevaluate its direct unlocks without
-  automatically activating them.
-parallel_compatibility: NONE_FOR_INITIAL_ROOT
+  Close only FORGEOS-V1-ARCH-001, then reevaluate its direct dependents together with
+  the already available foundation nodes without automatically activating more work.
+parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
 ```
 
-This packet is active. The newest clean supplied ForgeOS archive may be inspected
-and patched immediately after the intake checks in this router pass.
+This packet is active. `FORGEOS-V1-GUARD-000` and
+`FORGEOS-V1-CONTRACT-000` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for the initial root
+## 17. Direct unlock handling for scoped module routing
 
-After `FORGEOS-V1-ARCH-000` closes, reevaluate only its direct dependents from the
-canonical worksheet.
+After `FORGEOS-V1-ARCH-001` closes, reevaluate only its direct dependents and the
+already available frontier.
 
-Expected candidates include:
+Expected frontier:
 
 ```text
-FORGEOS-V1-ARCH-001
-FORGEOS-V1-GUARD-000
-FORGEOS-V1-CONTRACT-000
+FORGEOS-V1-GUARD-000      AVAILABLE
+FORGEOS-V1-CONTRACT-000   AVAILABLE
+FORGEOS-V1-GUARD-001      AVAILABLE after ARCH-001 closes
+FORGEOS-V1-GUARD-002      remains LOCKED until CONTRACT-000 also closes
 ```
 
-They may become `AVAILABLE` if their exact direct prerequisites are closed.
-They must not all become active automatically.
-
-The router should normally select `FORGEOS-V1-ARCH-001` next because coherent
-module routing is a direct structural foundation for later source work. A
-concurrent guard or contract skill is allowed only after source paths, public
-contracts, and worktrees are proven independent.
-
-This statement is a default routing preference, not an override of current
-source reality or user selection.
+The router should normally select `FORGEOS-V1-GUARD-000` next because every later
+source skill requires the source-size closure guard. This is a default routing
+preference, not permission to activate it before `FORGEOS-V1-ARCH-001` closes or
+to bypass current source evidence.
 
 ---
 

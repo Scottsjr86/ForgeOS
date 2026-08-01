@@ -1,4 +1,9 @@
 //! Pure canonical ForgeOS project, workspace, capability, and mission state.
 //!
-//! This crate is intentionally behavior-free in `FORGEOS-V1-ARCH-000` and may
-//! depend only on pure domain and protocol contracts.
+//! Public routes are explicit. Capability implementations remain owned by
+//! their named modules and are added only by the skills that prove them.
+
+pub mod capabilities;
+pub mod missions;
+pub mod projects;
+pub mod workspaces;

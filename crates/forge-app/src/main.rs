@@ -1,6 +1,7 @@
-//! ForgeOS composition root.
+//! ForgeOS executable entrypoint.
 //!
-//! Subsystem wiring will be added only by the capabilities that own it. The
-//! initial architecture slice deliberately contains no product behavior.
+//! Product behavior belongs to owning crates, not this binary root.
 
-fn main() {}
+fn main() {
+    forge_app::composition::run();
+}

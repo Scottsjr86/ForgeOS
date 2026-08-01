@@ -1,4 +1,8 @@
 //! Approved ForgeOS structural guard boundary.
 //!
-//! This crate is intentionally behavior-free in `FORGEOS-V1-ARCH-000`; guard
-//! implementations belong to their later registered capabilities.
+//! Public routes are explicit. Capability implementations remain owned by
+//! their named modules and are added only by the skills that prove them.
+
+pub mod core_purity;
+pub mod seams;
+pub mod source_size;

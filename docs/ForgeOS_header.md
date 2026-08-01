@@ -292,21 +292,24 @@ activate later-version work.
 
 ## 6. Current V1 gap-closing campaign
 
-The bounded authority migration is complete. The first V1 source capability is active:
+The bounded authority migration and initial workspace root are closed. Scoped
+module routing is the only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-ARCH-000
-ACTIVE_V1_CONTRIBUTION=INITIAL_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-ARCH-000
-QUESTION=Can the documentation-only ForgeOS repository become a compiling and tested Rust workspace whose crates match the declared V1 authority boundaries without placing business logic in the composition root, Bevy layer, scripts, or a monolithic crate?
-CURRENT_RESULT=FIRST_SOURCE_SKILL_ACTIVATED
-BATON_OWNER=FORGEOS-V1-ARCH-000
+ACTIVE_RELEASE_GATE=FORGEOS-V1-ARCH-001
+ACTIVE_V1_CONTRIBUTION=SCOPED_MODULE_HIERARCHY_AND_PUBLIC_ROUTING
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-ARCH-001
+QUESTION=Can every production crate expose explicit scoped module routes while the executable delegates through a behavior-free composition module and no uncontrolled re-exports or catch-all modules appear?
+CURRENT_RESULT=ROOT_ARCHITECTURE_CLOSED_SCOPED_MODULE_ROUTING_ACTIVE
+BATON_OWNER=FORGEOS-V1-ARCH-001
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
-ACTIVE_SLICE=FORGEOS-V1-ARCH-000-SLICE-001
-FIRST_BLOCKER=THE_REPOSITORY_DOES_NOT_YET_CONTAIN_THE_V1_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
+ACTIVE_SLICE=FORGEOS-V1-ARCH-001-SLICE-001
+FIRST_BLOCKER=THE_CRATES_EXIST_BUT_DO_NOT_YET_EXPOSE_SCOPED_NAMED_MODULE_ROUTES_AND_MAIN_DOES_NOT_DELEGATE_THROUGH_AN_EXPLICIT_COMPOSITION_MODULE
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-GUARD-000,FORGEOS-V1-CONTRACT-000]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -320,8 +323,8 @@ SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=ASSISTANT_RUN_WHEN_AVAILABLE_OTHERWISE_OPERATOR_HANDOFF
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=NOT_YET_REQUESTED
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-ARCH-000
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-ARCH-001
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-ARCH-001-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -336,8 +339,9 @@ V4 earns the full spatial developer operating system.
 ```
 
 The complete bounded authority set now exists and agrees. The V1 First Armor skill
-tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-ARCH-000` is the only active source skill.
+tree is the canonical worksheet, the V1 router owns live selection,
+`FORGEOS-V1-ARCH-000` is closed, and `FORGEOS-V1-ARCH-001` is the only active
+source skill.
 
 Source work may begin immediately after the newest supplied ForgeOS archive is
 verified as the current clean repository. No additional documentation, archive

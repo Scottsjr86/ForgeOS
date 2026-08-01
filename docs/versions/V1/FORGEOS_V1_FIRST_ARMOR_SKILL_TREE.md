@@ -1279,7 +1279,10 @@ never closes the node.
 
 - **Owner:** repository root
 - **Prerequisites:** none
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-ARCH-000/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-ARCH-000/USER_GUIDE_SOURCE.md`
 - **Must be true:** The Rust workspace contains the declared V1 authority crates,
   composition root, test locations, and dependency direction needed by this tree.
 - **Must not be true:** Business logic may not begin in `forge-app`, `main.rs`, Bevy
@@ -1293,7 +1296,7 @@ never closes the node.
 
 - **Owner:** all production crates
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
 - **Must be true:** Each crate routes public APIs through `lib.rs`; nested behavior is
   organized through named submodules and `mod.rs` where directories are used.
 - **Must not be true:** Production logic may not accumulate in crate roots, giant
@@ -1307,7 +1310,7 @@ never closes the node.
 
 - **Owner:** `forge-guards`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** One executable verifier counts physical lines in every authored
   Rust source module, warns at 1001-1200, and fails at 1201 or more.
 - **Must not be true:** The verifier may not treat 1200 as the design target, scan
@@ -1348,7 +1351,7 @@ never closes the node.
 
 - **Owner:** `forge-protocol`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-ARCH-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Project, repository, process, terminal, command, session, task,
   patch, result, and event identities are stable typed values with versioned request,
   result, and error envelopes.
@@ -1441,28 +1444,32 @@ section ever disagree.
 
 ---
 
-## 8. Initial frontier
+## 8. Current frontier
 
-The repository currently contains planning documents only. No product behavior is
-assumed from names or plans.
+The initial Rust workspace and authority crate skeleton is closed. The repository
+contains structural source only; no functional product capability is inferred from
+crate or module names.
 
 Current frontier:
 
 ```text
-ACTIVE_SKILL=FORGEOS-V1-ARCH-000
-ACTIVE_BLOCKER=THE_REPOSITORY_DOES_NOT_YET_CONTAIN_THE_V1_RUST_WORKSPACE_AND_AUTHORITY_CRATE_SKELETON
-ACTIVE_SLICE=FORGEOS-V1-ARCH-000-SLICE-001
+CLOSED
+  FORGEOS-V1-ARCH-000
+
+ACTIVE_SKILL=FORGEOS-V1-ARCH-001
+ACTIVE_BLOCKER=THE_CRATES_EXIST_BUT_DO_NOT_YET_EXPOSE_SCOPED_NAMED_MODULE_ROUTES_AND_MAIN_DOES_NOT_DELEGATE_THROUGH_AN_EXPLICIT_COMPOSITION_MODULE
+ACTIVE_SLICE=FORGEOS-V1-ARCH-001-SLICE-001
 
 AVAILABLE
-  none while the root skill is active
+  FORGEOS-V1-GUARD-000
+  FORGEOS-V1-CONTRACT-000
 
 LOCKED
-  every other node
+  every node whose direct prerequisites are not closed
 ```
 
-After `FORGEOS-V1-ARCH-000` closes, the router may expose independent foundation
-nodes according to direct prerequisites and conflict rules. It must not activate
-them automatically.
+Only `FORGEOS-V1-ARCH-001` is active. Available nodes remain inactive until the
+router selects them after conflict and write-boundary checks.
 
 ---
 

@@ -1,3 +1,7 @@
 //! ForgeOS PTY and registered-command execution.
 //!
-//! This crate is intentionally behavior-free in `FORGEOS-V1-ARCH-000`.
+//! Public routes are explicit. Capability implementations remain owned by
+//! their named modules and are added only by the skills that prove them.
+
+pub mod commands;
+pub mod pty;
