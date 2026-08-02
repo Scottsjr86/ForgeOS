@@ -1058,7 +1058,7 @@ never closes the node.
 - **Owner:** `forge-project`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-PATH-000`, `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** A versioned manifest validates display name, canonical repository
   identity, allowed roots, commands, language profile, and settings.
 - **Must not be true:** Unknown required fields, invalid paths, duplicate IDs, or
@@ -1085,7 +1085,7 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-PATH-000`, `FORGEOS-V1-STATE-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Reads and atomic writes resolve through approved project roots and
   detect changed-on-disk conflicts.
 - **Must not be true:** Symlink escapes, path traversal, partial writes, or hidden
@@ -1368,7 +1368,10 @@ never closes the node.
 
 - **Owner:** `forge-core`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-STATE-000/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-STATE-000/USER_GUIDE_SOURCE.md`
 - **Must be true:** Canonical local records write atomically, reopen through explicit
   schema versions, reject corrupt or unsupported data, and preserve the previous
   valid state on failure.
@@ -1410,7 +1413,7 @@ never closes the node.
 
 - **Owner:** `forge-protocol`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Files, patches, tool requests, snapshots, and result payloads can
   receive stable SHA-256 identities over declared canonical bytes.
 - **Must not be true:** Timestamps, host paths, unstable map ordering, or display text
@@ -1449,11 +1452,11 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The architecture foundations, three structural guards, stable protocol contract,
-process foundation, and path foundation are closed. Atomic versioned local
-persistence is active because it is the remaining lowest-depth foundation with
-the shortest route into project registration, boundary-safe files, verification
-records, recovery, and later agent state.
+The architecture foundations, all three structural guards, stable protocol
+contract, process foundation, canonical path boundary, and atomic local persistence
+are closed. Stable SHA-256 identity is active because it is the final available
+Tier-0 foundation and directly unlocks patch, agent, recovery, and immutable Nyx
+request contracts.
 
 Current frontier:
 
@@ -1467,13 +1470,15 @@ CLOSED
   FORGEOS-V1-CONTRACT-000
   FORGEOS-V1-PROCESS-000
   FORGEOS-V1-PATH-000
+  FORGEOS-V1-STATE-000
 
-ACTIVE_SKILL=FORGEOS-V1-STATE-000
-ACTIVE_BLOCKER=FORGE_CORE_HAS_NO_CANONICAL_VERSIONED_STATE_RECORD_AND_FORGE_PROJECT_PERSISTENCE_IS_BEHAVIOR_FREE
-ACTIVE_SLICE=FORGEOS-V1-STATE-000-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-HASH-000
+ACTIVE_BLOCKER=FORGEOS_HAS_NO_STABLE_SHA256_IDENTITY_CONTRACT_AND_STATE_ONLY_HAS_A_NON_IDENTITY_CORRUPTION_CHECKSUM
+ACTIVE_SLICE=FORGEOS-V1-HASH-000-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-HASH-000
+  FORGEOS-V1-PROJECT-100
+  FORGEOS-V1-FILE-100
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-SESSION-100
   FORGEOS-V1-LSP-100
@@ -1486,9 +1491,9 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-STATE-000` is active. The remaining foundation and newly
-unlocked product contracts stay inactive while the architecture-and-contracts
-lane owns one active slice.
+Only `FORGEOS-V1-HASH-000` is active. The unlocked product contracts remain
+inactive while the architecture-and-contracts lane finishes the final Tier-0
+foundation.
 
 ## 9. Skill worksheet update fields
 

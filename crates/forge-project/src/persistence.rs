@@ -190,10 +190,7 @@ impl AtomicStateStore {
         }
 
         remove_regular_if_present(&self.staged, StateOperation::DiscardInterrupted)?;
-        remove_regular_if_present(
-            &self.previous_staged,
-            StateOperation::DiscardPreviousStaged,
-        )?;
+        remove_regular_if_present(&self.previous_staged, StateOperation::DiscardPreviousStaged)?;
         let encoded = record.encode();
         prepare_staged(&self.staged, &encoded)?;
         fault.trigger(FaultPoint::AfterStagedSync)?;
@@ -295,11 +292,12 @@ fn prepare_staged(path: &Path, bytes: &[u8]) -> Result<(), StateStoreError> {
             path: path.to_path_buf(),
             kind: source.kind(),
         })?;
-    file.write_all(bytes).map_err(|source| StateStoreError::Io {
-        operation: StateOperation::WriteStaged,
-        path: path.to_path_buf(),
-        kind: source.kind(),
-    })?;
+    file.write_all(bytes)
+        .map_err(|source| StateStoreError::Io {
+            operation: StateOperation::WriteStaged,
+            path: path.to_path_buf(),
+            kind: source.kind(),
+        })?;
     file.sync_all().map_err(|source| StateStoreError::Io {
         operation: StateOperation::SyncStaged,
         path: path.to_path_buf(),
@@ -307,7 +305,11 @@ fn prepare_staged(path: &Path, bytes: &[u8]) -> Result<(), StateStoreError> {
     })
 }
 
-fn rename_replace(from: &Path, to: &Path, operation: StateOperation) -> Result<(), StateStoreError> {
+fn rename_replace(
+    from: &Path,
+    to: &Path,
+    operation: StateOperation,
+) -> Result<(), StateStoreError> {
     fs::rename(from, to).map_err(|source| StateStoreError::Io {
         operation,
         path: to.to_path_buf(),
@@ -369,13 +371,13 @@ fn remove_regular_if_present(
         Ok(metadata) if metadata.file_type().is_symlink() => {
             Err(StateStoreError::SymlinkRejected(path.to_path_buf()))
         }
-        Ok(metadata) if metadata.is_file() => fs::remove_file(path).map_err(|source| {
-            StateStoreError::Io {
+        Ok(metadata) if metadata.is_file() => {
+            fs::remove_file(path).map_err(|source| StateStoreError::Io {
                 operation,
                 path: path.to_path_buf(),
                 kind: source.kind(),
-            }
-        }),
+            })
+        }
         Ok(_) => Err(StateStoreError::CompanionNotFile(path.to_path_buf())),
         Err(source) if source.kind() == io::ErrorKind::NotFound => Ok(()),
         Err(source) => Err(StateStoreError::Io {
@@ -473,16 +475,27 @@ impl fmt::Display for StateStoreError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::UnsupportedPlatform => {
-                write!(formatter, "atomic V1 state persistence requires Unix rename semantics")
+                write!(
+                    formatter,
+                    "atomic V1 state persistence requires Unix rename semantics"
+                )
             }
             Self::InvalidTarget(path) => {
                 write!(formatter, "state target is invalid: {}", path.display())
             }
             Self::ParentNotDirectory(path) => {
-                write!(formatter, "state parent is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "state parent is not a directory: {}",
+                    path.display()
+                )
             }
             Self::CompanionNotFile(path) => {
-                write!(formatter, "state companion is not a regular file: {}", path.display())
+                write!(
+                    formatter,
+                    "state companion is not a regular file: {}",
+                    path.display()
+                )
             }
             Self::SymlinkRejected(path) => {
                 write!(formatter, "state path is a symlink: {}", path.display())
@@ -497,7 +510,11 @@ impl fmt::Display for StateStoreError {
             ),
             Self::Missing(path) => write!(formatter, "state is missing: {}", path.display()),
             Self::State { path, source } => {
-                write!(formatter, "state bytes are invalid at {}: {source}", path.display())
+                write!(
+                    formatter,
+                    "state bytes are invalid at {}: {source}",
+                    path.display()
+                )
             }
             Self::Io {
                 operation,

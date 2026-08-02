@@ -10,6 +10,7 @@ Skill-tree method: `docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md`
 V1 skill tree: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 V1 execution router: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
 V1 closure experiment: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
+V1 status mirror: `docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md`
 Active release target: `FORGEOS_V1_FIRST_ARMOR`
 Four-version product contract: `docs/High_Level.md`
 
@@ -74,6 +75,11 @@ When documents, source, tools, and visual surfaces disagree, use this order:
 12. subsystem contracts, tests, experiments, receipts, and operator proof
 13. historical plans, concept notes, prototypes, and legacy archives
 ```
+
+`ForgeOS_V1_Skill_Status_Master_List.md` is a mandatory human-readable status
+mirror. Update it whenever any skill changes state, the baton moves, or the
+available frontier changes. It may never override the router, skill tree, source,
+or proof records.
 
 Only `WORKFLOW_AUTHORITY.md` and the live V1 router select active work. The
 four-version plan defines what each version must become and what later-version
@@ -293,25 +299,25 @@ activate later-version work.
 ## 6. Current V1 gap-closing campaign
 
 The bounded authority migration, architecture foundations, all three mandatory
-structural guards, stable protocol contract, managed-process foundation, and
-canonical repository boundary are closed. Atomic versioned local persistence is
-the only active V1 source capability:
+structural guards, stable protocol contract, managed-process foundation, canonical
+repository boundary, and atomic versioned local persistence are closed. Stable
+artifact and request hashing is the only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-STATE-000
-ACTIVE_V1_CONTRIBUTION=ATOMIC_VERSIONED_LOCAL_PERSISTENCE
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-STATE-000
-QUESTION=Can ForgeOS encode canonical local state under an explicit schema, write it atomically, reopen equivalent state, reject corrupt or unsupported bytes, migrate only a declared legacy fixture, expose interrupted writes, and recover the previous valid record without silent reset?
-CURRENT_RESULT=PATH_FOUNDATION_CLOSED_STATE_FOUNDATION_ACTIVE
-BATON_OWNER=FORGEOS-V1-STATE-000
+ACTIVE_RELEASE_GATE=FORGEOS-V1-HASH-000
+ACTIVE_V1_CONTRIBUTION=STABLE_DOMAIN_SEPARATED_SHA256_IDENTITY
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-HASH-000
+QUESTION=Can ForgeOS assign stable domain-separated SHA-256 identities to declared canonical file, patch, tool-request, snapshot, and result bytes while rejecting corruption and remaining invariant to field insertion order and excluded metadata?
+CURRENT_RESULT=STATE_FOUNDATION_CLOSED_HASH_FOUNDATION_ACTIVE
+BATON_OWNER=FORGEOS-V1-HASH-000
 ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
-ACTIVE_SLICE=FORGEOS-V1-STATE-000-SLICE-001
-FIRST_BLOCKER=FORGE_CORE_HAS_NO_CANONICAL_VERSIONED_STATE_RECORD_AND_FORGE_PROJECT_PERSISTENCE_IS_BEHAVIOR_FREE
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-HASH-000,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100]
+ACTIVE_SLICE=FORGEOS-V1-HASH-000-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_NO_STABLE_SHA256_IDENTITY_CONTRACT_AND_STATE_ONLY_HAS_A_NON_IDENTITY_CORRUPTION_CHECKSUM
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -325,8 +331,8 @@ SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=ASSISTANT_RUN_WHEN_AVAILABLE_OTHERWISE_OPERATOR_HANDOFF
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-STATE-000
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-STATE-000-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-HASH-000
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-HASH-000-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -654,22 +660,23 @@ For every new ForgeOS build, audit, planning, or integration thread:
 4. read docs/workflow/WORKFLOW_AUTHORITY.md section 2
 5. read docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md
 6. read docs/versions/V1/V1_EXECUTION_ROUTER.md
-7. identify the current program mode, active skill, lane, repository, and baton owner
-8. use only the newest clean archive supplied for the baton repository
-9. delete or ignore every older archive extraction in the active work area
-10. extract the newest archive into an empty directory
-11. verify that the repository is coherent, clean, and matches the user's claim
-12. inspect current source before relying on prior plans
-13. verify source work is authorized and every direct prerequisite is CLOSED
-14. read only the active skill's full contract in the canonical V1 worksheet
-15. verify active-skill conflicts, repository ownership, write boundaries, public
+7. read docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md as a status mirror
+8. identify the current program mode, active skill, lane, repository, and baton owner
+9. use only the newest clean archive supplied for the baton repository
+10. delete or ignore every older archive extraction in the active work area
+11. extract the newest archive into an empty directory
+12. verify that the repository is coherent, clean, and matches the user's claim
+13. inspect current source before relying on prior plans
+14. verify source work is authorized and every direct prerequisite is CLOSED
+15. read only the active skill's full contract in the canonical V1 worksheet
+16. verify active-skill conflicts, repository ownership, write boundaries, public
     contracts, required commands, and user-acceptance path
-16. if the baton points to nyx_server, require the newest separate clean Nyx archive
+17. if the baton points to nyx_server, require the newest separate clean Nyx archive
     unless an explicit vendored-source contract proves otherwise
-17. inspect or run the active originating path and confirm the first blocker
-18. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
+18. inspect or run the active originating path and confirm the first blocker
+19. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
     pass edge, block edge, and return path
-19. only then edit source
+20. only then edit source
 ```
 
 The newest verified archive is canonical regardless of its filename or base
@@ -677,8 +684,8 @@ number. Do not demand a new archive, updated header token, matching hash, or
 repackaging ritual before working from clean current source.
 
 The bounded documentation migration is closed and may not be resurrected to avoid
-source work. The active router packet is authority to begin only
-`FORGEOS-V1-ARCH-000`; every other skill remains locked or inactive.
+source work. The active router packet is authority to begin only the skill named by
+`BATON_OWNER`; every other skill remains closed, available, locked, or inactive.
 
 Do not scan unrelated roadmap sections, future-version features, project-world
 concept art, Nyx engine lists, or neighboring skill nodes to choose work.
@@ -687,6 +694,10 @@ Do not create a new workflow document for every blocker. Record the blocker on t
 active capability and let the same experiment choose the next slice.
 
 When proof is missing, name the missing proof and leave the capability open.
+
+After every state transition, update the V1 status mirror in the same patch. The
+mirror must reflect the closed, active, available, and locked counts; current baton;
+dependent unlocks; and affected rows before the handoff leaves the current chat.
 
 ---
 

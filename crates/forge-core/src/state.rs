@@ -111,7 +111,10 @@ pub fn migrate_legacy_v0(bytes: &[u8]) -> Result<MigratedStateRecord, StateRecor
         });
     }
 
-    let record = StateRecord::new(header.record_type, bytes[HEADER_BYTES..payload_end].to_vec())?;
+    let record = StateRecord::new(
+        header.record_type,
+        bytes[HEADER_BYTES..payload_end].to_vec(),
+    )?;
     Ok(MigratedStateRecord {
         source_schema_version: LEGACY_STATE_SCHEMA_VERSION,
         record,
@@ -126,10 +129,11 @@ pub fn encode_legacy_v0_fixture(
 ) -> Result<Vec<u8>, StateRecordError> {
     validate_record_type(record_type)?;
     validate_payload_len(payload.len())?;
-    let payload_len = u32::try_from(payload.len()).map_err(|_| StateRecordError::PayloadTooLarge {
-        maximum: MAX_PAYLOAD_BYTES,
-        actual: payload.len(),
-    })?;
+    let payload_len =
+        u32::try_from(payload.len()).map_err(|_| StateRecordError::PayloadTooLarge {
+            maximum: MAX_PAYLOAD_BYTES,
+            actual: payload.len(),
+        })?;
 
     let mut bytes = Vec::with_capacity(HEADER_BYTES + payload.len());
     bytes.extend_from_slice(&STATE_MAGIC);
@@ -181,9 +185,7 @@ fn decode_current(bytes: &[u8], header: ParsedHeader) -> Result<StateRecord, Sta
     if bytes.len() != expected_len {
         return Err(StateRecordError::LengthMismatch {
             declared: header.payload_len,
-            actual: bytes
-                .len()
-                .saturating_sub(HEADER_BYTES + TRAILER_BYTES),
+            actual: bytes.len().saturating_sub(HEADER_BYTES + TRAILER_BYTES),
         });
     }
 
@@ -267,7 +269,10 @@ impl fmt::Display for StateRecordError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Truncated { minimum, actual } => {
-                write!(formatter, "state record needs at least {minimum} bytes, found {actual}")
+                write!(
+                    formatter,
+                    "state record needs at least {minimum} bytes, found {actual}"
+                )
             }
             Self::InvalidMagic => write!(formatter, "state record magic is invalid"),
             Self::ReservedRecordType => write!(formatter, "state record type zero is reserved"),
