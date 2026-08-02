@@ -130,12 +130,7 @@ impl ProcessRunner {
                 lifecycle
                     .finish(outcome.clone())
                     .expect("spawn failure is a valid requested-state terminal outcome");
-                return ProcessExecution::new(
-                    process_id,
-                    None,
-                    outcome,
-                    ProcessOutput::default(),
-                );
+                return ProcessExecution::new(process_id, None, outcome, ProcessOutput::default());
             }
         };
 
@@ -153,12 +148,8 @@ impl ProcessRunner {
             .take()
             .expect("stderr was configured as a pipe before spawn");
         let (sender, receiver) = mpsc::channel();
-        let stdout_reader = spawn_output_reader(
-            process_id,
-            ProcessStream::Stdout,
-            stdout,
-            sender.clone(),
-        );
+        let stdout_reader =
+            spawn_output_reader(process_id, ProcessStream::Stdout, stdout, sender.clone());
         let stderr_reader =
             spawn_output_reader(process_id, ProcessStream::Stderr, stderr, sender.clone());
         drop(sender);
@@ -315,12 +306,7 @@ where
             let bytes = buffer[..read].to_vec();
             complete.extend_from_slice(&bytes);
             if sender
-                .send(ProcessOutputChunk::new(
-                    process_id,
-                    stream,
-                    sequence,
-                    bytes,
-                ))
+                .send(ProcessOutputChunk::new(process_id, stream, sequence, bytes))
                 .is_err()
             {
                 return Ok(complete);
@@ -512,7 +498,9 @@ mod tests {
         );
         assert_eq!(execution.output().stdout(), b"out");
         assert_eq!(execution.output().stderr(), b"err");
-        assert!(chunks.iter().all(|chunk| chunk.process_id() == process_id(1)));
+        assert!(chunks
+            .iter()
+            .all(|chunk| chunk.process_id() == process_id(1)));
         for stream in [ProcessStream::Stdout, ProcessStream::Stderr] {
             let sequences = chunks
                 .iter()
@@ -565,16 +553,14 @@ mod tests {
     fn concurrent_outcomes_keep_stable_process_identity() {
         let cancelled_token = CancellationToken::new();
         let worker_token = cancelled_token.clone();
-        let cancelled =
-            thread::spawn(move || {
-                runner().run(
-                    request(5, "sleep 5").with_timeout(Duration::from_secs(2)),
-                    &worker_token,
-                )
-            });
-        let fast = thread::spawn(move || {
-            runner().run(request(6, "exit 9"), &CancellationToken::new())
+        let cancelled = thread::spawn(move || {
+            runner().run(
+                request(5, "sleep 5").with_timeout(Duration::from_secs(2)),
+                &worker_token,
+            )
         });
+        let fast =
+            thread::spawn(move || runner().run(request(6, "exit 9"), &CancellationToken::new()));
         thread::sleep(Duration::from_millis(40));
         cancelled_token.cancel();
 

@@ -1072,7 +1072,7 @@ never closes the node.
 - **Owner:** `forge-session`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Startup order, readiness, restart policy, shutdown order, and
   failure states are explicit and testable.
 - **Must not be true:** Service order may not depend on timing sleeps or process-name
@@ -1125,7 +1125,7 @@ never closes the node.
 - **Owner:** `forge-editor`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** ForgeOS starts Rust Analyzer, manages document versions, routes
   requests and responses, handles restart, and reports unsupported capabilities.
 - **Must not be true:** Responses may not cross project or document versions silently.
@@ -1192,7 +1192,7 @@ never closes the node.
 - **Owner:** `forge-nyx-client`, `nyx_server`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** ForgeOS discovers Nyx through configured transport, negotiates a
   supported protocol, reads health and capabilities, and distinguishes unavailable,
   incompatible, and unhealthy states.
@@ -1382,7 +1382,7 @@ never closes the node.
 
 - **Owner:** `forge-project`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Repository roots and child paths resolve canonically, preserve
   display paths separately, and reject escapes through traversal, symlink, or
   unexpected mount behavior.
@@ -1397,7 +1397,7 @@ never closes the node.
 
 - **Owner:** `forge-bridge`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** Spawn request, process identity, running state, output channels,
   exit, timeout, cancellation, and failure are explicit and race-safe.
 - **Must not be true:** PID alone may not serve as durable identity, and cancellation
@@ -1449,10 +1449,10 @@ section ever disagree.
 
 ## 8. Current frontier
 
-The architecture foundations, all three mandatory structural guards, and the
-stable protocol contract are closed. The process foundation is active because it
-is the lowest-depth available node with an immediate route to session, language,
-and Nyx product behavior.
+The architecture foundations, three structural guards, stable protocol contract,
+and process foundation are closed. The path foundation is active because it is a
+remaining lowest-depth foundation and opens the shortest bounded route to real
+terminal, command, Git, project, and file behavior.
 
 Current frontier:
 
@@ -1464,24 +1464,27 @@ CLOSED
   FORGEOS-V1-GUARD-001
   FORGEOS-V1-GUARD-002
   FORGEOS-V1-CONTRACT-000
+  FORGEOS-V1-PROCESS-000
 
-ACTIVE_SKILL=FORGEOS-V1-PROCESS-000
-ACTIVE_BLOCKER=FORGE_PROTOCOL_AND_FORGE_BRIDGE_HAVE_NO_PROCESS_LIFECYCLE_CONTRACT_OR_REAL_MANAGED_RUNNER
-ACTIVE_SLICE=FORGEOS-V1-PROCESS-000-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-PATH-000
+ACTIVE_BLOCKER=FORGE_PROTOCOL_AND_FORGE_PROJECT_HAVE_NO_CANONICAL_REPOSITORY_BOUNDARY_CONTRACT_OR_ESCAPE_REJECTING_RESOLVER
+ACTIVE_SLICE=FORGEOS-V1-PATH-000-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-STATE-000
-  FORGEOS-V1-PATH-000
   FORGEOS-V1-HASH-000
   FORGEOS-V1-WORLD-100
+  FORGEOS-V1-SESSION-100
+  FORGEOS-V1-LSP-100
+  FORGEOS-V1-NYX-100
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-PROCESS-000` is active. The other available foundations and the
-newly unlocked Forge World projection contract remain inactive while the
-architecture-and-contracts lane owns one active slice.
+Only `FORGEOS-V1-PATH-000` is active. The other available foundations and newly
+unlocked product contracts remain inactive while the architecture-and-contracts
+lane owns one active slice.
 
 ---
 
