@@ -307,24 +307,25 @@ The bounded authority migration, architecture foundations, all three mandatory
 structural guards, stable protocol contract, managed-process foundation, canonical
 repository boundary, atomic versioned local persistence, stable SHA-256 identity,
 validated project registration, boundary-safe raw file access, editor buffer identity,
-incremental Rust syntax parsing, and the Rust Analyzer JSON-RPC adapter are closed.
-The native PTY adapter is the only active V1 source capability:
+incremental Rust syntax parsing, the Rust Analyzer JSON-RPC adapter, and the native
+PTY adapter are closed. Registered command definition and execution policy is the
+only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-TERMINAL-100
-ACTIVE_V1_CONTRIBUTION=NATIVE_PTY_SPAWN_IO_RESIZE_AND_TERMINATION
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-TERMINAL-100
-QUESTION=Can ForgeOS start one real Linux PTY with stable identity, exact raw byte I/O, declared working directory, resize, native exit status, and isolated explicit termination?
-CURRENT_RESULT=RUST_ANALYZER_ADAPTER_CLOSED_NATIVE_PTY_ADAPTER_ACTIVE
-BATON_OWNER=FORGEOS-V1-TERMINAL-100
+ACTIVE_RELEASE_GATE=FORGEOS-V1-COMMAND-100
+ACTIVE_V1_CONTRIBUTION=IMMUTABLE_REGISTERED_COMMAND_DEFINITION_AND_LAUNCH_POLICY
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-COMMAND-100
+QUESTION=Can ForgeOS define one immutable registered command with stable identity, exact argv, repository-bound working directory, clear-parent declared environment, timeout, cancellation, authority class, and an inspectable shell-free launch payload?
+CURRENT_RESULT=NATIVE_PTY_ADAPTER_CLOSED_REGISTERED_COMMAND_POLICY_ACTIVE
+BATON_OWNER=FORGEOS-V1-COMMAND-100
 ACTIVE_LANE=TERMINAL_AND_COMMANDS
-ACTIVE_SLICE=FORGEOS-V1-TERMINAL-100-SLICE-001
-FIRST_BLOCKER=FORGEOS_HAS_NO_REAL_PTY_SESSION_WITH_EXACT_BYTES_RESIZE_AND_TERMINATION
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-NYX-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SLICE=FORGEOS-V1-COMMAND-100-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_COMMAND_REFERENCES_BUT_NO_CANONICAL_IMMUTABLE_DEFINITION_OR_EXACT_LAUNCH_POLICY
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-NYX-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -339,8 +340,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-TERMINAL-100
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-TERMINAL-100-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-COMMAND-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-COMMAND-100-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -356,13 +357,14 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-LSP-100` is the only active source skill.
+`FORGEOS-V1-COMMAND-100` is the only active source skill.
 
-This slice may establish only one project-bound Rust Analyzer process, framed
-JSON-RPC transport, reviewed capability negotiation, exact document generations,
-version-bound native diagnostics, explicit restart, and typed protocol failure.
-File mutation, save integration, Tree-sitter ownership, terminal, commands, Git,
-session, Nyx, recovery, and Forge World behavior remain separate capabilities.
+This slice may establish only immutable registered-command definitions, exact argv,
+repository-bound working-directory declarations, clear-parent declared environment
+policy, explicit timeout, cancellation and authority classes, definition identity,
+and inspectable shell-free launch payloads. Process execution, command history,
+project restoration, Git, session, Nyx, recovery, and Forge World behavior remain
+separate capabilities.
 
 ## 7. Program modes
 

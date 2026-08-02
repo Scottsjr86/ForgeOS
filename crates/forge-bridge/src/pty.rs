@@ -175,7 +175,6 @@ impl NativePtyExit {
     }
 }
 
-
 /// Native termination result, including whether the adapter actually sent a kill.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NativePtyTermination {
@@ -278,10 +277,7 @@ impl NativePtyProcess {
                         break;
                     }
                     Err(error) => {
-                        let _ = sender.send(ReaderEvent::Failed(
-                            error.kind(),
-                            error.to_string(),
-                        ));
+                        let _ = sender.send(ReaderEvent::Failed(error.kind(), error.to_string()));
                         break;
                     }
                 }

@@ -53,11 +53,7 @@ fn request(id: TerminalId, cwd: &TempDir, code: &str) -> PtySpawnRequest {
     .expect("fixture request should validate")
 }
 
-fn collect_until(
-    registry: &mut PtyRegistry,
-    id: TerminalId,
-    needle: &[u8],
-) -> Vec<u8> {
+fn collect_until(registry: &mut PtyRegistry, id: TerminalId, needle: &[u8]) -> Vec<u8> {
     let deadline = Instant::now() + DEADLINE;
     let mut output = Vec::new();
     while Instant::now() < deadline {
@@ -75,7 +71,9 @@ fn collect_until(
         if output.windows(needle.len()).any(|window| window == needle) {
             return output;
         }
-        let _ = session.poll_exit().expect("child status should be observable");
+        let _ = session
+            .poll_exit()
+            .expect("child status should be observable");
         thread::sleep(POLL);
     }
     panic!("timed out waiting for {:?}; output={output:?}", needle);
@@ -120,14 +118,23 @@ os.write(1, b'ECHO' + data + b'SIZE' + str(size[0]).encode() + b'x' + str(size[1
         .resize(PtyDimensions::new(31, 97).unwrap())
         .unwrap();
     let input = [0_u8, 0xff, b'A', b'\n'];
-    registry.session_mut(id).unwrap().write_input(&input).unwrap();
+    registry
+        .session_mut(id)
+        .unwrap()
+        .write_input(&input)
+        .unwrap();
     let output = collect_until(&mut registry, id, b"SIZE31x97\x00");
     let expected_echo = [b"ECHO".as_slice(), input.as_slice()].concat();
     assert!(output
         .windows(expected_echo.len())
         .any(|window| window == expected_echo.as_slice()));
     wait_exit(&mut registry, id);
-    let exit = registry.session_mut(id).unwrap().poll_exit().unwrap().unwrap();
+    let exit = registry
+        .session_mut(id)
+        .unwrap()
+        .poll_exit()
+        .unwrap()
+        .unwrap();
     assert_eq!(exit.code(), 0);
     assert!(exit.success());
 }

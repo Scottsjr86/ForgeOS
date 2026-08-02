@@ -4,6 +4,7 @@
 //! their named modules and are added only by the skills that prove them.
 
 pub mod capabilities;
+pub mod commands;
 pub mod hashing;
 pub mod missions;
 pub mod projects;

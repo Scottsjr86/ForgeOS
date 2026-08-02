@@ -97,15 +97,30 @@ impl fmt::Display for PtyRequestError {
             Self::ZeroRows => formatter.write_str("PTY rows must be nonzero"),
             Self::ZeroColumns => formatter.write_str("PTY columns must be nonzero"),
             Self::WorkingDirectoryNotAbsolute(path) => {
-                write!(formatter, "PTY working directory is not absolute: {}", path.display())
+                write!(
+                    formatter,
+                    "PTY working directory is not absolute: {}",
+                    path.display()
+                )
             }
             Self::WorkingDirectorySymlink(path) => {
-                write!(formatter, "PTY working directory is a symlink: {}", path.display())
+                write!(
+                    formatter,
+                    "PTY working directory is a symlink: {}",
+                    path.display()
+                )
             }
             Self::WorkingDirectoryNotDirectory(path) => {
-                write!(formatter, "PTY working directory is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "PTY working directory is not a directory: {}",
+                    path.display()
+                )
             }
-            Self::WorkingDirectoryNotCanonical { supplied, canonical } => write!(
+            Self::WorkingDirectoryNotCanonical {
+                supplied,
+                canonical,
+            } => write!(
                 formatter,
                 "PTY working directory is not canonical: {} resolves to {}",
                 supplied.display(),
@@ -191,10 +206,11 @@ fn validate_working_directory(path: &Path) -> Result<(), PtyRequestError> {
             path.to_path_buf(),
         ));
     }
-    let metadata = fs::symlink_metadata(path).map_err(|error| PtyRequestError::WorkingDirectoryIo {
-        path: path.to_path_buf(),
-        kind: error.kind(),
-    })?;
+    let metadata =
+        fs::symlink_metadata(path).map_err(|error| PtyRequestError::WorkingDirectoryIo {
+            path: path.to_path_buf(),
+            kind: error.kind(),
+        })?;
     if metadata.file_type().is_symlink() {
         return Err(PtyRequestError::WorkingDirectorySymlink(path.to_path_buf()));
     }
@@ -203,10 +219,11 @@ fn validate_working_directory(path: &Path) -> Result<(), PtyRequestError> {
             path.to_path_buf(),
         ));
     }
-    let canonical = fs::canonicalize(path).map_err(|error| PtyRequestError::WorkingDirectoryIo {
-        path: path.to_path_buf(),
-        kind: error.kind(),
-    })?;
+    let canonical =
+        fs::canonicalize(path).map_err(|error| PtyRequestError::WorkingDirectoryIo {
+            path: path.to_path_buf(),
+            kind: error.kind(),
+        })?;
     if canonical != path {
         return Err(PtyRequestError::WorkingDirectoryNotCanonical {
             supplied: path.to_path_buf(),
@@ -418,10 +435,7 @@ impl PtySession {
             return Ok(exit.clone());
         }
         let termination = self.native.terminate()?;
-        let exit = PtyExit::native(
-            termination.exit().clone(),
-            termination.signal_sent(),
-        );
+        let exit = PtyExit::native(termination.exit().clone(), termination.signal_sent());
         self.lifecycle = PtyLifecycle::Exited(exit.clone());
         Ok(exit)
     }

@@ -1145,7 +1145,10 @@ never closes the node.
 - **Owner:** `forge-terminal`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-PROCESS-000`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-TERMINAL-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-TERMINAL-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** PTYs have stable IDs, declared working directories, bidirectional
   bytes, resize, exit status, and explicit termination.
 - **Must not be true:** PTY output may not be normalized into misleading text or
@@ -1159,7 +1162,7 @@ never closes the node.
 - **Owner:** `forge-terminal`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-PROCESS-000`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Commands use stable IDs, exact argv arrays, declared working
   directories, environment policy, timeout, cancellation, and authority class.
 - **Must not be true:** Registered commands may not be mutable shell prose or inherit
@@ -1463,10 +1466,11 @@ section ever disagree.
 ## 8. Current frontier
 
 All Tier-0 foundations, structural guards, validated project registration,
-boundary-safe file access, editor buffer identity, incremental Rust parsing, and the
-Rust Analyzer adapter are closed. Native PTY support is active because stable process
-and path foundations now exist, and it is the shortest bounded route toward the real
-embedded terminal and registered-command loop.
+boundary-safe file access, editor buffer identity, incremental Rust parsing, the
+Rust Analyzer adapter, and native PTY support are closed. Registered command policy
+is active because the process, path, contract, and PTY foundations now exist, and it
+is the shortest bounded route toward the real registered-command loop without yet
+executing or persisting commands.
 
 Current frontier:
 
@@ -1487,17 +1491,17 @@ CLOSED
   FORGEOS-V1-EDITOR-100
   FORGEOS-V1-PARSER-100
   FORGEOS-V1-LSP-100
+  FORGEOS-V1-TERMINAL-100
 
-ACTIVE_SKILL=FORGEOS-V1-TERMINAL-100
-ACTIVE_BLOCKER=FORGEOS_HAS_NO_REAL_PTY_SESSION_WITH_EXACT_BYTES_RESIZE_AND_TERMINATION
-ACTIVE_SLICE=FORGEOS-V1-TERMINAL-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-COMMAND-100
+ACTIVE_BLOCKER=FORGEOS_HAS_COMMAND_REFERENCES_BUT_NO_CANONICAL_IMMUTABLE_DEFINITION_OR_EXACT_LAUNCH_POLICY
+ACTIVE_SLICE=FORGEOS-V1-COMMAND-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-PROJECT-200
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-SESSION-100
   FORGEOS-V1-NYX-100
-  FORGEOS-V1-COMMAND-100
   FORGEOS-V1-GIT-100
   FORGEOS-V1-PATCH-100
   FORGEOS-V1-RECOVERY-100
@@ -1506,7 +1510,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-TERMINAL-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-COMMAND-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

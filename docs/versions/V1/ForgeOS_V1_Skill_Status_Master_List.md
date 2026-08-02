@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_24.tar`, the canonical V1 skill tree, and the accepted behavior-only CI result through `FORGEOS-V1-LSP-100`.
-> `FORGEOS-V1-TERMINAL-100` is currently active and awaiting operator validation.
+> Source basis: `Forge_OS_V1_base_25.tar`, the canonical V1 skill tree, and the accepted behavior-only CI result through `FORGEOS-V1-TERMINAL-100`.
+> `FORGEOS-V1-COMMAND-100` is currently active and awaiting operator validation.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 15 |
+| ✅ Completed / closed | 16 |
 | 🔨 Active / started | 1 |
-| 🟢 Available / ready to start | 8 |
+| 🟢 Available / ready to start | 7 |
 | 🔒 Locked by prerequisites | 43 |
 
-**Raw closed-node count:** 15 of 67, or 22.4%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 16 of 67, or 23.9%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -39,24 +39,23 @@
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
 | 2 | Functional V1 systems | 19 | available 1, locked 18 |
-| 1 | Local mechanisms | 16 | closed 5, active 1, available 7, locked 3 |
+| 1 | Local mechanisms | 16 | closed 6, active 1, available 6, locked 3 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-TERMINAL-100` — PTY spawn, I/O, resize, and termination
+### 🔨 `FORGEOS-V1-COMMAND-100` — Registered command definition and execution policy
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
 - **Current position:** Source patch prepared; behavior-only CI has not yet been returned by the operator.
-- **Direct prerequisites:** `PROCESS-000`, `PATH-000`, and `GUARD-002` ✅
-- **Immediate unlock after closure:** None by itself. `TERMINAL-200` also requires `PROJECT-200`.
+- **Direct prerequisites:** `PROCESS-000`, `PATH-000`, and `CONTRACT-000` ✅
+- **Immediate unlock after closure:** None by itself. `COMMAND-200` also requires `TERMINAL-200`.
 
 ## Available skills right now
 
 - 🟢 `FORGEOS-V1-PROJECT-200` — Persistent project registry and workspace restoration
 - 🟢 `FORGEOS-V1-SESSION-100` — Session and managed-service lifecycle contract
-- 🟢 `FORGEOS-V1-COMMAND-100` — Registered command definition and execution policy
 - 🟢 `FORGEOS-V1-GIT-100` — Read-only Git adapter
 - 🟢 `FORGEOS-V1-PATCH-100` — Patch identity, base validation, and safe application primitive
 - 🟢 `FORGEOS-V1-NYX-100` — Nyx health and versioned client protocol
@@ -123,8 +122,8 @@ Functional subsystems assembled from local mechanisms.
 | 🔒 LOCKED | `FORGEOS-V1-FILE-200` | Repository file tree and search | ✅ `FORGEOS-V1-FILE-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-EDITOR-200` | Multi-buffer file editing and atomic save | ✅ `FORGEOS-V1-EDITOR-100`<br>🔒 `FORGEOS-V1-FILE-200` |
 | 🔒 LOCKED | `FORGEOS-V1-EDITOR-201` | Rust syntax and language-intelligence integration | 🔒 `FORGEOS-V1-EDITOR-200`<br>✅ `FORGEOS-V1-PARSER-100`<br>✅ `FORGEOS-V1-LSP-100` |
-| 🔒 LOCKED | `FORGEOS-V1-TERMINAL-200` | Managed embedded terminal sessions | 🔨 `FORGEOS-V1-TERMINAL-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
-| 🔒 LOCKED | `FORGEOS-V1-COMMAND-200` | Registered project command execution and output history | 🟢 `FORGEOS-V1-COMMAND-100`<br>🔒 `FORGEOS-V1-TERMINAL-200` |
+| 🔒 LOCKED | `FORGEOS-V1-TERMINAL-200` | Managed embedded terminal sessions | ✅ `FORGEOS-V1-TERMINAL-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
+| 🔒 LOCKED | `FORGEOS-V1-COMMAND-200` | Registered project command execution and output history | 🔨 `FORGEOS-V1-COMMAND-100`<br>🔒 `FORGEOS-V1-TERMINAL-200` |
 | 🔒 LOCKED | `FORGEOS-V1-GIT-200` | Real Git status, branch, revision, and diff inspection | 🟢 `FORGEOS-V1-GIT-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-GIT-201` | Safe Git mutation and isolated worktree control | 🔒 `FORGEOS-V1-GIT-101`<br>🔒 `FORGEOS-V1-GIT-200`<br>🔒 `FORGEOS-V1-PATCH-100` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-200` | Local model selection and Nyx conversation lifecycle | 🟢 `FORGEOS-V1-NYX-100`<br>🔒 `FORGEOS-V1-SESSION-201` |
@@ -150,8 +149,8 @@ Concrete local mechanisms and adapters that make the systems real.
 | ✅ CLOSED | `FORGEOS-V1-EDITOR-100` | Editor buffer identity and dirty-state model | ✅ `FORGEOS-V1-FILE-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | ✅ CLOSED | `FORGEOS-V1-PARSER-100` | Incremental Tree-sitter parsing adapter | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-FILE-100` |
 | ✅ CLOSED | `FORGEOS-V1-LSP-100` | Rust Analyzer process and JSON-RPC adapter | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
-| 🔨 ACTIVE | `FORGEOS-V1-TERMINAL-100` | PTY spawn, I/O, resize, and termination | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
-| 🟢 AVAILABLE | `FORGEOS-V1-COMMAND-100` | Registered command definition and execution policy | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-CONTRACT-000` |
+| ✅ CLOSED | `FORGEOS-V1-TERMINAL-100` | PTY spawn, I/O, resize, and termination | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
+| 🔨 ACTIVE | `FORGEOS-V1-COMMAND-100` | Registered command definition and execution policy | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | 🟢 AVAILABLE | `FORGEOS-V1-GIT-100` | Read-only Git adapter | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🔒 LOCKED | `FORGEOS-V1-GIT-101` | Git mutation and worktree primitives | 🟢 `FORGEOS-V1-GIT-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | 🟢 AVAILABLE | `FORGEOS-V1-NYX-100` | Nyx health and versioned client protocol | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
@@ -199,7 +198,8 @@ The bedrock: architecture, contracts, guards, process/path/state foundations, an
 13. ✅ `FORGEOS-V1-EDITOR-100` — Editor buffer identity and dirty-state model
 14. ✅ `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
 15. ✅ `FORGEOS-V1-LSP-100` — Rust Analyzer process and JSON-RPC adapter
-16. 🔨 `FORGEOS-V1-TERMINAL-100` — PTY spawn, I/O, resize, and termination
+16. ✅ `FORGEOS-V1-TERMINAL-100` — PTY spawn, I/O, resize, and termination
+17. 🔨 `FORGEOS-V1-COMMAND-100` — Registered command definition and execution policy
 
 ## Reading this list correctly
 
