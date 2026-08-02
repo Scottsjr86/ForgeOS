@@ -1138,7 +1138,7 @@ never closes the node.
 - **Owner:** `forge-terminal`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-PROCESS-000`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** PTYs have stable IDs, declared working directories, bidirectional
   bytes, resize, exit status, and explicit termination.
 - **Must not be true:** PTY output may not be normalized into misleading text or
@@ -1152,7 +1152,7 @@ never closes the node.
 - **Owner:** `forge-terminal`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-PROCESS-000`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Commands use stable IDs, exact argv arrays, declared working
   directories, environment policy, timeout, cancellation, and authority class.
 - **Must not be true:** Registered commands may not be mutable shell prose or inherit
@@ -1166,7 +1166,7 @@ never closes the node.
 - **Owner:** `forge-git`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-PATH-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Branch, revision, status, worktree list, and diff are represented
   through typed outcomes with native error preservation.
 - **Must not be true:** Parsing may not collapse distinct Git states or assume English
@@ -1368,7 +1368,7 @@ never closes the node.
 
 - **Owner:** `forge-core`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Canonical local records write atomically, reopen through explicit
   schema versions, reject corrupt or unsupported data, and preserve the previous
   valid state on failure.
@@ -1382,7 +1382,7 @@ never closes the node.
 
 - **Owner:** `forge-project`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** Repository roots and child paths resolve canonically, preserve
   display paths separately, and reject escapes through traversal, symlink, or
   unexpected mount behavior.
@@ -1450,9 +1450,10 @@ section ever disagree.
 ## 8. Current frontier
 
 The architecture foundations, three structural guards, stable protocol contract,
-and process foundation are closed. The path foundation is active because it is a
-remaining lowest-depth foundation and opens the shortest bounded route to real
-terminal, command, Git, project, and file behavior.
+process foundation, and path foundation are closed. Atomic versioned local
+persistence is active because it is the remaining lowest-depth foundation with
+the shortest route into project registration, boundary-safe files, verification
+records, recovery, and later agent state.
 
 Current frontier:
 
@@ -1465,28 +1466,29 @@ CLOSED
   FORGEOS-V1-GUARD-002
   FORGEOS-V1-CONTRACT-000
   FORGEOS-V1-PROCESS-000
+  FORGEOS-V1-PATH-000
 
-ACTIVE_SKILL=FORGEOS-V1-PATH-000
-ACTIVE_BLOCKER=FORGE_PROTOCOL_AND_FORGE_PROJECT_HAVE_NO_CANONICAL_REPOSITORY_BOUNDARY_CONTRACT_OR_ESCAPE_REJECTING_RESOLVER
-ACTIVE_SLICE=FORGEOS-V1-PATH-000-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-STATE-000
+ACTIVE_BLOCKER=FORGE_CORE_HAS_NO_CANONICAL_VERSIONED_STATE_RECORD_AND_FORGE_PROJECT_PERSISTENCE_IS_BEHAVIOR_FREE
+ACTIVE_SLICE=FORGEOS-V1-STATE-000-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-STATE-000
   FORGEOS-V1-HASH-000
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-SESSION-100
   FORGEOS-V1-LSP-100
   FORGEOS-V1-NYX-100
+  FORGEOS-V1-TERMINAL-100
+  FORGEOS-V1-COMMAND-100
+  FORGEOS-V1-GIT-100
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-PATH-000` is active. The other available foundations and newly
-unlocked product contracts remain inactive while the architecture-and-contracts
+Only `FORGEOS-V1-STATE-000` is active. The remaining foundation and newly
+unlocked product contracts stay inactive while the architecture-and-contracts
 lane owns one active slice.
-
----
 
 ## 9. Skill worksheet update fields
 

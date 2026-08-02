@@ -112,10 +112,10 @@ impl fmt::Display for RepositoryPathError {
             Self::Empty => "repository-relative path must contain at least one component",
             Self::Absolute => "absolute paths are not valid repository-relative paths",
             Self::ParentTraversal => "parent traversal is forbidden in repository-relative paths",
-            Self::PlatformPrefix => "platform path prefixes are forbidden in repository-relative paths",
-            Self::NonCanonical => {
-                "repository-relative path must already be lexically canonical"
+            Self::PlatformPrefix => {
+                "platform path prefixes are forbidden in repository-relative paths"
             }
+            Self::NonCanonical => "repository-relative path must already be lexically canonical",
         })
     }
 }

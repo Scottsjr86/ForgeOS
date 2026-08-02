@@ -139,14 +139,10 @@ impl RepositoryBoundary {
             current.push(component.as_os_str());
             let metadata = symlink_metadata(&current, BoundaryOperation::InspectChild)?;
             if metadata.file_type().is_symlink() {
-                return Err(RepositoryBoundaryError::SymlinkRejected {
-                    path: current,
-                });
+                return Err(RepositoryBoundaryError::SymlinkRejected { path: current });
             }
             if index + 1 < components.len() && !metadata.is_dir() {
-                return Err(RepositoryBoundaryError::IntermediateNotDirectory {
-                    path: current,
-                });
+                return Err(RepositoryBoundaryError::IntermediateNotDirectory { path: current });
             }
             let object = filesystem_object(&metadata)?;
             ensure_same_filesystem(self.root_object, object, &current)?;
@@ -387,8 +383,7 @@ fn inspect_root(display_root: &Path) -> Result<InspectedRoot, RepositoryBoundary
     }
     let before = filesystem_object(&display_metadata)?;
     let canonical = canonicalize(display_root, BoundaryOperation::CanonicalizeRoot)?;
-    let canonical_metadata =
-        symlink_metadata(&canonical, BoundaryOperation::InspectCanonicalRoot)?;
+    let canonical_metadata = symlink_metadata(&canonical, BoundaryOperation::InspectCanonicalRoot)?;
     let after = filesystem_object(&canonical_metadata)?;
     if before != after {
         return Err(RepositoryBoundaryError::RootIdentityChanged {

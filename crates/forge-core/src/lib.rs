@@ -7,3 +7,4 @@ pub mod capabilities;
 pub mod missions;
 pub mod projects;
 pub mod workspaces;
+pub mod state;

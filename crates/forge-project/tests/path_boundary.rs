@@ -55,7 +55,10 @@ fn normal_child_keeps_display_and_canonical_paths_separate() {
     let resolved = boundary.resolve_existing(&request).expect("resolve child");
 
     assert_eq!(boundary.display_root(), display_root);
-    assert_eq!(boundary.canonical_root(), fs::canonicalize(&repository).unwrap());
+    assert_eq!(
+        boundary.canonical_root(),
+        fs::canonicalize(&repository).unwrap()
+    );
     assert_eq!(resolved.repository_id(), repository_id(1));
     assert_eq!(resolved.relative_path().as_path(), Path::new("src/lib.rs"));
     assert_eq!(resolved.display_path(), display_root.join("src/lib.rs"));
@@ -83,7 +86,9 @@ fn moved_repository_rebinds_only_when_the_directory_object_is_unchanged() {
     assert_eq!(relocated.repository_id(), repository_id(2));
     assert_eq!(relocated.root_object(), original_object);
     assert_eq!(relocated.display_root(), moved);
-    relocated.revalidate().expect("moved boundary remains valid");
+    relocated
+        .revalidate()
+        .expect("moved boundary remains valid");
 
     let request = RepositoryPathRequest::new(repository_id(2), "src/main.rs").unwrap();
     assert!(relocated.resolve_existing(&request).is_ok());
