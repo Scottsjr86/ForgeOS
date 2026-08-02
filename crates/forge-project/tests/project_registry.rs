@@ -67,7 +67,10 @@ fn valid_manifest_import_and_reopen_are_equivalent() {
     let second = second_registry.import_bytes(&bytes, root.path()).unwrap();
 
     assert_eq!(first.manifest(), second.manifest());
-    assert_eq!(first.boundary().root_object(), second.boundary().root_object());
+    assert_eq!(
+        first.boundary().root_object(),
+        second.boundary().root_object()
+    );
 }
 
 #[test]

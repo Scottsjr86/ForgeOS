@@ -1,7 +1,6 @@
 use forge_core::projects::{
-    AllowedProjectRoot, LanguageProfile, ManifestCommand, ProjectManifest,
-    ProjectManifestError, ProjectSetting, PROJECT_MANIFEST_RECORD_TYPE,
-    PROJECT_MANIFEST_SCHEMA_VERSION,
+    AllowedProjectRoot, LanguageProfile, ManifestCommand, ProjectManifest, ProjectManifestError,
+    ProjectSetting, PROJECT_MANIFEST_RECORD_TYPE, PROJECT_MANIFEST_SCHEMA_VERSION,
 };
 use forge_protocol::identities::{CommandId, ProjectId, RepositoryId};
 
@@ -57,14 +56,20 @@ fn state_record_round_trip_preserves_manifest_type_and_bytes() {
     let manifest = manifest_with_orders(false);
     let record = manifest.to_state_record().unwrap();
     assert_eq!(record.record_type(), PROJECT_MANIFEST_RECORD_TYPE);
-    assert_eq!(ProjectManifest::from_state_record(&record).unwrap(), manifest);
+    assert_eq!(
+        ProjectManifest::from_state_record(&record).unwrap(),
+        manifest
+    );
 }
 
 #[test]
 fn exact_v1_header_and_required_field_count_are_golden_locked() {
     let bytes = manifest_with_orders(false).encode();
     assert_eq!(&bytes[..8], b"FGPROJ\0\0");
-    assert_eq!(u16::from_be_bytes([bytes[8], bytes[9]]), PROJECT_MANIFEST_SCHEMA_VERSION);
+    assert_eq!(
+        u16::from_be_bytes([bytes[8], bytes[9]]),
+        PROJECT_MANIFEST_SCHEMA_VERSION
+    );
     assert_eq!(u16::from_be_bytes([bytes[10], bytes[11]]), 7);
     assert_eq!(&bytes[12..14], &0x8001u16.to_be_bytes());
 }

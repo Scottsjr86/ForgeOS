@@ -227,13 +227,15 @@ impl ProjectManifest {
             left.command_id
                 .as_bytes()
                 .cmp(right.command_id.as_bytes())
-                .then_with(|| left.display_name.as_bytes().cmp(right.display_name.as_bytes()))
+                .then_with(|| {
+                    left.display_name
+                        .as_bytes()
+                        .cmp(right.display_name.as_bytes())
+                })
         });
         for pair in commands.windows(2) {
             if pair[0].command_id == pair[1].command_id {
-                return Err(ProjectManifestError::DuplicateCommandId(
-                    pair[0].command_id,
-                ));
+                return Err(ProjectManifestError::DuplicateCommandId(pair[0].command_id));
             }
         }
         let mut command_names: Vec<&str> = commands
@@ -311,10 +313,7 @@ impl ProjectManifest {
             encode_field(FIELD_DISPLAY_NAME, self.display_name.as_bytes()),
             encode_field(FIELD_ALLOWED_ROOTS, &encode_roots(&self.allowed_roots)),
             encode_field(FIELD_COMMANDS, &encode_commands(&self.commands)),
-            encode_field(
-                FIELD_LANGUAGE_PROFILE,
-                &[self.language_profile.code()],
-            ),
+            encode_field(FIELD_LANGUAGE_PROFILE, &[self.language_profile.code()]),
             encode_field(FIELD_SETTINGS, &encode_settings(&self.settings)),
         ];
 
@@ -375,9 +374,7 @@ impl ProjectManifest {
                     read_utf8(payload, ManifestTextField::DisplayName)?.to_owned(),
                     tag,
                 )?,
-                FIELD_ALLOWED_ROOTS => {
-                    set_once(&mut allowed_roots, decode_roots(payload)?, tag)?
-                }
+                FIELD_ALLOWED_ROOTS => set_once(&mut allowed_roots, decode_roots(payload)?, tag)?,
                 FIELD_COMMANDS => set_once(&mut commands, decode_commands(payload)?, tag)?,
                 FIELD_LANGUAGE_PROFILE => {
                     if payload.len() != 1 {
@@ -493,13 +490,10 @@ fn decode_roots(payload: &[u8]) -> Result<Vec<AllowedProjectRoot>, ProjectManife
             1 => {
                 let length = usize::from(reader.u16()?);
                 let text = read_utf8(reader.take(length)?, ManifestTextField::AllowedRoot)?;
-                AllowedProjectRoot::relative(text).map_err(|source| {
-                    ProjectManifestError::InvalidAllowedRoot { index, source }
-                })?
+                AllowedProjectRoot::relative(text)
+                    .map_err(|source| ProjectManifestError::InvalidAllowedRoot { index, source })?
             }
-            found => {
-                return Err(ProjectManifestError::UnsupportedAllowedRootKind { index, found })
-            }
+            found => return Err(ProjectManifestError::UnsupportedAllowedRootKind { index, found }),
         };
         roots.push(root);
     }
@@ -529,10 +523,8 @@ fn decode_commands(payload: &[u8]) -> Result<Vec<ManifestCommand>, ProjectManife
     }
     let mut commands = Vec::with_capacity(count);
     for _ in 0..count {
-        let command_id = CommandId::from_bytes(read_identity(
-            reader.take(IDENTITY_BYTES)?,
-            FIELD_COMMANDS,
-        )?);
+        let command_id =
+            CommandId::from_bytes(read_identity(reader.take(IDENTITY_BYTES)?, FIELD_COMMANDS)?);
         let length = usize::from(reader.u16()?);
         let display_name =
             read_utf8(reader.take(length)?, ManifestTextField::CommandName)?.to_owned();
@@ -568,10 +560,7 @@ fn decode_settings(payload: &[u8]) -> Result<Vec<ProjectSetting>, ProjectManifes
         let key_len = usize::from(reader.u16()?);
         let key = read_utf8(reader.take(key_len)?, ManifestTextField::SettingKey)?;
         let value_len = reader.u32()? as usize;
-        let value = read_utf8(
-            reader.take(value_len)?,
-            ManifestTextField::SettingValue,
-        )?;
+        let value = read_utf8(reader.take(value_len)?, ManifestTextField::SettingValue)?;
         settings.push(ProjectSetting::new(key, value)?);
     }
     reader.finish_nested(ManifestTextField::SettingValue)?;
@@ -632,19 +621,14 @@ fn validate_setting_key(key: &str) -> Result<(), ProjectManifestError> {
         return Err(ProjectManifestError::InvalidSettingKey(key.to_owned()));
     }
     if !bytes.all(|byte| {
-        byte.is_ascii_lowercase()
-            || byte.is_ascii_digit()
-            || matches!(byte, b'.' | b'_' | b'-')
+        byte.is_ascii_lowercase() || byte.is_ascii_digit() || matches!(byte, b'.' | b'_' | b'-')
     }) {
         return Err(ProjectManifestError::InvalidSettingKey(key.to_owned()));
     }
     Ok(())
 }
 
-fn read_utf8(
-    payload: &[u8],
-    field: ManifestTextField,
-) -> Result<&str, ProjectManifestError> {
+fn read_utf8(payload: &[u8], field: ManifestTextField) -> Result<&str, ProjectManifestError> {
     str::from_utf8(payload).map_err(|_| ProjectManifestError::InvalidUtf8 { field })
 }
 
@@ -666,48 +650,87 @@ pub enum ManifestTextField {
 /// Exact reason a project manifest was rejected.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProjectManifestError {
-    Truncated { needed: usize, remaining: usize },
+    Truncated {
+        needed: usize,
+        remaining: usize,
+    },
     InvalidMagic,
-    UnsupportedSchemaVersion { found: u16 },
-    UnknownRequiredField { field: u16 },
-    MissingRequiredField { field: u16 },
-    DuplicateField { field: u16 },
+    UnsupportedSchemaVersion {
+        found: u16,
+    },
+    UnknownRequiredField {
+        field: u16,
+    },
+    MissingRequiredField {
+        field: u16,
+    },
+    DuplicateField {
+        field: u16,
+    },
     InvalidFieldLength {
         field: u16,
         expected: usize,
         actual: usize,
     },
-    TrailingBytes { actual: usize },
+    TrailingBytes {
+        actual: usize,
+    },
     NestedTrailingBytes {
         field: ManifestTextField,
         actual: usize,
     },
-    InvalidUtf8 { field: ManifestTextField },
-    InvalidName { kind: ManifestNameKind },
+    InvalidUtf8 {
+        field: ManifestTextField,
+    },
+    InvalidName {
+        kind: ManifestNameKind,
+    },
     NameTooLong {
         kind: ManifestNameKind,
         maximum: usize,
         actual: usize,
     },
     MissingAllowedRoot,
-    TooManyAllowedRoots { maximum: usize, actual: usize },
-    NonUtf8AllowedRoot { index: usize },
+    TooManyAllowedRoots {
+        maximum: usize,
+        actual: usize,
+    },
+    NonUtf8AllowedRoot {
+        index: usize,
+    },
     InvalidAllowedRoot {
         index: usize,
         source: RepositoryPathError,
     },
-    UnsupportedAllowedRootKind { index: usize, found: u8 },
+    UnsupportedAllowedRootKind {
+        index: usize,
+        found: u8,
+    },
     DuplicateAllowedRoot(String),
-    TooManyCommands { maximum: usize, actual: usize },
+    TooManyCommands {
+        maximum: usize,
+        actual: usize,
+    },
     DuplicateCommandId(CommandId),
     DuplicateCommandName(String),
-    UnsupportedLanguageProfile { found: u8 },
-    TooManySettings { maximum: usize, actual: usize },
+    UnsupportedLanguageProfile {
+        found: u8,
+    },
+    TooManySettings {
+        maximum: usize,
+        actual: usize,
+    },
     InvalidSettingKey(String),
     DuplicateSettingKey(String),
-    SettingValueTooLong { maximum: usize, actual: usize },
+    SettingValueTooLong {
+        maximum: usize,
+        actual: usize,
+    },
     SettingValueContainsNul,
-    UnexpectedRecordType { expected: u16, found: u16 },
+    UnexpectedRecordType {
+        expected: u16,
+        found: u16,
+    },
     StateRecord(StateRecordError),
 }
 
@@ -723,10 +746,16 @@ impl fmt::Display for ProjectManifestError {
                 write!(formatter, "project manifest schema {found} is unsupported")
             }
             Self::UnknownRequiredField { field } => {
-                write!(formatter, "project manifest required field {field} is unknown")
+                write!(
+                    formatter,
+                    "project manifest required field {field} is unknown"
+                )
             }
             Self::MissingRequiredField { field } => {
-                write!(formatter, "project manifest required field {field} is missing")
+                write!(
+                    formatter,
+                    "project manifest required field {field} is missing"
+                )
             }
             Self::DuplicateField { field } => {
                 write!(formatter, "project manifest field {field} is duplicated")
@@ -768,30 +797,48 @@ impl fmt::Display for ProjectManifestError {
                 "project manifest allows at most {maximum} roots, got {actual}"
             ),
             Self::NonUtf8AllowedRoot { index } => {
-                write!(formatter, "project manifest allowed root {index} is not UTF-8")
+                write!(
+                    formatter,
+                    "project manifest allowed root {index} is not UTF-8"
+                )
             }
             Self::InvalidAllowedRoot { index, source } => {
-                write!(formatter, "project manifest allowed root {index} is invalid: {source}")
+                write!(
+                    formatter,
+                    "project manifest allowed root {index} is invalid: {source}"
+                )
             }
             Self::UnsupportedAllowedRootKind { index, found } => write!(
                 formatter,
                 "project manifest allowed root {index} has unsupported kind {found}"
             ),
             Self::DuplicateAllowedRoot(root) => {
-                write!(formatter, "project manifest allowed root is duplicated: {root}")
+                write!(
+                    formatter,
+                    "project manifest allowed root is duplicated: {root}"
+                )
             }
             Self::TooManyCommands { maximum, actual } => write!(
                 formatter,
                 "project manifest allows at most {maximum} commands, got {actual}"
             ),
             Self::DuplicateCommandId(command_id) => {
-                write!(formatter, "project manifest command ID is duplicated: {command_id}")
+                write!(
+                    formatter,
+                    "project manifest command ID is duplicated: {command_id}"
+                )
             }
             Self::DuplicateCommandName(name) => {
-                write!(formatter, "project manifest command name is duplicated: {name}")
+                write!(
+                    formatter,
+                    "project manifest command name is duplicated: {name}"
+                )
             }
             Self::UnsupportedLanguageProfile { found } => {
-                write!(formatter, "project manifest language profile {found} is unsupported")
+                write!(
+                    formatter,
+                    "project manifest language profile {found} is unsupported"
+                )
             }
             Self::TooManySettings { maximum, actual } => write!(
                 formatter,
@@ -801,7 +848,10 @@ impl fmt::Display for ProjectManifestError {
                 write!(formatter, "project manifest setting key is invalid: {key}")
             }
             Self::DuplicateSettingKey(key) => {
-                write!(formatter, "project manifest setting key is duplicated: {key}")
+                write!(
+                    formatter,
+                    "project manifest setting key is duplicated: {key}"
+                )
             }
             Self::SettingValueTooLong { maximum, actual } => write!(
                 formatter,
@@ -814,7 +864,9 @@ impl fmt::Display for ProjectManifestError {
                 formatter,
                 "project manifest state record type must be {expected}, got {found}"
             ),
-            Self::StateRecord(source) => write!(formatter, "project manifest state error: {source}"),
+            Self::StateRecord(source) => {
+                write!(formatter, "project manifest state error: {source}")
+            }
         }
     }
 }

@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_19.tar`, the canonical V1 skill tree, and the live session results through `FORGEOS-V1-HASH-000`.
-> `FORGEOS-V1-PROJECT-100` is currently active and awaiting operator validation.
+> Source basis: `Forge_OS_V1_base_20.tar`, the canonical V1 skill tree, and the live session results through `FORGEOS-V1-PROJECT-100`.
+> `FORGEOS-V1-FILE-100` is currently active and awaiting operator validation.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 10 |
+| ✅ Completed / closed | 11 |
 | 🔨 Active / started | 1 |
 | 🟢 Available / ready to start | 10 |
-| 🔒 Locked by prerequisites | 46 |
+| 🔒 Locked by prerequisites | 45 |
 
-**Raw closed-node count:** 10 of 67, or 14.9%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 11 of 67, or 16.4%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -38,23 +38,23 @@
 | 5 | Final release capability | 1 | locked 1 |
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
-| 2 | Functional V1 systems | 19 | locked 19 |
-| 1 | Local mechanisms | 16 | active 1, available 10, locked 5 |
+| 2 | Functional V1 systems | 19 | available 1, locked 18 |
+| 1 | Local mechanisms | 16 | closed 1, active 1, available 9, locked 5 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-PROJECT-100` — Validated project manifest and repository identity
+### 🔨 `FORGEOS-V1-FILE-100` — Boundary-safe file access and atomic write
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
 - **Current position:** Source patch prepared; behavior-only CI has not yet been returned by the operator.
-- **Direct prerequisites:** `CONTRACT-000`, `STATE-000`, `PATH-000`, and `GUARD-002` ✅
-- **Immediate unlock after closure:** `FORGEOS-V1-PROJECT-200` becomes available.
+- **Direct prerequisites:** `PATH-000` and `STATE-000` ✅
+- **Immediate unlock after closure:** `FORGEOS-V1-EDITOR-100` and `FORGEOS-V1-PARSER-100` become available.
 
 ## Available skills right now
 
-- 🟢 `FORGEOS-V1-FILE-100` — Boundary-safe file access and atomic write
+- 🟢 `FORGEOS-V1-PROJECT-200` — Persistent project registry and workspace restoration
 - 🟢 `FORGEOS-V1-SESSION-100` — Session and managed-service lifecycle contract
 - 🟢 `FORGEOS-V1-LSP-100` — Rust Analyzer process and JSON-RPC adapter
 - 🟢 `FORGEOS-V1-TERMINAL-100` — PTY spawn, I/O, resize, and termination
@@ -119,7 +119,7 @@ Functional subsystems assembled from local mechanisms.
 
 | Status | Skill | What it is | Direct prerequisites / blockers |
 |---|---|---|---|
-| 🔒 LOCKED | `FORGEOS-V1-PROJECT-200` | Persistent project registry and workspace restoration | 🔒 `FORGEOS-V1-PROJECT-100` |
+| 🟢 AVAILABLE | `FORGEOS-V1-PROJECT-200` | Persistent project registry and workspace restoration | ✅ `FORGEOS-V1-PROJECT-100` |
 | 🔒 LOCKED | `FORGEOS-V1-SESSION-200` | Dedicated ForgeOS session bootstrap | 🟢 `FORGEOS-V1-SESSION-100` |
 | 🔒 LOCKED | `FORGEOS-V1-SESSION-201` | Managed ForgeOS and Nyx service lifecycle | 🟢 `FORGEOS-V1-SESSION-100`<br>🟢 `FORGEOS-V1-NYX-100` |
 | 🔒 LOCKED | `FORGEOS-V1-FILE-200` | Repository file tree and search | 🔒 `FORGEOS-V1-FILE-100`<br>🔒 `FORGEOS-V1-PROJECT-200` |
@@ -146,9 +146,9 @@ Concrete local mechanisms and adapters that make the systems real.
 
 | Status | Skill | What it is | Direct prerequisites / blockers |
 |---|---|---|---|
-| 🔨 ACTIVE | `FORGEOS-V1-PROJECT-100` | Validated project manifest and repository identity | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
+| ✅ CLOSED | `FORGEOS-V1-PROJECT-100` | Validated project manifest and repository identity | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-SESSION-100` | Session and managed-service lifecycle contract | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
-| 🟢 AVAILABLE | `FORGEOS-V1-FILE-100` | Boundary-safe file access and atomic write | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000` |
+| 🔨 ACTIVE | `FORGEOS-V1-FILE-100` | Boundary-safe file access and atomic write | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000` |
 | 🔒 LOCKED | `FORGEOS-V1-EDITOR-100` | Editor buffer identity and dirty-state model | 🔒 `FORGEOS-V1-FILE-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | 🔒 LOCKED | `FORGEOS-V1-PARSER-100` | Incremental Tree-sitter parsing adapter | ✅ `FORGEOS-V1-ARCH-001`<br>🔒 `FORGEOS-V1-FILE-100` |
 | 🟢 AVAILABLE | `FORGEOS-V1-LSP-100` | Rust Analyzer process and JSON-RPC adapter | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
@@ -196,7 +196,8 @@ The bedrock: architecture, contracts, guards, process/path/state foundations, an
 8. ✅ `FORGEOS-V1-PATH-000` — Canonical repository path and boundary identity
 9. ✅ `FORGEOS-V1-STATE-000` — Atomic versioned local persistence
 10. ✅ `FORGEOS-V1-HASH-000` — Stable artifact and request hashing
-11. 🔨 `FORGEOS-V1-PROJECT-100` — Validated project manifest and repository identity
+11. ✅ `FORGEOS-V1-PROJECT-100` — Validated project manifest and repository identity
+12. 🔨 `FORGEOS-V1-FILE-100` — Boundary-safe file access and atomic write
 
 ## Reading this list correctly
 

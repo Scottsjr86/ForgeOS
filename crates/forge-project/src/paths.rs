@@ -21,6 +21,10 @@ pub struct FileSystemObjectId {
 }
 
 impl FileSystemObjectId {
+    pub(crate) const fn from_raw(device: u64, object: u64) -> Self {
+        Self { device, object }
+    }
+
     /// Filesystem or mount identity.
     pub const fn device(self) -> u64 {
         self.device

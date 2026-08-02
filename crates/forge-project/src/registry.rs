@@ -112,13 +112,8 @@ impl ProjectRegistry {
         let boundary = RepositoryBoundary::open(repository_id, display_root)?;
         validate_allowed_roots(&manifest, &boundary)?;
         self.repositories.insert(repository_id, project_id);
-        self.projects.insert(
-            project_id,
-            RegisteredProject {
-                manifest,
-                boundary,
-            },
-        );
+        self.projects
+            .insert(project_id, RegisteredProject { manifest, boundary });
         Ok(self
             .projects
             .get(&project_id)
@@ -163,8 +158,13 @@ pub enum ProjectRegistryError {
         repository_id: RepositoryId,
         existing_project: ProjectId,
     },
-    AllowedRootNotDirectory { path: PathBuf },
-    Io { path: PathBuf, kind: io::ErrorKind },
+    AllowedRootNotDirectory {
+        path: PathBuf,
+    },
+    Io {
+        path: PathBuf,
+        kind: io::ErrorKind,
+    },
 }
 
 impl fmt::Display for ProjectRegistryError {
@@ -183,10 +183,18 @@ impl fmt::Display for ProjectRegistryError {
                 "repository ID {repository_id} is already owned by project {existing_project}"
             ),
             Self::AllowedRootNotDirectory { path } => {
-                write!(formatter, "allowed project root is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "allowed project root is not a directory: {}",
+                    path.display()
+                )
             }
             Self::Io { path, kind } => {
-                write!(formatter, "project registration I/O failed for {}: {kind:?}", path.display())
+                write!(
+                    formatter,
+                    "project registration I/O failed for {}: {kind:?}",
+                    path.display()
+                )
             }
         }
     }

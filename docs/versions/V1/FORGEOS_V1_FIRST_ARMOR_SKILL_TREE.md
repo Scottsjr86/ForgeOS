@@ -779,7 +779,7 @@ never closes the node.
 
 - **Owner:** `forge-project`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-PROJECT-100`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Projects persist with stable identity, repository root, display
   name, registered commands, recent-open state, and last safe workspace snapshot.
 - **Must not be true:** Display name, path string alone, or list order may not become
@@ -1058,7 +1058,7 @@ never closes the node.
 - **Owner:** `forge-project`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-PATH-000`, `FORGEOS-V1-GUARD-002`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** A versioned manifest validates display name, canonical repository
   identity, allowed roots, commands, language profile, and settings.
 - **Must not be true:** Unknown required fields, invalid paths, duplicate IDs, or
@@ -1085,7 +1085,7 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-PATH-000`, `FORGEOS-V1-STATE-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Reads and atomic writes resolve through approved project roots and
   detect changed-on-disk conflicts.
 - **Must not be true:** Symlink escapes, path traversal, partial writes, or hidden
@@ -1455,10 +1455,10 @@ section ever disagree.
 
 ## 8. Current frontier
 
-All Tier-0 foundations and structural guards are closed. Validated project manifest
-and repository identity is active because it is the shortest bounded route into a
-real registered repository and directly unlocks the persistent project registry.
-Recovery is newly available after stable hashing closed.
+All Tier-0 foundations, structural guards, and validated project registration are
+closed. Boundary-safe file access is active because it is the smallest lower-depth
+bridge from a registered repository into real source work and directly unlocks the
+editor-buffer and parser branches. Persistent project restoration remains available.
 
 Current frontier:
 
@@ -1474,13 +1474,14 @@ CLOSED
   FORGEOS-V1-PATH-000
   FORGEOS-V1-STATE-000
   FORGEOS-V1-HASH-000
+  FORGEOS-V1-PROJECT-100
 
-ACTIVE_SKILL=FORGEOS-V1-PROJECT-100
-ACTIVE_BLOCKER=FORGEOS_HAS_NO_VERSIONED_VALIDATED_PROJECT_MANIFEST_OR_DUPLICATE_SAFE_REPOSITORY_REGISTRY
-ACTIVE_SLICE=FORGEOS-V1-PROJECT-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-FILE-100
+ACTIVE_BLOCKER=FORGEOS_HAS_NO_MANIFEST_BOUND_RAW_FILE_ACCESS_OR_CONFLICT_SAFE_ATOMIC_WRITE
+ACTIVE_SLICE=FORGEOS-V1-FILE-100-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-FILE-100
+  FORGEOS-V1-PROJECT-200
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-SESSION-100
   FORGEOS-V1-LSP-100
@@ -1495,7 +1496,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-PROJECT-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-FILE-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

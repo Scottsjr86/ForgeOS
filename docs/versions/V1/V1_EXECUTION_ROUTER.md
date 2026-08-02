@@ -90,15 +90,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-FILE-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-PROJECT-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-PROJECT-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-FILE-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-FILE-100
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=PROJECT_AND_PERSISTENCE
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-PROJECT-100-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-FILE-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -106,10 +106,7 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
 
 All Tier-0 foundations and all three structural guards are closed.
-`FORGEOS-V1-PROJECT-100` is the only active source skill. Boundary-safe file access,
-Forge World, session, LSP, Nyx health, terminal, command, read-only Git, and recovery
-remain available but inactive. The active slice may validate and register project
-manifest truth only; it may not execute commands or mutate repository files.
+`FORGEOS-V1-FILE-100` is the only active source skill. Persistent project registry, Forge World, session, LSP, Nyx health, terminal, command, read-only Git, patch, and recovery remain available but inactive. The active slice may read and atomically replace approved repository files only; it may not build file trees, search, edit buffers, execute commands, inspect Git, or present UI state.
 
 ## 3. Current-source intake law
 
@@ -888,59 +885,71 @@ closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-HASH-000/CLOSURE_AND_SPEC.m
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-HASH-000/USER_GUIDE_SOURCE.md
 ```
 
-Validated project manifest and repository identity is active.
+Validated project manifest and repository identity is closed.
 
 ```yaml
 skill_id: FORGEOS-V1-PROJECT-100
+state: CLOSED
+lane: PROJECT_AND_PERSISTENCE
+owner: forge-core, forge-project
+source_repository: Forge_OS_V1
+user_acceptance_status: APPROVED_2026-08-02
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-PROJECT-100/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-PROJECT-100/USER_GUIDE_SOURCE.md
+```
+
+Boundary-safe file access and atomic write is active.
+
+```yaml
+skill_id: FORGEOS-V1-FILE-100
 state: ACTIVE
 lane: PROJECT_AND_PERSISTENCE
-owning_subsystem: forge-core, forge-project
+owning_subsystem: forge-project
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_19.tar sha256 b8fefe29556b977062607b8bda6c067cdf1f9e215f84783d21a16b0c8a65b197
+source_revision: Forge_OS_V1_base_20.tar sha256 5923e493f18fdeac68f521fd7e81bb4426fe780fc76857cb8a0ec55aa1bbfb00
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-CONTRACT-000
-  - FORGEOS-V1-STATE-000
   - FORGEOS-V1-PATH-000
-  - FORGEOS-V1-GUARD-002
+  - FORGEOS-V1-STATE-000
 originating_path_or_probe: >
-  Import valid, malformed, duplicate-project, duplicate-repository, missing-root,
-  non-directory-root, and moved-repository fixtures; encode and reopen equivalent
-  canonical manifests; and verify unsupported schema and unknown required fields fail.
+  Read raw, non-UTF8, denied-root, wrong-repository, symlink, directory, missing,
+  create, replace, stale-revision, and injected-failure fixtures through one
+  manifest-bound repository file adapter.
 first_blocker: >
-  ForgeOS has stable IDs, state bytes, and repository boundaries but no versioned
-  project manifest or duplicate-safe registry binding canonical project truth to a
-  verified repository directory object.
-active_slice: FORGEOS-V1-PROJECT-100-SLICE-001
+  ForgeOS can validate project manifests and repository boundaries but has no
+  manifest-bound raw file access or conflict-safe atomic replacement primitive.
+active_slice: FORGEOS-V1-FILE-100-SLICE-001
 allowed_paths:
-  - crates/forge-core/src/projects.rs
-  - crates/forge-core/tests/project_manifest.rs
-  - crates/forge-project/src/registry.rs
-  - crates/forge-project/tests/project_registry.rs
+  - crates/forge-project/src/files.rs
+  - crates/forge-project/src/files/**
+  - crates/forge-project/src/lib.rs
+  - crates/forge-project/src/paths.rs
+  - crates/forge-project/tests/file_access.rs
   - docs/ForgeOS_header.md
   - docs/GOVERNING_LAWS.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-HASH-000/**
+  - docs/versions/V1/skills/FORGEOS-V1-PROJECT-100/**
 forbidden_paths:
-  - repository file mutation, atomic source writes, editor buffers, or search
-  - command execution semantics, environment policy, PTY, terminal, or shell behavior
+  - repository tree enumeration, content search, or file watching
+  - editor buffers, cursor state, dirty state, parsing, or LSP
+  - command execution, environment policy, PTY, terminal, or shell behavior
   - Git inspection or mutation
-  - session, LSP, Nyx, agent, patch, recovery, or Forge World behavior
+  - project-registry persistence or workspace restoration
+  - session, Nyx, agent, patch, recovery, or Forge World behavior
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_core::projects::ProjectManifest
-  - forge_core::projects::ManifestCommand
-  - forge_core::projects::ProjectSetting
-  - forge_core::projects::LanguageProfile
-  - forge_core::projects::ProjectManifestError
-  - forge_project::registry::ProjectRegistry
-  - forge_project::registry::RegisteredProject
-  - forge_project::registry::ProjectRegistryError
+  - forge_project::files::ProjectFileAccess
+  - forge_project::files::FileSnapshot
+  - forge_project::files::FileRevision
+  - forge_project::files::FileExpectation
+  - forge_project::files::FileWriteResult
+  - forge_project::files::WriteDurability
+  - forge_project::files::ProjectFileError
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -950,40 +959,41 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  Equivalent manifests encode identically and reopen equivalently; required fields,
-  display names, allowed roots, command references, Rust language profile, and
-  settings validate deterministically; unsupported schemas, unknown required fields,
-  malformed bytes, invalid roots, duplicate command IDs, duplicate project IDs, and
-  duplicate repository IDs fail explicitly; the same moved directory object can be
-  rebound; and behavior-only CI plus all structural guards remain green.
+  Raw bytes read without encoding replacement; approved existing files replace
+  atomically through same-directory synced staging; missing files create explicitly;
+  stale, missing, or unexpected existing revisions conflict before commit; denied
+  roots, wrong repository IDs, symlinks, directories, and boundary escapes fail;
+  injected pre-commit failures preserve original bytes and remove staging; and
+  behavior-only CI plus all structural guards remain green.
 block_edge: >
-  Stop on unstable manifest bytes, silent schema acceptance, path escape, duplicate
-  identity acceptance, display path becoming canonical identity, missing-root
-  acceptance, command execution leakage, dependency-graph expansion, structural
-  guard regression, source-size warning, or CI failure.
+  Stop on lossy text conversion, path escape, symlink following, partial target bytes,
+  stale-revision overwrite, original-byte loss on pre-commit failure, hidden stage
+  overwrite, dependency-graph expansion, structural guard regression, source-size
+  warning, or CI failure.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py, observes project-manifest and registry
-  fixtures pass together with the full Rust suite and all three structural guards,
-  and explicitly approves project registration behavior.
+  The user runs python3 scripts/run_ci.py, observes raw read, create, replace, conflict,
+  denied-path, symlink, non-UTF8, and injected-failure fixtures pass with the full Rust
+  suite and all three structural guards, and explicitly approves file behavior.
 return_path: >
-  Close only FORGEOS-V1-PROJECT-100, unlock FORGEOS-V1-PROJECT-200, then reevaluate
-  that direct unlock and the current available frontier.
+  Close only FORGEOS-V1-FILE-100, unlock FORGEOS-V1-EDITOR-100 and
+  FORGEOS-V1-PARSER-100, then reevaluate those direct unlocks and the current frontier.
 parallel_compatibility: NONE_IN_PROJECT_AND_PERSISTENCE_LANE
 ```
 
-This packet is active. `FORGEOS-V1-FILE-100`, `FORGEOS-V1-WORLD-100`,
+This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-WORLD-100`,
 `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-LSP-100`, `FORGEOS-V1-NYX-100`,
 `FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-COMMAND-100`, `FORGEOS-V1-GIT-100`,
 `FORGEOS-V1-PATCH-100`, and `FORGEOS-V1-RECOVERY-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for the project manifest
+## 17. Direct unlock handling for file access
 
-After `FORGEOS-V1-PROJECT-100` closes, unlock only `FORGEOS-V1-PROJECT-200`,
-reevaluate the current available frontier, and rerun behavior-only CI. Do not infer
-file mutation, command execution, Git, session, Nyx, or Forge World behavior from
-manifest registration.
+After `FORGEOS-V1-FILE-100` closes, unlock only `FORGEOS-V1-EDITOR-100` and
+`FORGEOS-V1-PARSER-100`, reevaluate those direct unlocks and the current available
+frontier, and rerun behavior-only CI. Do not infer file-tree search, editor state,
+parsing, command execution, Git, session, Nyx, or Forge World behavior from the raw
+file primitive.
 
 ## 18. Final closure routing
 
