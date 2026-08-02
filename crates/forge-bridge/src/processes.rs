@@ -340,7 +340,6 @@ fn exit_from_status(status: ExitStatus) -> ProcessExit {
     ProcessExit::new(status.code(), status.success())
 }
 
-
 /// Applies the same isolated process-group policy used by the process foundation.
 pub(crate) fn configure_managed_process(command: &mut Command) {
     configure_process_group(command);

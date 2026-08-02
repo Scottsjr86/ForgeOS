@@ -1,7 +1,6 @@
 use super::types::{LspError, LspProtocolError, RustAnalyzerConfig};
 use crate::processes::{
-    configure_managed_process, terminate_managed_process,
-    terminate_remaining_managed_process_group,
+    configure_managed_process, terminate_managed_process, terminate_remaining_managed_process_group,
 };
 use serde_json::{json, Value};
 use std::collections::VecDeque;
@@ -116,11 +115,13 @@ impl LspConnection {
             "method": method,
             "params": params,
         }))?;
-        let deadline = Instant::now().checked_add(timeout).ok_or(LspError::Timeout)?;
+        let deadline = Instant::now()
+            .checked_add(timeout)
+            .ok_or(LspError::Timeout)?;
         loop {
             let message = self.receive_until(deadline)?;
             if let Some(response) = response_for_id(&message, request_id)? {
-                return response;
+                return Ok(response);
             }
             self.handle_server_message(message)?;
         }
@@ -135,16 +136,20 @@ impl LspConnection {
         method: &str,
         timeout: Duration,
     ) -> Result<Value, LspError> {
-        if let Some(index) = self.queued_notifications.iter().position(|message| {
-            message.get("method").and_then(Value::as_str) == Some(method)
-        }) {
+        if let Some(index) = self
+            .queued_notifications
+            .iter()
+            .position(|message| message.get("method").and_then(Value::as_str) == Some(method))
+        {
             let message = self
                 .queued_notifications
                 .remove(index)
                 .expect("queued notification index was found");
             return notification_params(message, method);
         }
-        let deadline = Instant::now().checked_add(timeout).ok_or(LspError::Timeout)?;
+        let deadline = Instant::now()
+            .checked_add(timeout)
+            .ok_or(LspError::Timeout)?;
         loop {
             let message = self.receive_until(deadline)?;
             if message.get("method").and_then(Value::as_str) == Some(method)

@@ -90,15 +90,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-LSP-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-LSP-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-NYX-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-TERMINAL-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-TERMINAL-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=EDITOR_AND_LANGUAGE
+ACTIVE_LANE=TERMINAL_AND_COMMANDS
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-LSP-100-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-TERMINAL-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -106,12 +106,13 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
 
 All Tier-0 foundations, all three structural guards, project registration,
-boundary-safe file access, editor buffer identity, and incremental Rust parsing are
-closed. `FORGEOS-V1-LSP-100` is the only active source skill. Persistent project
-registry, Forge World, session, Nyx health, terminal, command, read-only Git, patch,
-and recovery remain available but inactive. The active slice may own one
-project-bound Rust Analyzer transport and exact document generations only; it may
-not own source files, saves, commands, Git, sessions, or presentation state.
+boundary-safe file access, editor buffer identity, incremental Rust parsing, and the
+Rust Analyzer adapter are closed. `FORGEOS-V1-TERMINAL-100` is the only active source
+skill. Persistent project registry, Forge World, session, Nyx health, command,
+read-only Git, patch, and recovery remain available but inactive. The active slice
+may own one real PTY adapter and stable terminal-session identity only; it may not own
+registered-command policy, project restoration, Git, Nyx, session, or presentation
+state.
 
 ## 3. Current-source intake law
 
@@ -778,62 +779,66 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-Rust Analyzer process and JSON-RPC integration is active.
+Native PTY spawn, byte I/O, resize, and termination is active.
 
 ```yaml
-skill_id: FORGEOS-V1-LSP-100
+skill_id: FORGEOS-V1-TERMINAL-100
 state: ACTIVE
-lane: EDITOR_AND_LANGUAGE
-owning_subsystem: forge-editor and forge-bridge
+lane: TERMINAL_AND_COMMANDS
+owning_subsystem: forge-terminal and forge-bridge
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_23.tar sha256 1b999748b0ed4f3873fe209eae24c3ca35dec0b593e5e76fb0270be4da5b3ec5
+source_revision: Forge_OS_V1_base_24.tar sha256 54ec26d8a66f4d916b81519faf8c107f9cdcc08a8d3dcbeee33245f92a5f5e63
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-CONTRACT-000
   - FORGEOS-V1-PROCESS-000
+  - FORGEOS-V1-PATH-000
   - FORGEOS-V1-GUARD-002
 originating_path_or_probe: >
-  Start one configured Rust Analyzer-compatible process for a canonical project
-  root, initialize framed JSON-RPC, open and change exact editor generations,
-  receive native diagnostics, restart with a new process identity, and inject one
-  malformed protocol frame.
+  Start two real PTYs with distinct stable IDs, declared absolute working directories,
+  exact argv, and explicit dimensions; exchange raw bytes; resize one; observe native
+  exits; terminate one; and prove the other remains alive and uncontaminated.
 first_blocker: >
-  ForgeOS has exact editor and parser generations but no project-bound Rust
-  Analyzer process, framed JSON-RPC transport, capability negotiation, or
-  version-safe diagnostic route.
-active_slice: FORGEOS-V1-LSP-100-SLICE-001
+  ForgeOS has a general managed-process foundation but no real PTY master/slave
+  adapter, stable terminal registry, exact raw byte channel, resize operation, or
+  explicit terminal termination outcome.
+active_slice: FORGEOS-V1-TERMINAL-100-SLICE-001
 allowed_paths:
   - crates/forge-bridge/Cargo.toml
   - crates/forge-bridge/src/lib.rs
-  - crates/forge-bridge/src/processes.rs
-  - crates/forge-bridge/src/lsp/**
-  - crates/forge-editor/src/language.rs
-  - crates/forge-editor/tests/language_server.rs
+  - crates/forge-bridge/src/pty.rs
+  - crates/forge-terminal/src/pty.rs
+  - crates/forge-terminal/tests/pty_sessions.rs
   - Cargo.lock
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-PARSER-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-LSP-100/**
 forbidden_paths_and_behavior:
-  - source-file ownership, file writes, save integration, file tree, or search
-  - synthetic diagnostics, cross-project responses, or stale document versions
-  - parser-tree ownership inside the language-server transport
-  - PTY, registered command, Git, session, Nyx, agent, recovery, or UI behavior
+  - registered-command definitions, authority classes, environment policy, or history
+  - project registry or workspace restoration
+  - terminal rendering, shell prose parsing, ANSI normalization, or text replacement
+  - Git, Nyx, session, recovery, agent, or Forge World behavior
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_bridge::lsp::RustAnalyzerConfig
-  - forge_bridge::lsp::RustAnalyzerClient
-  - forge_bridge::lsp::LspDocument
-  - forge_bridge::lsp::DocumentVersion
-  - forge_bridge::lsp::PublishedDiagnostics
-  - forge_bridge::lsp::LspError
-  - forge_editor::language::RustLanguageDocument
-  - forge_editor::language::PendingLanguageUpdate
-  - forge_editor::language::LanguageDocumentError
+  - forge_bridge::pty::NativePtyProcess
+  - forge_bridge::pty::NativePtyLaunch
+  - forge_bridge::pty::NativePtySize
+  - forge_bridge::pty::NativePtyExit
+  - forge_bridge::pty::NativePtyTermination
+  - forge_bridge::pty::NativePtyDrain
+  - forge_bridge::pty::PtyAdapterError
+  - forge_terminal::pty::PtyDimensions
+  - forge_terminal::pty::PtySpawnRequest
+  - forge_terminal::pty::PtySession
+  - forge_terminal::pty::PtyRegistry
+  - forge_terminal::pty::PtyOutputChunk
+  - forge_terminal::pty::PtyLifecycle
+  - forge_terminal::pty::PtyExit
+  - forge_terminal::pty::PtyError
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -843,47 +848,44 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  A configured Rust Analyzer-compatible executable starts in an isolated managed
-  process; initialize and initialized exchange framed JSON-RPC; reviewed capabilities
-  are explicit; exact UTF-8 editor generations open and change with strictly
-  advancing versions; editor language state advances only after the LSP notification
-  write succeeds; native diagnostics require a tracked URI and exact version;
-  project, repository, document, and buffer crossings fail before acceptance;
-  supported server requests receive bounded replies; unsupported client features are
-  reported explicitly; restart requires a new stable process identity and clears old
-  document state; malformed framing, missing diagnostic versions, unknown documents,
-  missing executables, and unexpected server exit remain typed failures; editor bytes
-  survive all adapter failures; and behavior-only CI plus all guards remain green.
+  A shell-free command starts inside a real native PTY with one stable TerminalId,
+  declared absolute non-symlink working directory, exact argv, and explicit nonzero
+  dimensions; master input and output preserve exact bytes without UTF-8 replacement
+  or ANSI normalization; resize reaches the kernel PTY; native exit code or signal is
+  inspectable; operator termination is explicit; duplicate and unknown IDs fail;
+  output sequence numbers remain terminal-local; missing executables and invalid
+  requests remain typed failures; terminating one PTY does not terminate or mix bytes
+  with another; and behavior-only CI plus all guards remain green.
 block_edge: >
-  Stop on unframed or ambiguously framed messages, stale or foreign diagnostics,
-  synthetic diagnostics, process identity reuse, leaked child processes, document
-  state surviving restart silently, server failure mutating editor buffers,
-  structural guard regression, source-size warning, or CI failure.
+  Stop on shell-mediated argv, path ambiguity, output normalization, shared output
+  channels, identity crossing, resize that only changes UI state, leaked live child,
+  one terminal affecting another, structural guard regression, source-size warning,
+  or CI failure.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and observes startup, capability negotiation,
-  server-request handling, diagnostics, stale and foreign rejection, restart, missing
-  executable, malformed protocol, unexpected exit, unsupported capability, and
-  non-UTF8 degradation fixtures pass with the full Rust suite and all three guards.
+  The user runs python3 scripts/run_ci.py and observes real PTY raw-byte, working
+  directory, resize, exit, duplicate identity, missing executable, invalid dimensions,
+  post-exit rejection, terminal isolation, and removal fixtures pass with the full Rust
+  suite and all three guards.
 return_path: >
-  Close only FORGEOS-V1-LSP-100, keep FORGEOS-V1-EDITOR-201 locked until
-  FORGEOS-V1-EDITOR-200 also closes, and reevaluate the current available frontier.
-parallel_compatibility: NONE_IN_EDITOR_AND_LANGUAGE_LANE
+  Close only FORGEOS-V1-TERMINAL-100, keep FORGEOS-V1-TERMINAL-200 locked until
+  FORGEOS-V1-PROJECT-200 also closes, and reevaluate the current available frontier.
+parallel_compatibility: NONE_IN_TERMINAL_AND_COMMANDS_LANE
 ```
 
 This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-WORLD-100`,
-`FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`, `FORGEOS-V1-TERMINAL-100`,
-`FORGEOS-V1-COMMAND-100`, `FORGEOS-V1-GIT-100`, `FORGEOS-V1-PATCH-100`, and
-`FORGEOS-V1-RECOVERY-100` remain available but inactive.
+`FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`, `FORGEOS-V1-COMMAND-100`,
+`FORGEOS-V1-GIT-100`, `FORGEOS-V1-PATCH-100`, and `FORGEOS-V1-RECOVERY-100`
+remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for Rust Analyzer
+## 17. Direct unlock handling for native PTY support
 
-After `FORGEOS-V1-LSP-100` closes, no dependent becomes available solely from
-that closure. `FORGEOS-V1-EDITOR-201` remains locked until
-`FORGEOS-V1-EDITOR-200` also closes. Reevaluate the current available frontier and
-rerun behavior-only CI. Do not infer save, navigation UI, completion UI, command,
-Git, session, Nyx, or Forge World behavior from the transport adapter.
+After `FORGEOS-V1-TERMINAL-100` closes, no dependent becomes available solely from
+that closure. `FORGEOS-V1-TERMINAL-200` remains locked until
+`FORGEOS-V1-PROJECT-200` also closes. Reevaluate only the current frontier and rerun
+behavior-only CI. Do not infer registered commands, project restoration, terminal UI,
+session management, Git, Nyx, or Forge World behavior from the PTY primitive.
 
 ## 18. Final closure routing
 

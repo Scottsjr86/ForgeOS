@@ -1,8 +1,7 @@
 use super::protocol::LspConnection;
 use super::types::{
-    DocumentVersion, LspDiagnostic, LspDocument, LspError, LspPosition, LspProtocolError,
-    LspRange, PublishedDiagnostics, RustAnalyzerCapabilities, RustAnalyzerConfig,
-    TextDocumentSyncKind,
+    DocumentVersion, LspDiagnostic, LspDocument, LspError, LspPosition, LspProtocolError, LspRange,
+    PublishedDiagnostics, RustAnalyzerCapabilities, RustAnalyzerConfig, TextDocumentSyncKind,
 };
 use forge_protocol::identities::{ProcessId, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
@@ -92,10 +91,7 @@ impl RustAnalyzerClient {
             return Err(LspError::PreviousDocumentMismatch);
         }
         let uri = document_uri(self.config.workspace_root(), document.relative_path())?;
-        let tracked = self
-            .documents
-            .get(&uri)
-            .ok_or(LspError::DocumentNotOpen)?;
+        let tracked = self.documents.get(&uri).ok_or(LspError::DocumentNotOpen)?;
         if previous.version() != tracked.version {
             return Err(LspError::PreviousDocumentMismatch);
         }
@@ -137,10 +133,7 @@ impl RustAnalyzerClient {
     pub fn close_document(&mut self, document: &LspDocument) -> Result<(), LspError> {
         self.validate_document_boundary(document)?;
         let uri = document_uri(self.config.workspace_root(), document.relative_path())?;
-        let tracked = self
-            .documents
-            .get(&uri)
-            .ok_or(LspError::DocumentNotOpen)?;
+        let tracked = self.documents.get(&uri).ok_or(LspError::DocumentNotOpen)?;
         if tracked.version != document.version() {
             return Err(LspError::StaleDocumentVersion {
                 current: tracked.version,
@@ -220,7 +213,6 @@ impl RustAnalyzerClient {
         )
     }
 
-
     pub fn restart(&mut self, process_id: ProcessId) -> Result<(), LspError> {
         if process_id == self.config.process_id() {
             return Err(LspError::ProcessIdentityReused(process_id));
@@ -264,10 +256,7 @@ impl RustAnalyzerClient {
     fn validate_current_document(&self, document: &LspDocument) -> Result<(), LspError> {
         self.validate_document_boundary(document)?;
         let uri = document_uri(self.config.workspace_root(), document.relative_path())?;
-        let tracked = self
-            .documents
-            .get(&uri)
-            .ok_or(LspError::DocumentNotOpen)?;
+        let tracked = self.documents.get(&uri).ok_or(LspError::DocumentNotOpen)?;
         if tracked.version != document.version() {
             return Err(LspError::StaleDocumentVersion {
                 current: tracked.version,
@@ -368,7 +357,10 @@ fn parse_diagnostic(value: &Value) -> Result<LspDiagnostic, LspError> {
         Value::Number(value) => Some(value.to_string()),
         _ => None,
     });
-    let source = object.get("source").and_then(Value::as_str).map(str::to_owned);
+    let source = object
+        .get("source")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
     let message = required_str(object.get("message"))?.to_owned();
     Ok(LspDiagnostic {
         range,

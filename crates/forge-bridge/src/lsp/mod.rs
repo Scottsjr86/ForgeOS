@@ -9,6 +9,6 @@ mod types;
 
 pub use client::RustAnalyzerClient;
 pub use types::{
-    DocumentVersion, LspDiagnostic, LspDocument, LspError, LspPosition, LspProtocolError,
-    LspRange, PublishedDiagnostics, RustAnalyzerCapabilities, RustAnalyzerConfig, TextDocumentSyncKind,
+    DocumentVersion, LspDiagnostic, LspDocument, LspError, LspPosition, LspProtocolError, LspRange,
+    PublishedDiagnostics, RustAnalyzerCapabilities, RustAnalyzerConfig, TextDocumentSyncKind,
 };

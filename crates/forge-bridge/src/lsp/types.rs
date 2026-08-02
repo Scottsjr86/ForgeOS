@@ -340,7 +340,10 @@ impl fmt::Display for LspProtocolError {
             }
             Self::InvalidContentLength => formatter.write_str("invalid LSP Content-Length"),
             Self::MessageTooLarge { length } => {
-                write!(formatter, "LSP message length {length} exceeds the V1 limit")
+                write!(
+                    formatter,
+                    "LSP message length {length} exceeds the V1 limit"
+                )
             }
             Self::InvalidJson(message) => write!(formatter, "invalid LSP JSON: {message}"),
             Self::InvalidMessageShape => formatter.write_str("invalid JSON-RPC message shape"),
@@ -365,10 +368,16 @@ pub enum LspError {
     Protocol(LspProtocolError),
     Timeout,
     ServerExited(String),
-    Remote { code: i64, message: String },
+    Remote {
+        code: i64,
+        message: String,
+    },
     InvalidInitializeResult,
     UnsupportedCapability(&'static str),
-    ProjectMismatch { expected: ProjectId, actual: ProjectId },
+    ProjectMismatch {
+        expected: ProjectId,
+        actual: ProjectId,
+    },
     RepositoryMismatch {
         expected: RepositoryId,
         actual: RepositoryId,
@@ -400,13 +409,21 @@ pub enum LspError {
 impl fmt::Display for LspError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::InvalidProcessRequest(error) => write!(formatter, "invalid process request: {error}"),
+            Self::InvalidProcessRequest(error) => {
+                write!(formatter, "invalid process request: {error}")
+            }
             Self::ZeroRequestTimeout => formatter.write_str("LSP request timeout must be nonzero"),
             Self::InvalidWorkspaceRoot(path) => {
-                write!(formatter, "invalid canonical workspace root {}", path.display())
+                write!(
+                    formatter,
+                    "invalid canonical workspace root {}",
+                    path.display()
+                )
             }
             Self::Spawn(message) => write!(formatter, "Rust Analyzer spawn failed: {message}"),
-            Self::Termination(message) => write!(formatter, "Rust Analyzer termination failed: {message}"),
+            Self::Termination(message) => {
+                write!(formatter, "Rust Analyzer termination failed: {message}")
+            }
             Self::Protocol(error) => write!(formatter, "{error}"),
             Self::Timeout => formatter.write_str("timed out waiting for Rust Analyzer"),
             Self::ServerExited(stderr) if stderr.is_empty() => {
@@ -423,15 +440,24 @@ impl fmt::Display for LspError {
                 write!(formatter, "Rust Analyzer does not support {method}")
             }
             Self::ProjectMismatch { expected, actual } => {
-                write!(formatter, "LSP project mismatch: expected {expected}, got {actual}")
+                write!(
+                    formatter,
+                    "LSP project mismatch: expected {expected}, got {actual}"
+                )
             }
             Self::RepositoryMismatch { expected, actual } => write!(
                 formatter,
                 "LSP repository mismatch: expected {expected}, got {actual}"
             ),
-            Self::InvalidDocumentVersion(version) => write!(formatter, "invalid LSP document version {version}"),
-            Self::InvalidDiagnosticVersion(version) => write!(formatter, "invalid diagnostic version {version}"),
-            Self::MissingDiagnosticVersion => formatter.write_str("diagnostics omitted the required document version"),
+            Self::InvalidDocumentVersion(version) => {
+                write!(formatter, "invalid LSP document version {version}")
+            }
+            Self::InvalidDiagnosticVersion(version) => {
+                write!(formatter, "invalid diagnostic version {version}")
+            }
+            Self::MissingDiagnosticVersion => {
+                formatter.write_str("diagnostics omitted the required document version")
+            }
             Self::InvalidLanguageId => formatter.write_str("invalid LSP language ID"),
             Self::InvalidMethod => formatter.write_str("invalid JSON-RPC method"),
             Self::InvalidDocumentUri => formatter.write_str("invalid LSP document URI"),
@@ -446,17 +472,25 @@ impl fmt::Display for LspError {
             Self::StaleDocumentVersion { current, requested } => write!(
                 formatter,
                 "LSP document version {} does not advance current version {}",
-                requested.get(), current.get()
+                requested.get(),
+                current.get()
             ),
-            Self::UntrackedDiagnosticDocument(uri) => write!(formatter, "diagnostics target untracked document {uri}"),
+            Self::UntrackedDiagnosticDocument(uri) => {
+                write!(formatter, "diagnostics target untracked document {uri}")
+            }
             Self::StaleDiagnostics { current, received } => write!(
                 formatter,
                 "diagnostics version {} does not match current version {}",
-                received.get(), current.get()
+                received.get(),
+                current.get()
             ),
-            Self::ProcessIdentityReused(process_id) => write!(formatter, "restart reused process identity {process_id}"),
+            Self::ProcessIdentityReused(process_id) => {
+                write!(formatter, "restart reused process identity {process_id}")
+            }
             Self::RequestIdExhausted => formatter.write_str("JSON-RPC request IDs exhausted"),
-            Self::GenerationExhausted => formatter.write_str("Rust Analyzer restart generation exhausted"),
+            Self::GenerationExhausted => {
+                formatter.write_str("Rust Analyzer restart generation exhausted")
+            }
         }
     }
 }
@@ -467,13 +501,13 @@ fn validate_workspace_root(path: PathBuf) -> Result<PathBuf, LspError> {
     if !path.is_absolute() {
         return Err(LspError::InvalidWorkspaceRoot(path));
     }
-    let metadata = fs::symlink_metadata(&path)
-        .map_err(|_| LspError::InvalidWorkspaceRoot(path.clone()))?;
+    let metadata =
+        fs::symlink_metadata(&path).map_err(|_| LspError::InvalidWorkspaceRoot(path.clone()))?;
     if !metadata.is_dir() || metadata.file_type().is_symlink() {
         return Err(LspError::InvalidWorkspaceRoot(path));
     }
-    let canonical = fs::canonicalize(&path)
-        .map_err(|_| LspError::InvalidWorkspaceRoot(path.clone()))?;
+    let canonical =
+        fs::canonicalize(&path).map_err(|_| LspError::InvalidWorkspaceRoot(path.clone()))?;
     if canonical != path {
         return Err(LspError::InvalidWorkspaceRoot(path));
     }

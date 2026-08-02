@@ -8,3 +8,4 @@ pub mod lsp;
 pub mod parsing;
 pub mod ports;
 pub mod processes;
+pub mod pty;

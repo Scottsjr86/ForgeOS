@@ -3,9 +3,7 @@
 use forge_bridge::lsp::{
     LspError, LspPosition, LspProtocolError, RustAnalyzerClient, RustAnalyzerConfig,
 };
-use forge_editor::buffers::{
-    BufferId, BufferRegistry, DiskVersion, DocumentKey, EditorBuffer,
-};
+use forge_editor::buffers::{BufferId, BufferRegistry, DiskVersion, DocumentKey, EditorBuffer};
 use forge_editor::language::{LanguageDocumentError, RustLanguageDocument};
 use forge_protocol::identities::{ProcessId, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
@@ -144,10 +142,8 @@ struct Fixture {
 impl Fixture {
     fn new() -> Self {
         let counter = FIXTURE_COUNTER.fetch_add(1, Ordering::Relaxed);
-        let root = std::env::temp_dir().join(format!(
-            "forgeos-lsp-{}-{counter}",
-            std::process::id()
-        ));
+        let root =
+            std::env::temp_dir().join(format!("forgeos-lsp-{}-{counter}", std::process::id()));
         fs::create_dir_all(root.join("src")).expect("create fixture root");
         let root = fs::canonicalize(root).expect("canonical fixture root");
         let script = root.join("server.py");
@@ -210,8 +206,9 @@ fn open_buffer<'a>(
     bytes: &[u8],
 ) -> &'a mut EditorBuffer {
     registry
-        .open(id, document, bytes, DiskVersion::for_bytes(bytes))
-        .expect("open fixture buffer")
+        .open_existing(id, document, DiskVersion::for_bytes(bytes), bytes.to_vec())
+        .expect("open fixture buffer");
+    registry.get_mut(id).expect("fixture buffer exists")
 }
 
 #[test]
@@ -302,7 +299,9 @@ fn stale_diagnostics_are_rejected_after_an_edit() {
     client
         .change_document(&first, pending.lsp_document())
         .expect("send document change");
-    language.commit_update(pending).expect("commit language update");
+    language
+        .commit_update(pending)
+        .expect("commit language update");
     assert!(matches!(
         client.wait_for_diagnostics(Duration::from_secs(2)),
         Err(LspError::StaleDiagnostics { current, received })
@@ -333,7 +332,9 @@ fn prepared_update_does_not_advance_language_state_until_committed() {
     assert_eq!(language.content_version(), original_content);
     assert_eq!(language.lsp_version(), original_lsp);
 
-    language.commit_update(pending).expect("commit language update");
+    language
+        .commit_update(pending)
+        .expect("commit language update");
     assert_eq!(language.content_version(), buffer.content_version());
     assert!(language.lsp_version() > original_lsp);
 }
@@ -391,7 +392,9 @@ fn restart_requires_a_new_process_identity_and_clears_document_state() {
             .to_string(),
         "LSP document is not open"
     );
-    client.open_document(&payload).expect("reopen after restart");
+    client
+        .open_document(&payload)
+        .expect("reopen after restart");
     client
         .wait_for_diagnostics(Duration::from_secs(2))
         .expect("post-restart diagnostics");

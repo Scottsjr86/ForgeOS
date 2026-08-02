@@ -143,7 +143,6 @@ impl RustLanguageDocument {
     }
 }
 
-
 /// One exact editor generation prepared for LSP delivery but not yet committed.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PendingLanguageUpdate {
@@ -165,9 +164,14 @@ impl PendingLanguageUpdate {
 /// Exact reason an editor generation could not cross the LSP seam.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LanguageDocumentError {
-    InvalidUtf8 { valid_up_to: usize },
+    InvalidUtf8 {
+        valid_up_to: usize,
+    },
     InvalidVersion(u64),
-    BufferMismatch { expected: BufferId, actual: BufferId },
+    BufferMismatch {
+        expected: BufferId,
+        actual: BufferId,
+    },
     DocumentMismatch,
     ProjectMismatch,
     PendingUpdateMismatch,
@@ -185,10 +189,16 @@ impl fmt::Display for LanguageDocumentError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidUtf8 { valid_up_to } => {
-                write!(formatter, "Rust LSP text is not UTF-8 at byte {valid_up_to}")
+                write!(
+                    formatter,
+                    "Rust LSP text is not UTF-8 at byte {valid_up_to}"
+                )
             }
             Self::InvalidVersion(version) => {
-                write!(formatter, "buffer generation {version} cannot be represented by LSP")
+                write!(
+                    formatter,
+                    "buffer generation {version} cannot be represented by LSP"
+                )
             }
             Self::BufferMismatch { expected, actual } => write!(
                 formatter,
@@ -197,7 +207,9 @@ impl fmt::Display for LanguageDocumentError {
             Self::DocumentMismatch => {
                 formatter.write_str("language document identity does not match")
             }
-            Self::ProjectMismatch => formatter.write_str("language project identity does not match"),
+            Self::ProjectMismatch => {
+                formatter.write_str("language project identity does not match")
+            }
             Self::PendingUpdateMismatch => {
                 formatter.write_str("pending language update no longer matches committed state")
             }
