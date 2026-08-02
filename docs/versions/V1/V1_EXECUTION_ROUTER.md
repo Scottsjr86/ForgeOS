@@ -90,15 +90,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-NYX-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-COMMAND-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-COMMAND-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-SESSION-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-SESSION-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=TERMINAL_AND_COMMANDS
+ACTIVE_LANE=SESSION_AND_DISTRIBUTION
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-COMMAND-100-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-SESSION-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -107,12 +107,12 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 
 All Tier-0 foundations, all three structural guards, project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
-Rust Analyzer adapter, and native PTY support are closed. `FORGEOS-V1-COMMAND-100`
-is the only active source skill. Persistent project registry, Forge World, session,
-Nyx health, read-only Git, patch, and recovery remain available but inactive. The
-active slice may own immutable registered-command definitions and exact launch
-policy only; it may not execute commands, persist command history, restore projects,
-or own Git, Nyx, session, recovery, or presentation state.
+Rust Analyzer adapter, native PTY support, and immutable registered-command policy
+are closed. `FORGEOS-V1-SESSION-100` is the only active source skill. Persistent
+project registry, Forge World, Nyx health, read-only Git, patch, and recovery remain
+available but inactive. The active slice may own deterministic service-plan and
+session lifecycle contracts only; it may not bootstrap a login session, spawn
+services, persist recovery, call Nyx, mutate Git, or own presentation state.
 
 ## 3. Current-source intake law
 
@@ -779,64 +779,62 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-Registered command definition and launch policy is active.
+Session and managed-service lifecycle is active.
 
 ```yaml
-skill_id: FORGEOS-V1-COMMAND-100
+skill_id: FORGEOS-V1-SESSION-100
 state: ACTIVE
-lane: TERMINAL_AND_COMMANDS
-owning_subsystem: forge-core and forge-terminal
+lane: SESSION_AND_DISTRIBUTION
+owning_subsystem: forge-session
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_25.tar sha256 bfae16d0d73aeeff2dd2b2c2a3d8728f473252bb3597702159ece321589d643a
+source_revision: Forge_OS_V1_base_26.tar sha256 104b15ab148a83963c4423acfdfa243168db2df3f5acf78fff8796b0a7386e5d
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-PROCESS-000
-  - FORGEOS-V1-PATH-000
   - FORGEOS-V1-CONTRACT-000
+  - FORGEOS-V1-PROCESS-000
+  - FORGEOS-V1-GUARD-002
 originating_path_or_probe: >
-  Define one real project command with stable identity, exact executable and argv,
-  repository-bound working directory, declared clear-parent environment policy,
-  timeout, cancellation policy, and authority class; inspect the exact launch payload;
-  and prove invalid definitions, identity reuse, undeclared secrets, and boundary
-  crossing are rejected before any process starts.
+  Define one explicit managed-service plan with stable names and startup ranks;
+  drive a stable SessionId through dependency-gated start requests, exact ProcessId
+  start and readiness outcomes, bounded pre-readiness restart, reverse-order stop,
+  rollback, and terminal failure; and prove no service order or readiness decision
+  comes from sleeps, process-name discovery, map iteration, or ambient host state.
 first_blocker: >
-  Project manifests can reference a command ID and display name, and ForgeOS can run
-  processes and PTYs, but no canonical immutable command definition, environment
-  policy, authority class, definition identity, or exact pre-execution launch payload
-  exists.
-active_slice: FORGEOS-V1-COMMAND-100-SLICE-001
+  ForgeOS has stable process identity and execution outcomes, but forge-session has
+  no canonical service definitions, explicit startup and shutdown plan, readiness
+  handshake, restart policy, or deterministic supervisor state machine.
+active_slice: FORGEOS-V1-SESSION-100-SLICE-001
 allowed_paths:
-  - crates/forge-core/src/lib.rs
-  - crates/forge-core/src/commands.rs
-  - crates/forge-core/tests/registered_commands.rs
-  - crates/forge-terminal/src/commands.rs
-  - crates/forge-terminal/tests/registered_commands.rs
+  - crates/forge-session/src/lib.rs
+  - crates/forge-session/src/services.rs
+  - crates/forge-session/src/lifecycle.rs
+  - crates/forge-session/tests/**
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-TERMINAL-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-COMMAND-100/**
 forbidden_paths_and_behavior:
-  - process spawning, PTY launch, registered-command execution, output capture, or history
-  - mutable shell command strings or shell interpolation
-  - implicit parent-environment inheritance or undeclared secret propagation
-  - project registry persistence, file mutation, Git, Nyx, session, recovery, or UI state
+  - login-session bootstrap, display manager integration, compositor, or packaging
+  - direct service process spawning, polling sleeps, or process-name discovery
+  - runtime restart of already-ready dependency trees in this foundation slice
+  - Nyx transport, model providers, Git, file mutation, recovery persistence, or UI state
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_core::commands::RegisteredCommand
-  - forge_core::commands::CommandRegistry
-  - forge_core::commands::CommandEnvironmentPolicy
-  - forge_core::commands::CommandWorkingDirectory
-  - forge_core::commands::CommandTimeout
-  - forge_core::commands::CommandCancellationPolicy
-  - forge_core::commands::CommandAuthorityClass
-  - forge_terminal::commands::CommandDirectoryBinding
-  - forge_terminal::commands::CommandLaunchPayload
-  - forge_terminal::commands::ResolvedCommandEnvironmentVariable
-  - forge_terminal::commands::CommandLaunchError
+  - forge_session::services::ServiceName
+  - forge_session::services::ManagedService
+  - forge_session::services::ServicePlan
+  - forge_session::services::StartupRestartPolicy
+  - forge_session::lifecycle::SessionSupervisor
+  - forge_session::lifecycle::SessionPhase
+  - forge_session::lifecycle::LifecycleAction
+  - forge_session::lifecycle::ServiceStatus
+  - forge_session::lifecycle::ServiceFailure
+  - forge_session::lifecycle::StopReason
+  - forge_session::lifecycle::SupervisorError
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -846,49 +844,46 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  One immutable registered command preserves stable CommandId and RepositoryId, exact
-  executable and argv tokens, repository-root or canonical relative working-directory
-  declaration, clear-parent environment with only declared literal or inherited
-  variables, explicit timeout, process-group cancellation policy, and authority class;
-  its exact versioned definition has a stable SHA-256 identity; identical registration
-  is idempotent while silent ID meaning changes fail and replacement requires the exact
-  previous identity; launch preparation produces an inspectable ProcessSpawnRequest,
-  resolved working directory, sorted exact environment, definition identity, authority,
-  and cancellation policy without spawning; undeclared host variables are ignored;
-  missing declared inheritance, repository crossing, working-directory mismatch,
-  malformed text, ambiguous environment, and invalid timeout fail as typed errors; and
-  behavior-only CI plus all guards remain green.
+  One immutable service plan has canonical lower-kebab names, unique explicit startup
+  ranks, validated earlier dependencies, deterministic startup and reverse shutdown
+  order, and a scoped pre-readiness restart policy; one SessionSupervisor emits exact
+  start and stop actions, waits for explicit ProcessId-bound readiness, retries only
+  when declared, cleans a failed readiness process before retry, rolls back already-
+  ready services after terminal startup or runtime failure, preserves stop failures,
+  rejects attempt and process identity crossing, and reaches explicit Ready, Stopped,
+  or Failed phases without sleeps or process-name guessing; adding an unrelated
+  service preserves existing relative order; behavior-only CI and all guards remain
+  green.
 block_edge: >
-  Stop on shell prose, implicit environment inheritance, mutable registered meaning,
-  host path or display name becoming command identity, execution during this slice,
-  repository or directory crossing, unstable canonical bytes, structural guard
-  regression, source-size warning, or CI failure.
+  Stop on implicit ordering, duplicate startup ranks, unknown or later dependencies,
+  timing-based readiness, process-name discovery, identity crossing, unbounded retry,
+  silently ignored stop failure, source-size warning, structural guard regression, or
+  behavior-only CI failure.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and observes canonical definition, golden
-  identity, exact argv, literal token, environment clearing, missing inheritance,
-  identity conflict, explicit replacement, repository mismatch, working-directory
-  mismatch, timeout, and exact launch-payload fixtures pass with the full Rust suite
-  and all three guards.
+  The user runs python3 scripts/run_ci.py and observes explicit plan-order,
+  dependency, readiness, retry-cleanup, exhausted-failure rollback, reverse shutdown,
+  stop-failure, runtime-exit, identity-mismatch, and independent-session fixtures pass
+  with the full Rust suite and all three structural guards.
 return_path: >
-  Close only FORGEOS-V1-COMMAND-100, keep FORGEOS-V1-COMMAND-200 locked until
-  FORGEOS-V1-TERMINAL-200 closes, and reevaluate the current available frontier.
-parallel_compatibility: NONE_IN_TERMINAL_AND_COMMANDS_LANE
+  Close only FORGEOS-V1-SESSION-100, make FORGEOS-V1-SESSION-200 available, keep
+  FORGEOS-V1-SESSION-201 locked until FORGEOS-V1-NYX-100 closes, and reevaluate only
+  the current available frontier.
+parallel_compatibility: NONE_IN_SESSION_AND_DISTRIBUTION_LANE
 ```
 
 This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-WORLD-100`,
-`FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`, `FORGEOS-V1-GIT-100`,
-`FORGEOS-V1-PATCH-100`, and `FORGEOS-V1-RECOVERY-100` remain available but inactive.
+`FORGEOS-V1-NYX-100`, `FORGEOS-V1-GIT-100`, `FORGEOS-V1-PATCH-100`, and
+`FORGEOS-V1-RECOVERY-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for registered command policy
+## 17. Direct unlock handling for session lifecycle
 
-After `FORGEOS-V1-COMMAND-100` closes, no dependent becomes available solely from
-that closure. `FORGEOS-V1-COMMAND-200` remains locked until
-`FORGEOS-V1-TERMINAL-200` closes, and that terminal capability still requires
-`FORGEOS-V1-PROJECT-200`. Reevaluate only the current frontier and rerun behavior-only
-CI. Do not infer command execution, output history, project restoration, Git,
-session management, Nyx, or Forge World behavior from the definition primitive.
+After `FORGEOS-V1-SESSION-100` closes, `FORGEOS-V1-SESSION-200` becomes available.
+`FORGEOS-V1-SESSION-201` remains locked until `FORGEOS-V1-NYX-100` also closes.
+Reevaluate only those direct unlocks and the current frontier. Do not infer login
+bootstrap, managed process spawning, recovery, Nyx compatibility, or packaging from
+the lifecycle state-machine primitive.
 
 ## 18. Final closure routing
 

@@ -28,8 +28,7 @@ fn command(timeout: CommandTimeout) -> RegisteredCommand {
         "Workspace test",
         "cargo",
         ["test", "--workspace"],
-        CommandWorkingDirectory::relative(RepositoryRelativePath::new("crates").unwrap())
-            .unwrap(),
+        CommandWorkingDirectory::relative(RepositoryRelativePath::new("crates").unwrap()).unwrap(),
         CommandEnvironmentPolicy::clear(vec![
             CommandEnvironmentVariable::literal("RUST_BACKTRACE", "1").unwrap(),
             CommandEnvironmentVariable::inherit("PATH").unwrap(),
@@ -64,13 +63,9 @@ fn host_environment() -> BTreeMap<String, String> {
 #[test]
 fn exact_shell_free_launch_payload_is_inspectable() {
     let command = command(CommandTimeout::after(Duration::from_secs(30)).unwrap());
-    let payload = CommandLaunchPayload::prepare(
-        process_id(3),
-        &command,
-        &binding(),
-        &host_environment(),
-    )
-    .unwrap();
+    let payload =
+        CommandLaunchPayload::prepare(process_id(3), &command, &binding(), &host_environment())
+            .unwrap();
     assert_eq!(payload.command_id(), command.command_id());
     assert_eq!(payload.command_definition(), command.definition_identity());
     assert_eq!(payload.repository_id(), repository_id(2));
@@ -89,7 +84,10 @@ fn exact_shell_free_launch_payload_is_inspectable() {
         payload.process_request().timeout(),
         Some(Duration::from_secs(30))
     );
-    assert_eq!(payload.working_directory(), Path::new("/work/project/crates"));
+    assert_eq!(
+        payload.working_directory(),
+        Path::new("/work/project/crates")
+    );
     assert_eq!(payload.authority(), CommandAuthorityClass::Build);
     assert_eq!(
         payload.cancellation(),
@@ -116,7 +114,9 @@ fn parent_environment_is_cleared_and_undeclared_secrets_are_ignored() {
         pairs,
         vec![("PATH", "/usr/bin:/bin"), ("RUST_BACKTRACE", "1")]
     );
-    assert!(!pairs.iter().any(|(name, _)| *name == "AWS_SECRET_ACCESS_KEY"));
+    assert!(!pairs
+        .iter()
+        .any(|(name, _)| *name == "AWS_SECRET_ACCESS_KEY"));
 }
 
 #[test]
@@ -213,9 +213,10 @@ fn literal_environment_values_do_not_read_the_host_source() {
         "env",
         ["--null"],
         CommandWorkingDirectory::repository_root(),
-        CommandEnvironmentPolicy::clear(vec![
-            CommandEnvironmentVariable::literal("TOKEN", "declared").unwrap(),
-        ])
+        CommandEnvironmentPolicy::clear(vec![CommandEnvironmentVariable::literal(
+            "TOKEN", "declared",
+        )
+        .unwrap()])
         .unwrap(),
         CommandTimeout::Unlimited,
         CommandCancellationPolicy::TerminateProcessGroup,

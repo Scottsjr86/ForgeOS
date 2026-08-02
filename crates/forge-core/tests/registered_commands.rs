@@ -1,8 +1,7 @@
 use forge_core::commands::{
     CommandAuthorityClass, CommandCancellationPolicy, CommandDefinitionError,
-    CommandEnvironmentPolicy, CommandEnvironmentVariable, CommandRegistration,
-    CommandRegistry, CommandRegistryError, CommandTimeout, CommandWorkingDirectory,
-    RegisteredCommand,
+    CommandEnvironmentPolicy, CommandEnvironmentVariable, CommandRegistration, CommandRegistry,
+    CommandRegistryError, CommandTimeout, CommandWorkingDirectory, RegisteredCommand,
 };
 use forge_protocol::identities::{CommandId, RepositoryId, IDENTITY_BYTES};
 use forge_protocol::paths::RepositoryRelativePath;
@@ -52,11 +51,19 @@ fn exact_definition_has_golden_identity_and_fields() {
     assert_eq!(command.display_name(), "Workspace test");
     assert_eq!(command.program(), "cargo");
     assert_eq!(
-        command.arguments().iter().map(String::as_str).collect::<Vec<_>>(),
+        command
+            .arguments()
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>(),
         vec!["test", "--workspace"]
     );
     assert_eq!(
-        command.working_directory().relative_path().unwrap().as_path(),
+        command
+            .working_directory()
+            .relative_path()
+            .unwrap()
+            .as_path(),
         std::path::Path::new("crates")
     );
     assert_eq!(command.timeout().milliseconds(), Some(30_000));
@@ -205,8 +212,7 @@ fn registry_is_idempotent_but_rejects_silent_identity_reuse() {
 fn replacement_requires_the_exact_previous_definition_identity() {
     let original = command_with(8, "Check", "cargo", &["check"]);
     let replacement = command_with(8, "Test", "cargo", &["test"]);
-    let stale = command_with(9, "Other", "cargo", &["fmt"])
-        .definition_identity();
+    let stale = command_with(9, "Other", "cargo", &["fmt"]).definition_identity();
     let mut registry = CommandRegistry::new();
     registry.register(original.clone()).unwrap();
     assert!(matches!(
@@ -232,7 +238,10 @@ fn registry_iteration_is_stable_by_command_id() {
     registry
         .register(command_with(2, "Two", "cargo", &["fmt"]))
         .unwrap();
-    let ids = registry.iter().map(RegisteredCommand::command_id).collect::<Vec<_>>();
+    let ids = registry
+        .iter()
+        .map(RegisteredCommand::command_id)
+        .collect::<Vec<_>>();
     assert_eq!(ids, vec![command_id(1), command_id(2), command_id(3)]);
 }
 

@@ -116,9 +116,7 @@ impl CommandWorkingDirectory {
         Self { relative: None }
     }
 
-    pub fn relative(
-        relative: RepositoryRelativePath,
-    ) -> Result<Self, CommandDefinitionError> {
+    pub fn relative(relative: RepositoryRelativePath) -> Result<Self, CommandDefinitionError> {
         if relative.as_path().to_str().is_none() {
             return Err(CommandDefinitionError::WorkingDirectoryNotUtf8);
         }
@@ -183,10 +181,7 @@ impl CommandEnvironmentVariable {
     }
 
     /// Validates one resolved value before it enters an operating-system launch.
-    pub fn validate_resolved_value(
-        &self,
-        value: &str,
-    ) -> Result<(), CommandDefinitionError> {
+    pub fn validate_resolved_value(&self, value: &str) -> Result<(), CommandDefinitionError> {
         validate_environment_value(&self.name, value)
     }
 }
@@ -475,21 +470,57 @@ pub enum CommandRegistration {
 pub enum CommandDefinitionError {
     EmptyDisplayName,
     DisplayNameNotTrimmed,
-    DisplayNameTooLong { maximum: usize, actual: usize },
+    DisplayNameTooLong {
+        maximum: usize,
+        actual: usize,
+    },
     EmptyProgram,
-    ProgramTooLong { maximum: usize, actual: usize },
-    ContainsNul { field: CommandTextField, index: Option<usize>, byte_index: usize },
-    TooManyArguments { maximum: usize, actual: usize },
-    EmptyArgument { index: usize },
-    ArgumentTooLong { index: usize, maximum: usize, actual: usize },
+    ProgramTooLong {
+        maximum: usize,
+        actual: usize,
+    },
+    ContainsNul {
+        field: CommandTextField,
+        index: Option<usize>,
+        byte_index: usize,
+    },
+    TooManyArguments {
+        maximum: usize,
+        actual: usize,
+    },
+    EmptyArgument {
+        index: usize,
+    },
+    ArgumentTooLong {
+        index: usize,
+        maximum: usize,
+        actual: usize,
+    },
     WorkingDirectoryNotUtf8,
-    InvalidEnvironmentName { name: String, byte_index: usize, byte: u8 },
-    EnvironmentNameTooLong { maximum: usize, actual: usize },
-    EnvironmentValueTooLong { name: String, maximum: usize, actual: usize },
+    InvalidEnvironmentName {
+        name: String,
+        byte_index: usize,
+        byte: u8,
+    },
+    EnvironmentNameTooLong {
+        maximum: usize,
+        actual: usize,
+    },
+    EnvironmentValueTooLong {
+        name: String,
+        maximum: usize,
+        actual: usize,
+    },
     DuplicateEnvironmentVariable(String),
-    TooManyEnvironmentVariables { maximum: usize, actual: usize },
+    TooManyEnvironmentVariables {
+        maximum: usize,
+        actual: usize,
+    },
     ZeroTimeout,
-    TimeoutTooLarge { maximum_millis: u64, actual_millis: u64 },
+    TimeoutTooLarge {
+        maximum_millis: u64,
+        actual_millis: u64,
+    },
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -525,7 +556,10 @@ impl std::error::Error for CommandDefinitionError {}
 
 impl fmt::Display for CommandRegistryError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(formatter, "registered command registry rejected operation: {self:?}")
+        write!(
+            formatter,
+            "registered command registry rejected operation: {self:?}"
+        )
     }
 }
 

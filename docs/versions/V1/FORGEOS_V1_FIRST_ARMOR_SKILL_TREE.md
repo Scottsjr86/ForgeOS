@@ -1072,7 +1072,7 @@ never closes the node.
 - **Owner:** `forge-session`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Startup order, readiness, restart policy, shutdown order, and
   failure states are explicit and testable.
 - **Must not be true:** Service order may not depend on timing sleeps or process-name
@@ -1162,7 +1162,10 @@ never closes the node.
 - **Owner:** `forge-terminal`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-PROCESS-000`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-COMMAND-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-COMMAND-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** Commands use stable IDs, exact argv arrays, declared working
   directories, environment policy, timeout, cancellation, and authority class.
 - **Must not be true:** Registered commands may not be mutable shell prose or inherit

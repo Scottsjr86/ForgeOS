@@ -6,8 +6,8 @@
 //! owned by `FORGEOS-V1-COMMAND-200`.
 
 use forge_core::commands::{
-    CommandAuthorityClass, CommandCancellationPolicy, CommandEnvironmentSource,
-    CommandTimeout, CommandWorkingDirectory, RegisteredCommand,
+    CommandAuthorityClass, CommandCancellationPolicy, CommandEnvironmentSource, CommandTimeout,
+    CommandWorkingDirectory, RegisteredCommand,
 };
 use forge_protocol::hashes::ContentHash;
 use forge_protocol::identities::{CommandId, ProcessId, RepositoryId};
