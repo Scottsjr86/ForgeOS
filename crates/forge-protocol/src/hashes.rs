@@ -56,7 +56,10 @@ impl ContentHash {
 
 impl fmt::Debug for ContentHash {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.debug_tuple("ContentHash").field(&self.to_hex()).finish()
+        formatter
+            .debug_tuple("ContentHash")
+            .field(&self.to_hex())
+            .finish()
     }
 }
 
@@ -195,13 +198,30 @@ pub fn verify_canonical_bytes(
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HashContractError {
     EmptyFieldName,
-    FieldNameTooLong { maximum: usize, actual: usize },
-    InvalidFieldNameByte { index: usize, byte: u8 },
+    FieldNameTooLong {
+        maximum: usize,
+        actual: usize,
+    },
+    InvalidFieldNameByte {
+        index: usize,
+        byte: u8,
+    },
     DuplicateField(String),
-    TooManyFields { maximum: usize },
-    InvalidDigestLength { expected: usize, actual: usize },
-    InvalidDigestCharacter { index: usize, byte: u8 },
-    DigestMismatch { expected: ContentHash, actual: ContentHash },
+    TooManyFields {
+        maximum: usize,
+    },
+    InvalidDigestLength {
+        expected: usize,
+        actual: usize,
+    },
+    InvalidDigestCharacter {
+        index: usize,
+        byte: u8,
+    },
+    DigestMismatch {
+        expected: ContentHash,
+        actual: ContentHash,
+    },
 }
 
 impl fmt::Display for HashContractError {
@@ -231,7 +251,10 @@ impl fmt::Display for HashContractError {
                 "SHA-256 text byte {index} is not lowercase hexadecimal: 0x{byte:02x}"
             ),
             Self::DigestMismatch { expected, actual } => {
-                write!(formatter, "SHA-256 mismatch: expected {expected}, got {actual}")
+                write!(
+                    formatter,
+                    "SHA-256 mismatch: expected {expected}, got {actual}"
+                )
             }
         }
     }

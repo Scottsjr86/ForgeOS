@@ -39,6 +39,9 @@ mod tests {
     fn snapshot_and_result_domains_do_not_alias() {
         let bytes = b"same canonical bytes";
         let record = StateRecord::new(7, bytes.to_vec()).unwrap();
-        assert_ne!(state_record_hash(&record), result_payload_hash(&record.encode()));
+        assert_ne!(
+            state_record_hash(&record),
+            result_payload_hash(&record.encode())
+        );
     }
 }

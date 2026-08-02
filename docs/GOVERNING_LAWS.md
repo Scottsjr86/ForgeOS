@@ -573,8 +573,10 @@ A guard may not:
 - silently rewrite source or project state.
 
 There will be no documentation CI, documentation prose verifier, checklist
-parser, status-word scanner, heading validator, or Markdown test that claims to
-prove a product capability.
+parser, status-word scanner, heading validator, Markdown test, Git-state gate, or
+formatting gate that claims to prove a product capability. Canonical CI is limited
+to behavior tests, golden locks, and structural guards declared in `ci/master.yaml`
+and executed by `scripts/run_ci.py`.
 
 ---
 

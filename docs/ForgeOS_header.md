@@ -69,17 +69,22 @@ When documents, source, tools, and visual surfaces disagree, use this order:
 6. docs/versions/V1/V1_EXECUTION_ROUTER.md
 7. docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 8. docs/versions/V1/V1_CLOSURE_EXPERIMENT.md when activated
-9. docs/MISSION_FORGEOS.md
-10. docs/High_Level.md
-11. the one selected independent capability node
-12. subsystem contracts, tests, experiments, receipts, and operator proof
-13. historical plans, concept notes, prototypes, and legacy archives
+10. docs/MISSION_FORGEOS.md
+11. docs/High_Level.md
+12. the one selected independent capability node
+13. subsystem contracts, tests, experiments, receipts, and operator proof
+14. historical plans, concept notes, prototypes, and legacy archives
 ```
 
 `ForgeOS_V1_Skill_Status_Master_List.md` is a mandatory human-readable status
 mirror. Update it whenever any skill changes state, the baton moves, or the
 available frontier changes. It may never override the router, skill tree, source,
 or proof records.
+
+Behavioral CI authority is `ci/master.yaml`, executed by `scripts/run_ci.py`. CI may
+run only behavior tests, golden locks, and structural guards. Documentation, Git
+state, formatting, status prose, and Markdown are forbidden CI gates and may not
+award closure.
 
 Only `WORKFLOW_AUTHORITY.md` and the live V1 router select active work. The
 four-version plan defines what each version must become and what later-version
@@ -300,24 +305,25 @@ activate later-version work.
 
 The bounded authority migration, architecture foundations, all three mandatory
 structural guards, stable protocol contract, managed-process foundation, canonical
-repository boundary, and atomic versioned local persistence are closed. Stable
-artifact and request hashing is the only active V1 source capability:
+repository boundary, atomic versioned local persistence, and stable SHA-256 identity
+are closed. Validated project manifest and repository registration is the only active
+V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-HASH-000
-ACTIVE_V1_CONTRIBUTION=STABLE_DOMAIN_SEPARATED_SHA256_IDENTITY
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-HASH-000
-QUESTION=Can ForgeOS assign stable domain-separated SHA-256 identities to declared canonical file, patch, tool-request, snapshot, and result bytes while rejecting corruption and remaining invariant to field insertion order and excluded metadata?
-CURRENT_RESULT=STATE_FOUNDATION_CLOSED_HASH_FOUNDATION_ACTIVE
-BATON_OWNER=FORGEOS-V1-HASH-000
-ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
-ACTIVE_SLICE=FORGEOS-V1-HASH-000-SLICE-001
-FIRST_BLOCKER=FORGEOS_HAS_NO_STABLE_SHA256_IDENTITY_CONTRACT_AND_STATE_ONLY_HAS_A_NON_IDENTITY_CORRUPTION_CHECKSUM
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-PROJECT-100
+ACTIVE_V1_CONTRIBUTION=VALIDATED_PROJECT_MANIFEST_AND_REPOSITORY_IDENTITY
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-PROJECT-100
+QUESTION=Can ForgeOS import a versioned project manifest, bind stable project and repository identities to a verified repository directory object, validate allowed roots, command references, language profile, and settings, reject malformed or duplicate input, and reopen unchanged state equivalently?
+CURRENT_RESULT=HASH_FOUNDATION_CLOSED_PROJECT_MANIFEST_ACTIVE
+BATON_OWNER=FORGEOS-V1-PROJECT-100
+ACTIVE_LANE=PROJECT_AND_PERSISTENCE
+ACTIVE_SLICE=FORGEOS-V1-PROJECT-100-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_NO_VERSIONED_VALIDATED_PROJECT_MANIFEST_OR_DUPLICATE_SAFE_REPOSITORY_REGISTRY
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-FILE-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -329,10 +335,11 @@ PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
 FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_ARCHIVE
 SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
 SOURCE_WORK_AUTHORIZED=YES
-VALIDATION_EXECUTION_POLICY=ASSISTANT_RUN_WHEN_AVAILABLE_OTHERWISE_OPERATOR_HANDOFF
+VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
+CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-HASH-000
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-HASH-000-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-PROJECT-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-PROJECT-100-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -348,13 +355,14 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-STATE-000` is the only active source skill.
+`FORGEOS-V1-PROJECT-100` is the only active source skill.
 
-This slice may establish only lexical repository-relative paths, verified root
-identity, display-versus-canonical location, existing-child resolution, relocation
-of the same directory object, and explicit boundary rejection. Atomic writes,
-project manifests, PTYs, commands, Git, sessions, LSP, Nyx, hashing, and Forge
-World behavior remain separate capabilities.
+This slice may establish only canonical project-manifest bytes, stable project and
+repository identity binding, allowed-root validation, command references, the V1
+Rust language profile, deterministic settings, duplicate rejection, moved-root
+revalidation, and equivalent reopen behavior. File mutation, command execution,
+terminal, Git, session, LSP, Nyx, recovery, and Forge World behavior remain
+separate capabilities.
 
 ---
 
@@ -527,17 +535,16 @@ missing higher proof
 
 ### 8.2 Green-patch operator ritual
 
-For a Rust-owned ForgeOS or Nyx patch, the default operator ritual is:
+For a Rust-owned ForgeOS patch, the canonical acceptance command is:
 
 ```bash
-git apply <repository>.patch \
-  && cargo fmt --all \
-  && cargo test --workspace
+python3 scripts/run_ci.py
 ```
 
-Use repository-declared focused checks before the broad workspace test when the
-active capability requires them. If the repository defines stronger canonical
-commands, those commands take precedence.
+`ci/master.yaml` may contain only behavioral tests, golden locks, and structural
+guards. Git state, formatting, documentation, Markdown, prose status, and archive
+naming are forbidden CI gates. Developers may inspect or format locally, but those
+conveniences are not CI evidence and may not award closure.
 
 If a command reports a defect, repair the defect and rerun the same command chain
 until green or until a new first blocker is honestly recorded.
@@ -661,22 +668,23 @@ For every new ForgeOS build, audit, planning, or integration thread:
 5. read docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md
 6. read docs/versions/V1/V1_EXECUTION_ROUTER.md
 7. read docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md as a status mirror
-8. identify the current program mode, active skill, lane, repository, and baton owner
-9. use only the newest clean archive supplied for the baton repository
-10. delete or ignore every older archive extraction in the active work area
-11. extract the newest archive into an empty directory
-12. verify that the repository is coherent, clean, and matches the user's claim
-13. inspect current source before relying on prior plans
-14. verify source work is authorized and every direct prerequisite is CLOSED
-15. read only the active skill's full contract in the canonical V1 worksheet
-16. verify active-skill conflicts, repository ownership, write boundaries, public
+8. read ci/master.yaml and preserve its behavior-only CI boundary
+9. identify the current program mode, active skill, lane, repository, and baton owner
+10. use only the newest clean archive supplied for the baton repository
+11. delete or ignore every older archive extraction in the active work area
+12. extract the newest archive into an empty directory
+13. verify that the repository is coherent, clean, and matches the user's claim
+14. inspect current source before relying on prior plans
+15. verify source work is authorized and every direct prerequisite is CLOSED
+16. read only the active skill's full contract in the canonical V1 worksheet
+17. verify active-skill conflicts, repository ownership, write boundaries, public
     contracts, required commands, and user-acceptance path
-17. if the baton points to nyx_server, require the newest separate clean Nyx archive
+18. if the baton points to nyx_server, require the newest separate clean Nyx archive
     unless an explicit vendored-source contract proves otherwise
-18. inspect or run the active originating path and confirm the first blocker
-19. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
+19. inspect or run the active originating path and confirm the first blocker
+20. restate the one V1 gap, active capability, first blocker, owner, allowed paths,
     pass edge, block edge, and return path
-20. only then edit source
+21. only then edit source
 ```
 
 The newest verified archive is canonical regardless of its filename or base

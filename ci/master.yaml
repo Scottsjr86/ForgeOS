@@ -1,0 +1,19 @@
+# ci/master.yaml
+version: 1
+phase: "all"
+
+jobs:
+  structural_guards:
+    runs:
+      - "cargo run -p forge-guards --bin forge-seam-direction -- --root ."
+      - "cargo run -p forge-guards --bin forge-core-purity -- --root ."
+      - "cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings"
+  rust_tests:
+    runs:
+      - "cargo test -q"
+
+gates:
+  must_pass:
+    - structural_guards
+    - rust_tests
+  fail_fast: true

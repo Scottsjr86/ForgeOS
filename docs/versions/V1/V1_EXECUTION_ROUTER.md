@@ -90,24 +90,26 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-HASH-000]
-ACTIVE_BATON_OWNER=FORGEOS-V1-HASH-000
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000]
+AVAILABLE_SKILLS=[FORGEOS-V1-FILE-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-PROJECT-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-PROJECT-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=ARCHITECTURE_AND_CONTRACTS
+ACTIVE_LANE=PROJECT_AND_PERSISTENCE
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-HASH-000-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-PROJECT-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
+CI_ENTRYPOINT=python3 scripts/run_ci.py
+CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
+CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
 
-The bounded authority chain, both architecture foundations, all three structural
-guards, stable protocol contract, managed-process foundation, canonical path
-foundation, and atomic local persistence are closed. `FORGEOS-V1-HASH-000` is the
-only active source skill. Project manifests, boundary-safe file access, Forge World,
-session, LSP, Nyx health, terminal, command, and read-only Git remain available but
-inactive while the final Tier-0 foundation is proved.
+All Tier-0 foundations and all three structural guards are closed.
+`FORGEOS-V1-PROJECT-100` is the only active source skill. Boundary-safe file access,
+Forge World, session, LSP, Nyx health, terminal, command, read-only Git, and recovery
+remain available but inactive. The active slice may validate and register project
+manifest truth only; it may not execute commands or mutate repository files.
 
 ## 3. Current-source intake law
 
@@ -873,112 +875,115 @@ closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-STATE-000/CLOSURE_AND_SPEC.
 user_guide_source: docs/versions/V1/skills/FORGEOS-V1-STATE-000/USER_GUIDE_SOURCE.md
 ```
 
-Stable artifact and request hashing is active.
+Stable artifact and request hashing is closed.
 
 ```yaml
 skill_id: FORGEOS-V1-HASH-000
-state: ACTIVE
+state: CLOSED
 lane: ARCHITECTURE_AND_CONTRACTS
-owning_subsystem: forge-protocol, forge-core
+owner: forge-protocol, forge-core
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_18.tar sha256 3433d3311dcc864dc65e2f3cd707397549bfcb6a3936e9e14f0308c3fd64bcf3
+user_acceptance_status: APPROVED_2026-08-02
+closure_and_spec: docs/versions/V1/skills/FORGEOS-V1-HASH-000/CLOSURE_AND_SPEC.md
+user_guide_source: docs/versions/V1/skills/FORGEOS-V1-HASH-000/USER_GUIDE_SOURCE.md
+```
+
+Validated project manifest and repository identity is active.
+
+```yaml
+skill_id: FORGEOS-V1-PROJECT-100
+state: ACTIVE
+lane: PROJECT_AND_PERSISTENCE
+owning_subsystem: forge-core, forge-project
+source_repository: Forge_OS_V1
+source_revision: Forge_OS_V1_base_19.tar sha256 b8fefe29556b977062607b8bda6c067cdf1f9e215f84783d21a16b0c8a65b197
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
   - FORGEOS-V1-CONTRACT-000
+  - FORGEOS-V1-STATE-000
+  - FORGEOS-V1-PATH-000
+  - FORGEOS-V1-GUARD-002
 originating_path_or_probe: >
-  Hash identical and changed file, patch, tool-request, snapshot, and result fixtures;
-  reorder declared structured fields; parse and render digest text; and verify a
-  deliberately corrupted payload against the original identity.
+  Import valid, malformed, duplicate-project, duplicate-repository, missing-root,
+  non-directory-root, and moved-repository fixtures; encode and reopen equivalent
+  canonical manifests; and verify unsupported schema and unknown required fields fail.
 first_blocker: >
-  ForgeOS has no stable SHA-256 identity contract. The state foundation contains
-  only a local corruption checksum that explicitly cannot identify artifacts or
-  requests, and structured field ordering has no canonical hash encoding.
-active_slice: FORGEOS-V1-HASH-000-SLICE-001
+  ForgeOS has stable IDs, state bytes, and repository boundaries but no versioned
+  project manifest or duplicate-safe registry binding canonical project truth to a
+  verified repository directory object.
+active_slice: FORGEOS-V1-PROJECT-100-SLICE-001
 allowed_paths:
-  - crates/forge-protocol/src/lib.rs
-  - crates/forge-protocol/src/hashes.rs
-  - crates/forge-protocol/src/sha256.rs
-  - crates/forge-core/src/lib.rs
-  - crates/forge-core/src/hashing.rs
+  - crates/forge-core/src/projects.rs
+  - crates/forge-core/tests/project_manifest.rs
+  - crates/forge-project/src/registry.rs
+  - crates/forge-project/tests/project_registry.rs
   - docs/ForgeOS_header.md
+  - docs/GOVERNING_LAWS.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-STATE-000/**
+  - docs/versions/V1/skills/FORGEOS-V1-HASH-000/**
 forbidden_paths:
-  - filesystem reads, path discovery, timestamps, random salts, or host metadata
-  - implicit hashing of display names, operator labels, or unordered structures
-  - non-SHA-256 algorithms presented as canonical identity
-  - external crypto dependencies that expand the reviewed Forge Core graph
-  - patch application, project manifests, recovery journals, Nyx permissions, or agent tasks
-  - PTY, command, Git, session, LSP, Forge World, or product integration behavior
+  - repository file mutation, atomic source writes, editor buffers, or search
+  - command execution semantics, environment policy, PTY, terminal, or shell behavior
+  - Git inspection or mutation
+  - session, LSP, Nyx, agent, patch, recovery, or Forge World behavior
+  - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_protocol::hashes::HashDomain
-  - forge_protocol::hashes::ContentHash
-  - forge_protocol::hashes::CanonicalHashInput
-  - forge_protocol::hashes::HashContractError
-  - forge_protocol::hashes::hash_canonical_bytes
-  - forge_protocol::hashes::verify_canonical_bytes
-  - forge_core::hashing::state_record_hash
-  - forge_core::hashing::result_payload_hash
+  - forge_core::projects::ProjectManifest
+  - forge_core::projects::ManifestCommand
+  - forge_core::projects::ProjectSetting
+  - forge_core::projects::LanguageProfile
+  - forge_core::projects::ProjectManifestError
+  - forge_project::registry::ProjectRegistry
+  - forge_project::registry::RegisteredProject
+  - forge_project::registry::ProjectRegistryError
 required_commands:
-  - cargo fmt --all -- --check
-  - cargo check --workspace
-  - cargo test -p forge-protocol
-  - cargo test -p forge-core
-  - cargo run -p forge-guards --bin forge-seam-direction -- --root .
-  - cargo run -p forge-guards --bin forge-core-purity -- --root .
-  - cargo run -p forge-guards --bin forge-source-size -- --root . --deny-warnings
-  - cargo test --workspace
-regression_commands:
-  - git diff --check
+  - python3 scripts/run_ci.py
+regression_commands: []
 validation_execution_policy: >
-  Run required commands in the assistant environment when available. Otherwise
-  prepare and apply-check the patch, set OPERATOR_VALIDATION_PENDING, and hand the
-  exact commands to the user without blocking source implementation.
+  Canonical CI is behavior-only and runs through scripts/run_ci.py. Documentation,
+  Git state, and formatting are forbidden CI gates. When Rust is unavailable in the
+  assistant environment, prepare and apply-check the patch and set
+  OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  The implementation matches standard SHA-256 vectors; identical canonical bytes
-  in the same domain hash identically; structured field insertion order does not
-  affect identity; changed bytes or semantic domains change identity; corrupt bytes
-  fail verification; malformed or uppercase digest text is rejected; canonical
-  state and result payloads receive stable Core identities; no external dependency
-  changes the reviewed graph; and all three structural guards remain green.
+  Equivalent manifests encode identically and reopen equivalently; required fields,
+  display names, allowed roots, command references, Rust language profile, and
+  settings validate deterministically; unsupported schemas, unknown required fields,
+  malformed bytes, invalid roots, duplicate command IDs, duplicate project IDs, and
+  duplicate repository IDs fail explicitly; the same moved directory object can be
+  rebound; and behavior-only CI plus all structural guards remain green.
 block_edge: >
-  Stop on a non-SHA-256 result, unstable ordering, domain aliasing, metadata leakage,
-  accepted corruption, ambiguous digest text, implicit path or timestamp input,
-  external dependency expansion, Core purity regression, seam regression,
-  source-size warning, or operator validation failure.
+  Stop on unstable manifest bytes, silent schema acceptance, path escape, duplicate
+  identity acceptance, display path becoming canonical identity, missing-root
+  acceptance, command execution leakage, dependency-graph expansion, structural
+  guard regression, source-size warning, or CI failure.
 user_acceptance_path: >
-  The user runs focused Protocol and Core tests plus the complete workspace suite,
-  observes standard vectors, identical, reordered, changed, cross-domain, malformed,
-  duplicate-field, and corrupt fixtures pass, confirms all three structural guards
-  remain clean, and explicitly approves the stable SHA-256 contract.
+  The user runs python3 scripts/run_ci.py, observes project-manifest and registry
+  fixtures pass together with the full Rust suite and all three structural guards,
+  and explicitly approves project registration behavior.
 return_path: >
-  Close only FORGEOS-V1-HASH-000, then reevaluate its direct unlocks including Nyx
-  permission identity, agent task records, patch identity, and recovery journals
-  together with the current available frontier.
-parallel_compatibility: NONE_IN_ARCHITECTURE_AND_CONTRACTS_LANE
+  Close only FORGEOS-V1-PROJECT-100, unlock FORGEOS-V1-PROJECT-200, then reevaluate
+  that direct unlock and the current available frontier.
+parallel_compatibility: NONE_IN_PROJECT_AND_PERSISTENCE_LANE
 ```
 
-This packet is active. `FORGEOS-V1-PROJECT-100`, `FORGEOS-V1-FILE-100`,
-`FORGEOS-V1-WORLD-100`, `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-LSP-100`,
-`FORGEOS-V1-NYX-100`, `FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-COMMAND-100`, and
-`FORGEOS-V1-GIT-100` remain available but inactive.
+This packet is active. `FORGEOS-V1-FILE-100`, `FORGEOS-V1-WORLD-100`,
+`FORGEOS-V1-SESSION-100`, `FORGEOS-V1-LSP-100`, `FORGEOS-V1-NYX-100`,
+`FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-COMMAND-100`, `FORGEOS-V1-GIT-100`,
+`FORGEOS-V1-PATCH-100`, and `FORGEOS-V1-RECOVERY-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for the hash foundation
+## 17. Direct unlock handling for the project manifest
 
-After `FORGEOS-V1-HASH-000` closes, reevaluate only its direct unlocks, the current
-available frontier, and any closed guard invalidated by the final dependency graph.
-Expected direct unlock candidates include immutable Nyx permission records, remote
-agent task records, patch identity, and workspace recovery journals. All three
-structural guards remain mandatory regression commands.
-
----
+After `FORGEOS-V1-PROJECT-100` closes, unlock only `FORGEOS-V1-PROJECT-200`,
+reevaluate the current available frontier, and rerun behavior-only CI. Do not infer
+file mutation, command execution, Git, session, Nyx, or Forge World behavior from
+manifest registration.
 
 ## 18. Final closure routing
 
@@ -1027,14 +1032,17 @@ Every source-capable ForgeOS turn must:
 8. read docs/workflow/SKILL_TREE_WORKFLOW_METHOD.md
 9. read this router
 10. read docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md as a status mirror
-11. read only the active skill's full canonical worksheet contract
-12. verify source work is authorized
-13. verify every direct prerequisite is CLOSED
-14. verify active-skill count, lane, dependency, path, contract, and worktree isolation
-15. inspect or run the originating path
-16. restate the one skill, one blocker, one slice, pass edge, block edge, allowed
-    paths, required commands, and user acceptance path
-17. edit only after those facts agree
+11. read ci/master.yaml and preserve its behavior-only CI boundary
+12. read only the active skill's full canonical worksheet contract
+13. verify source work is authorized
+14. verify every direct prerequisite is CLOSED
+15. verify active-skill count, lane, dependency, path, contract, and worktree isolation
+16. inspect or run the originating path
+17. restate the one skill, one blocker, one slice, pass edge, block edge, allowed
+    paths, forbidden paths, public contracts, required CI command, and return path
+18. edit only the declared source and authority paths
+19. run or hand off only python3 scripts/run_ci.py as canonical CI
+20. update the mandatory status mirror in the same patch as any state transition
 ```
 
 After every skill-state transition, update the master status mirror in the same patch.
