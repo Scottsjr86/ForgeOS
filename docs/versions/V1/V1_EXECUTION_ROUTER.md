@@ -90,15 +90,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-SESSION-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-SESSION-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-GIT-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-GIT-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=SESSION_AND_DISTRIBUTION
+ACTIVE_LANE=GIT_AND_PATCHES
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-SESSION-100-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-GIT-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -107,12 +107,13 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 
 All Tier-0 foundations, all three structural guards, project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
-Rust Analyzer adapter, native PTY support, and immutable registered-command policy
-are closed. `FORGEOS-V1-SESSION-100` is the only active source skill. Persistent
-project registry, Forge World, Nyx health, read-only Git, patch, and recovery remain
-available but inactive. The active slice may own deterministic service-plan and
-session lifecycle contracts only; it may not bootstrap a login session, spawn
-services, persist recovery, call Nyx, mutate Git, or own presentation state.
+Rust Analyzer adapter, native PTY support, immutable registered-command policy, and
+deterministic session lifecycle are closed. `FORGEOS-V1-GIT-100` is the only active
+source skill. Persistent project registry, dedicated session bootstrap, Forge World,
+Nyx health, patch intake, and recovery remain available but inactive. The active
+slice may own read-only native Git invocation and typed machine-format parsing only;
+it may not stage, commit, restore, create or remove worktrees, apply patches, mutate
+project state, or own presentation state.
 
 ## 3. Current-source intake law
 
@@ -779,62 +780,63 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-Session and managed-service lifecycle is active.
+Read-only native Git inspection is active.
 
 ```yaml
-skill_id: FORGEOS-V1-SESSION-100
+skill_id: FORGEOS-V1-GIT-100
 state: ACTIVE
-lane: SESSION_AND_DISTRIBUTION
-owning_subsystem: forge-session
+lane: GIT_AND_PATCHES
+owning_subsystem: forge-git, forge-bridge
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_26.tar sha256 104b15ab148a83963c4423acfdfa243168db2df3f5acf78fff8796b0a7386e5d
+source_revision: Forge_OS_V1_base_27.tar sha256 37356650de88d9244c413cc05e8657faebcadddf2c0821b6e2494e4390b3f6eb
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-CONTRACT-000
+  - FORGEOS-V1-PATH-000
   - FORGEOS-V1-PROCESS-000
   - FORGEOS-V1-GUARD-002
 originating_path_or_probe: >
-  Define one explicit managed-service plan with stable names and startup ranks;
-  drive a stable SessionId through dependency-gated start requests, exact ProcessId
-  start and readiness outcomes, bounded pre-readiness restart, reverse-order stop,
-  rollback, and terminal failure; and prove no service order or readiness decision
-  comes from sleeps, process-name discovery, map iteration, or ambient host state.
+  Bind one stable RepositoryId to one verified native Git worktree root; inspect
+  branch, revision, porcelain-v2 status, porcelain worktree list, worktree/staged/
+  exact-revision diffs, and exact binary-safe patch bytes; preserve native process
+  failures and raw path bytes; and prove the adapter performs no mutation.
 first_blocker: >
-  ForgeOS has stable process identity and execution outcomes, but forge-session has
-  no canonical service definitions, explicit startup and shutdown plan, readiness
-  handshake, restart policy, or deterministic supervisor state machine.
-active_slice: FORGEOS-V1-SESSION-100-SLICE-001
+  ForgeOS has stable repository and process foundations, but forge-git contains no
+  native read-only adapter, no machine-format parsers, and no typed outcomes for
+  branch, revision, status, worktrees, or diff.
+active_slice: FORGEOS-V1-GIT-100-SLICE-001
 allowed_paths:
-  - crates/forge-session/src/lib.rs
-  - crates/forge-session/src/services.rs
-  - crates/forge-session/src/lifecycle.rs
-  - crates/forge-session/tests/**
+  - crates/forge-bridge/src/git.rs
+  - crates/forge-bridge/src/lib.rs
+  - crates/forge-git/src/**
+  - crates/forge-git/tests/**
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-COMMAND-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-SESSION-100/**
 forbidden_paths_and_behavior:
-  - login-session bootstrap, display manager integration, compositor, or packaging
-  - direct service process spawning, polling sleeps, or process-name discovery
-  - runtime restart of already-ready dependency trees in this foundation slice
-  - Nyx transport, model providers, Git, file mutation, recovery persistence, or UI state
+  - Git add, reset, restore, checkout, switch, commit, merge, rebase, tag, branch mutation, or configuration mutation
+  - worktree creation, locking, unlocking, pruning, repair, move, or removal
+  - shell command prose, human-formatted status parsing, lossy path conversion, or locale-dependent interpretation
+  - patch application, project registry persistence, Nyx, session bootstrap, recovery, or UI state
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_session::services::ServiceName
-  - forge_session::services::ManagedService
-  - forge_session::services::ServicePlan
-  - forge_session::services::StartupRestartPolicy
-  - forge_session::lifecycle::SessionSupervisor
-  - forge_session::lifecycle::SessionPhase
-  - forge_session::lifecycle::LifecycleAction
-  - forge_session::lifecycle::ServiceStatus
-  - forge_session::lifecycle::ServiceFailure
-  - forge_session::lifecycle::StopReason
-  - forge_session::lifecycle::SupervisorError
+  - forge_bridge::git::NativeGitAdapter
+  - forge_bridge::git::GitReadRequest
+  - forge_bridge::git::NativeGitOutput
+  - forge_git::repository::GitRepositoryInspector
+  - forge_git::repository::GitInspectError
+  - forge_git::status::GitHead
+  - forge_git::status::GitStatusSnapshot
+  - forge_git::status::GitStatusEntry
+  - forge_git::worktree::GitWorktree
+  - forge_git::diff::DiffScope
+  - forge_git::diff::GitDiff
+  - forge_git::types::GitObjectId
+  - forge_git::types::GitPath
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -844,46 +846,47 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  One immutable service plan has canonical lower-kebab names, unique explicit startup
-  ranks, validated earlier dependencies, deterministic startup and reverse shutdown
-  order, and a scoped pre-readiness restart policy; one SessionSupervisor emits exact
-  start and stop actions, waits for explicit ProcessId-bound readiness, retries only
-  when declared, cleans a failed readiness process before retry, rolls back already-
-  ready services after terminal startup or runtime failure, preserves stop failures,
-  rejects attempt and process identity crossing, and reaches explicit Ready, Stopped,
-  or Failed phases without sleeps or process-name guessing; adding an unrelated
-  service preserves existing relative order; behavior-only CI and all guards remain
+  One verified repository root retains stable RepositoryId and filesystem identity;
+  branch and exact revision include attached, detached, and unborn states; status
+  preserves staged, unstaged, untracked, rename/copy, unmerged, and raw porcelain
+  metadata; worktree listing preserves exact raw paths, HEADs, branches, detached,
+  locked, and prunable state; worktree, staged, and exact-revision diffs expose typed
+  raw entries plus exact native patch bytes; missing Git, non-repository roots,
+  replaced roots, malformed output, and native nonzero exits remain typed failures;
+  read operations preserve repository state; behavior-only CI and all guards remain
   green.
 block_edge: >
-  Stop on implicit ordering, duplicate startup ranks, unknown or later dependencies,
-  timing-based readiness, process-name discovery, identity crossing, unbounded retry,
-  silently ignored stop failure, source-size warning, structural guard regression, or
-  behavior-only CI failure.
+  Any mutation-capable public method, shell interpolation, human status parsing,
+  lossy path replacement, hidden global configuration dependency, collapsed Git
+  state, discarded exit code/signal/stderr, repository-boundary crossing, source-size
+  warning, structural guard regression, or behavior-only CI failure.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and observes explicit plan-order,
-  dependency, readiness, retry-cleanup, exhausted-failure rollback, reverse shutdown,
-  stop-failure, runtime-exit, identity-mismatch, and independent-session fixtures pass
-  with the full Rust suite and all three structural guards.
+  The user runs python3 scripts/run_ci.py and observes exact-range option rejection,
+  attached, unborn, detached, staged, unstaged, untracked, rename, linked-worktree,
+  worktree-diff, staged-diff, revision-range, no-mutation, non-UTF8 path,
+  sanitized-environment, malformed-output, non-repository, subdirectory,
+  missing-executable, and replaced-root fixtures pass with the full Rust suite and
+  all three structural guards.
 return_path: >
-  Close only FORGEOS-V1-SESSION-100, make FORGEOS-V1-SESSION-200 available, keep
-  FORGEOS-V1-SESSION-201 locked until FORGEOS-V1-NYX-100 closes, and reevaluate only
-  the current available frontier.
-parallel_compatibility: NONE_IN_SESSION_AND_DISTRIBUTION_LANE
+  Close only FORGEOS-V1-GIT-100, make FORGEOS-V1-GIT-101 available, keep
+  FORGEOS-V1-GIT-200 locked until FORGEOS-V1-PROJECT-200 also closes, and reevaluate
+  only the current available frontier.
+parallel_compatibility: NONE_IN_GIT_AND_PATCHES_LANE
 ```
 
-This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-WORLD-100`,
-`FORGEOS-V1-NYX-100`, `FORGEOS-V1-GIT-100`, `FORGEOS-V1-PATCH-100`, and
+This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-SESSION-200`,
+`FORGEOS-V1-WORLD-100`, `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATCH-100`, and
 `FORGEOS-V1-RECOVERY-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for session lifecycle
+## 17. Direct unlock handling for read-only Git
 
-After `FORGEOS-V1-SESSION-100` closes, `FORGEOS-V1-SESSION-200` becomes available.
-`FORGEOS-V1-SESSION-201` remains locked until `FORGEOS-V1-NYX-100` also closes.
-Reevaluate only those direct unlocks and the current frontier. Do not infer login
-bootstrap, managed process spawning, recovery, Nyx compatibility, or packaging from
-the lifecycle state-machine primitive.
+After `FORGEOS-V1-GIT-100` closes, `FORGEOS-V1-GIT-101` becomes available.
+`FORGEOS-V1-GIT-200` remains locked until `FORGEOS-V1-PROJECT-200` also closes.
+Reevaluate only those direct unlocks and the current frontier. Do not infer Git
+mutation, worktree control, project restoration, patch application, verification,
+or Forge World presentation from read-only inspection.
 
 ## 18. Final closure routing
 

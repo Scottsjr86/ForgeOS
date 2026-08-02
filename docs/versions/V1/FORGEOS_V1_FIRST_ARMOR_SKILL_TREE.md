@@ -793,7 +793,7 @@ never closes the node.
 
 - **Owner:** `forge-session`
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** A display-manager session entry launches the ForgeOS composition
   root with the expected environment and returns a real failure status when startup
   fails.
@@ -1072,7 +1072,10 @@ never closes the node.
 - **Owner:** `forge-session`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** Startup order, readiness, restart policy, shutdown order, and
   failure states are explicit and testable.
 - **Must not be true:** Service order may not depend on timing sleeps or process-name
@@ -1179,7 +1182,7 @@ never closes the node.
 - **Owner:** `forge-git`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-PATH-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Branch, revision, status, worktree list, and diff are represented
   through typed outcomes with native error preservation.
 - **Must not be true:** Parsing may not collapse distinct Git states or assume English
@@ -1470,10 +1473,10 @@ section ever disagree.
 
 All Tier-0 foundations, structural guards, validated project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
-Rust Analyzer adapter, and native PTY support are closed. Registered command policy
-is active because the process, path, contract, and PTY foundations now exist, and it
-is the shortest bounded route toward the real registered-command loop without yet
-executing or persisting commands.
+Rust Analyzer adapter, native PTY support, immutable registered-command policy, and
+deterministic session lifecycle are closed. Read-only Git inspection is active
+because it is the smallest remaining Tier-1 mechanism and the shortest route to
+source-grounded developer status without permitting mutation.
 
 Current frontier:
 
@@ -1495,17 +1498,18 @@ CLOSED
   FORGEOS-V1-PARSER-100
   FORGEOS-V1-LSP-100
   FORGEOS-V1-TERMINAL-100
+  FORGEOS-V1-COMMAND-100
+  FORGEOS-V1-SESSION-100
 
-ACTIVE_SKILL=FORGEOS-V1-COMMAND-100
-ACTIVE_BLOCKER=FORGEOS_HAS_COMMAND_REFERENCES_BUT_NO_CANONICAL_IMMUTABLE_DEFINITION_OR_EXACT_LAUNCH_POLICY
-ACTIVE_SLICE=FORGEOS-V1-COMMAND-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-GIT-100
+ACTIVE_BLOCKER=FORGEOS_HAS_REPOSITORY_AND_PROCESS_FOUNDATIONS_BUT_NO_READ_ONLY_NATIVE_GIT_ADAPTER_OR_TYPED_MACHINE_FORMAT_RESULTS
+ACTIVE_SLICE=FORGEOS-V1-GIT-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-PROJECT-200
+  FORGEOS-V1-SESSION-200
   FORGEOS-V1-WORLD-100
-  FORGEOS-V1-SESSION-100
   FORGEOS-V1-NYX-100
-  FORGEOS-V1-GIT-100
   FORGEOS-V1-PATCH-100
   FORGEOS-V1-RECOVERY-100
 
@@ -1513,7 +1517,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-COMMAND-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-GIT-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

@@ -93,10 +93,20 @@ pub enum LifecycleAction {
 /// Public view of one service's runtime state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServiceStatus {
-    Pending { next_attempt: u16 },
-    StartRequested { attempt: u16 },
-    Running { attempt: u16, process_id: ProcessId },
-    Ready { attempt: u16, process_id: ProcessId },
+    Pending {
+        next_attempt: u16,
+    },
+    StartRequested {
+        attempt: u16,
+    },
+    Running {
+        attempt: u16,
+        process_id: ProcessId,
+    },
+    Ready {
+        attempt: u16,
+        process_id: ProcessId,
+    },
     StopRequested {
         attempt: u16,
         process_id: ProcessId,
@@ -115,10 +125,20 @@ enum StopContinuation {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum RuntimeState {
-    Pending { next_attempt: u16 },
-    StartRequested { attempt: u16 },
-    Running { attempt: u16, process_id: ProcessId },
-    Ready { attempt: u16, process_id: ProcessId },
+    Pending {
+        next_attempt: u16,
+    },
+    StartRequested {
+        attempt: u16,
+    },
+    Running {
+        attempt: u16,
+        process_id: ProcessId,
+    },
+    Ready {
+        attempt: u16,
+        process_id: ProcessId,
+    },
     StopRequested {
         attempt: u16,
         process_id: ProcessId,
@@ -126,7 +146,9 @@ enum RuntimeState {
         continuation: StopContinuation,
     },
     Stopped,
-    Failed { failure: ServiceFailure },
+    Failed {
+        failure: ServiceFailure,
+    },
 }
 
 impl RuntimeState {
@@ -135,9 +157,7 @@ impl RuntimeState {
             Self::Pending { next_attempt } => ServiceStatus::Pending {
                 next_attempt: *next_attempt,
             },
-            Self::StartRequested { attempt } => ServiceStatus::StartRequested {
-                attempt: *attempt,
-            },
+            Self::StartRequested { attempt } => ServiceStatus::StartRequested { attempt: *attempt },
             Self::Running {
                 attempt,
                 process_id,
@@ -358,9 +378,7 @@ impl SessionSupervisor {
     ) -> Result<(), SupervisorError> {
         self.require_phase(SessionPhase::Starting)?;
         match self.states.get(service) {
-            Some(RuntimeState::StartRequested {
-                attempt: expected,
-            }) if *expected == attempt => {
+            Some(RuntimeState::StartRequested { attempt: expected }) if *expected == attempt => {
                 self.states.insert(
                     service.clone(),
                     RuntimeState::Running {
@@ -370,13 +388,13 @@ impl SessionSupervisor {
                 );
                 Ok(())
             }
-            Some(RuntimeState::StartRequested {
-                attempt: expected,
-            }) => Err(SupervisorError::AttemptMismatch {
-                service: service.clone(),
-                expected: *expected,
-                actual: attempt,
-            }),
+            Some(RuntimeState::StartRequested { attempt: expected }) => {
+                Err(SupervisorError::AttemptMismatch {
+                    service: service.clone(),
+                    expected: *expected,
+                    actual: attempt,
+                })
+            }
             Some(state) => Err(SupervisorError::InvalidTransition {
                 service: service.clone(),
                 status: state.public_status(),
@@ -761,7 +779,10 @@ impl fmt::Display for SupervisorError {
         match self {
             Self::UnknownService(service) => write!(formatter, "unknown service: {service}"),
             Self::PhaseMismatch { expected, actual } => {
-                write!(formatter, "session phase is {actual:?}; expected {expected:?}")
+                write!(
+                    formatter,
+                    "session phase is {actual:?}; expected {expected:?}"
+                )
             }
             Self::AttemptMismatch {
                 service,

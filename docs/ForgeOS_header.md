@@ -308,24 +308,24 @@ structural guards, stable protocol contract, managed-process foundation, canonic
 repository boundary, atomic versioned local persistence, stable SHA-256 identity,
 validated project registration, boundary-safe raw file access, editor buffer identity,
 incremental Rust syntax parsing, the Rust Analyzer JSON-RPC adapter, native PTY
-support, and immutable registered-command policy are closed. Session and managed-
-service lifecycle is the only active V1 source capability:
+support, immutable registered-command policy, and deterministic session lifecycle are
+closed. Read-only native Git inspection is the only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-SESSION-100
-ACTIVE_V1_CONTRIBUTION=DETERMINISTIC_SESSION_AND_MANAGED_SERVICE_LIFECYCLE_CONTRACT
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-SESSION-100
-QUESTION=Can ForgeOS manage one explicitly ordered service plan with stable session identity, dependency-gated startup, explicit readiness, bounded startup restart, reverse-order shutdown, typed failure, and no timing or process-name guessing?
-CURRENT_RESULT=REGISTERED_COMMAND_POLICY_CLOSED_SESSION_LIFECYCLE_ACTIVE
-BATON_OWNER=FORGEOS-V1-SESSION-100
-ACTIVE_LANE=SESSION_AND_DISTRIBUTION
-ACTIVE_SLICE=FORGEOS-V1-SESSION-100-SLICE-001
-FIRST_BLOCKER=FORGEOS_HAS_PROCESS_PRIMITIVES_BUT_NO_DETERMINISTIC_SESSION_SERVICE_PLAN_OR_EXPLICIT_LIFECYCLE_STATE_MACHINE
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-GIT-100
+ACTIVE_V1_CONTRIBUTION=READ_ONLY_NATIVE_GIT_INSPECTION
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-GIT-100
+QUESTION=Can ForgeOS inspect one verified repository through stable machine Git formats and return typed branch, revision, status, worktree, and diff outcomes while preserving native failures and performing no mutation?
+CURRENT_RESULT=SESSION_LIFECYCLE_CLOSED_READ_ONLY_GIT_ACTIVE
+BATON_OWNER=FORGEOS-V1-GIT-100
+ACTIVE_LANE=GIT_AND_PATCHES
+ACTIVE_SLICE=FORGEOS-V1-GIT-100-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_REPOSITORY_AND_PROCESS_FOUNDATIONS_BUT_NO_READ_ONLY_NATIVE_GIT_ADAPTER_OR_TYPED_MACHINE_FORMAT_RESULTS
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -340,8 +340,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-SESSION-100
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-SESSION-100-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-GIT-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-GIT-100-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -357,14 +357,14 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-SESSION-100` is the only active source skill.
+`FORGEOS-V1-GIT-100` is the only active source skill.
 
-This slice may establish only immutable service definitions, explicit startup ranks,
-dependency-gated readiness, bounded pre-readiness restart policy, reverse shutdown,
-stable session and process identity checks, and typed failure transitions. Login
-bootstrap, service process spawning, persistent recovery, Nyx transport,
-project restoration, Git operations, and Forge World presentation remain separate
-capabilities.
+This slice may establish only verified repository-root binding, fixed shell-free
+read-only Git commands, typed branch and revision state, porcelain-v2 status,
+porcelain worktree listing, raw typed diff entries, exact patch bytes, and native
+failure preservation. Git mutation, staging, commits, worktree creation, project
+registry persistence, Nyx, session bootstrap, and Forge World presentation remain
+separate capabilities.
 
 ## 7. Program modes
 

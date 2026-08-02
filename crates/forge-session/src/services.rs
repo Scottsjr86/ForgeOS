@@ -136,9 +136,7 @@ impl ManagedService {
         dependencies.sort();
         for pair in dependencies.windows(2) {
             if pair[0] == pair[1] {
-                return Err(ServiceDefinitionError::DuplicateDependency(
-                    pair[0].clone(),
-                ));
+                return Err(ServiceDefinitionError::DuplicateDependency(pair[0].clone()));
             }
         }
         if dependencies.iter().any(|dependency| dependency == &name) {
@@ -232,12 +230,13 @@ impl ServicePlan {
 
         for service in by_name.values() {
             for dependency in service.dependencies() {
-                let dependency_service = by_name.get(dependency).ok_or_else(|| {
-                    ServicePlanError::UnknownDependency {
-                        service: service.name().clone(),
-                        dependency: dependency.clone(),
-                    }
-                })?;
+                let dependency_service =
+                    by_name
+                        .get(dependency)
+                        .ok_or_else(|| ServicePlanError::UnknownDependency {
+                            service: service.name().clone(),
+                            dependency: dependency.clone(),
+                        })?;
                 if dependency_service.startup_order() >= service.startup_order() {
                     return Err(ServicePlanError::DependencyOrder {
                         service: service.name().clone(),
@@ -279,11 +278,7 @@ impl ServicePlan {
     }
 
     /// True when every declared dependency appears in `ready`.
-    pub fn dependencies_ready(
-        &self,
-        name: &ServiceName,
-        ready: &BTreeSet<ServiceName>,
-    ) -> bool {
+    pub fn dependencies_ready(&self, name: &ServiceName, ready: &BTreeSet<ServiceName>) -> bool {
         self.service(name)
             .map(|service| {
                 service

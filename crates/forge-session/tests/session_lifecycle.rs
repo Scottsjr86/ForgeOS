@@ -3,9 +3,7 @@ use forge_session::lifecycle::{
     LifecycleAction, ServiceFailure, ServiceFailureStage, ServiceStatus, SessionPhase,
     SessionSupervisor, StopReason, SupervisorError,
 };
-use forge_session::services::{
-    ManagedService, ServiceName, ServicePlan, StartupRestartPolicy,
-};
+use forge_session::services::{ManagedService, ServiceName, ServicePlan, StartupRestartPolicy};
 
 fn session(byte: u8) -> SessionId {
     SessionId::from_bytes([byte; IDENTITY_BYTES])
@@ -74,10 +72,8 @@ fn start_and_ready(
 
 #[test]
 fn startup_waits_for_explicit_readiness_and_dependency_order() {
-    let mut supervisor = SessionSupervisor::new(
-        session(1),
-        two_service_plan(StartupRestartPolicy::Never),
-    );
+    let mut supervisor =
+        SessionSupervisor::new(session(1), two_service_plan(StartupRestartPolicy::Never));
     expect_start(supervisor.take_next_action().unwrap(), "forge-core", 1);
     supervisor
         .record_started(&name("forge-core"), 1, process(1))
@@ -200,10 +196,8 @@ fn exhausted_start_failure_rolls_back_ready_services() {
 
 #[test]
 fn clean_shutdown_is_strict_reverse_startup_order() {
-    let mut supervisor = SessionSupervisor::new(
-        session(5),
-        two_service_plan(StartupRestartPolicy::Never),
-    );
+    let mut supervisor =
+        SessionSupervisor::new(session(5), two_service_plan(StartupRestartPolicy::Never));
     start_and_ready(&mut supervisor, "forge-core", 1, process(5));
     start_and_ready(&mut supervisor, "forge-world", 1, process(6));
     assert!(matches!(
@@ -246,10 +240,8 @@ fn clean_shutdown_is_strict_reverse_startup_order() {
 
 #[test]
 fn stop_failure_is_preserved_while_other_services_are_stopped() {
-    let mut supervisor = SessionSupervisor::new(
-        session(6),
-        two_service_plan(StartupRestartPolicy::Never),
-    );
+    let mut supervisor =
+        SessionSupervisor::new(session(6), two_service_plan(StartupRestartPolicy::Never));
     start_and_ready(&mut supervisor, "forge-core", 1, process(7));
     start_and_ready(&mut supervisor, "forge-world", 1, process(8));
     supervisor.take_next_action();
@@ -286,10 +278,8 @@ fn stop_failure_is_preserved_while_other_services_are_stopped() {
 
 #[test]
 fn unexpected_runtime_exit_rolls_back_remaining_ready_services() {
-    let mut supervisor = SessionSupervisor::new(
-        session(7),
-        two_service_plan(StartupRestartPolicy::Never),
-    );
+    let mut supervisor =
+        SessionSupervisor::new(session(7), two_service_plan(StartupRestartPolicy::Never));
     start_and_ready(&mut supervisor, "forge-core", 1, process(9));
     start_and_ready(&mut supervisor, "forge-world", 1, process(10));
     supervisor.take_next_action();
@@ -313,10 +303,8 @@ fn unexpected_runtime_exit_rolls_back_remaining_ready_services() {
 
 #[test]
 fn wrong_attempt_and_process_identity_are_rejected() {
-    let mut supervisor = SessionSupervisor::new(
-        session(8),
-        two_service_plan(StartupRestartPolicy::Never),
-    );
+    let mut supervisor =
+        SessionSupervisor::new(session(8), two_service_plan(StartupRestartPolicy::Never));
     supervisor.take_next_action();
     assert!(matches!(
         supervisor.record_started(&name("forge-core"), 2, process(11)),
@@ -333,10 +321,8 @@ fn wrong_attempt_and_process_identity_are_rejected() {
 
 #[test]
 fn destructive_shutdown_is_rejected_before_session_ready() {
-    let mut supervisor = SessionSupervisor::new(
-        session(9),
-        two_service_plan(StartupRestartPolicy::Never),
-    );
+    let mut supervisor =
+        SessionSupervisor::new(session(9), two_service_plan(StartupRestartPolicy::Never));
     assert_eq!(
         supervisor.request_shutdown(),
         Err(SupervisorError::PhaseMismatch {

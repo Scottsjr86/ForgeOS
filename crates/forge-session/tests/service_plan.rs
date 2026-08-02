@@ -25,7 +25,12 @@ fn service(
 #[test]
 fn explicit_startup_and_reverse_shutdown_order_are_stable() {
     let plan = ServicePlan::new([
-        service("forge-world", 30, &["forge-core"], StartupRestartPolicy::Never),
+        service(
+            "forge-world",
+            30,
+            &["forge-core"],
+            StartupRestartPolicy::Never,
+        ),
         service("nyx", 20, &["forge-core"], StartupRestartPolicy::Never),
         service("forge-core", 10, &[], StartupRestartPolicy::Never),
     ])
@@ -112,7 +117,12 @@ fn unknown_dependency_is_rejected() {
 #[test]
 fn dependency_must_have_an_earlier_explicit_rank() {
     let error = ServicePlan::new([
-        service("forge-world", 10, &["forge-core"], StartupRestartPolicy::Never),
+        service(
+            "forge-world",
+            10,
+            &["forge-core"],
+            StartupRestartPolicy::Never,
+        ),
         service("forge-core", 20, &[], StartupRestartPolicy::Never),
     ])
     .unwrap_err();
