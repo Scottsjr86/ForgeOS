@@ -170,10 +170,7 @@ impl ProjectFileAccess {
     }
 
     /// Reads raw bytes without UTF-8 conversion or replacement.
-    pub fn read(
-        &self,
-        request: &RepositoryPathRequest,
-    ) -> Result<FileSnapshot, ProjectFileError> {
+    pub fn read(&self, request: &RepositoryPathRequest) -> Result<FileSnapshot, ProjectFileError> {
         self.validate_request(request)?;
         let parent = self.open_parent(request.relative_path())?;
         let leaf = target_leaf(request.relative_path())?;
@@ -228,16 +225,16 @@ impl ProjectFileAccess {
             request.relative_path(),
             display_path.clone(),
         )?;
-        ensure_expectation(expected, current.as_ref().map(|value| value.public.revision))?;
+        ensure_expectation(
+            expected,
+            current.as_ref().map(|value| value.public.revision),
+        )?;
 
         let new_hash = hash_canonical_bytes(HashDomain::File, bytes);
         let stage_name = stage_name(request.relative_path(), new_hash)?;
         let stage_path = parent.proc_path.join(&stage_name);
         let target_path = parent.proc_path.join(leaf);
-        let mode = current
-            .as_ref()
-            .map(|value| value.mode)
-            .unwrap_or(0o666);
+        let mode = current.as_ref().map(|value| value.mode).unwrap_or(0o666);
 
         let mut staged = StagedFile::create(stage_path.clone(), mode, current.is_some())?;
         staged.write_and_sync(bytes)?;
@@ -261,7 +258,10 @@ impl ProjectFileAccess {
             request.relative_path(),
             display_path,
         )?;
-        ensure_expectation(expected, rechecked.as_ref().map(|value| value.public.revision))?;
+        ensure_expectation(
+            expected,
+            rechecked.as_ref().map(|value| value.public.revision),
+        )?;
 
         #[cfg(test)]
         if _fault == WriteFault::BeforeReplace {
@@ -331,11 +331,9 @@ impl ProjectFileAccess {
 
         let parent_relative = RepositoryRelativePath::new(parent_path)
             .expect("parent of a validated repository path remains valid");
-        let parent_request = RepositoryPathRequest::new(
-            self.repository_id,
-            parent_relative.as_path(),
-        )
-        .expect("parent request was already validated");
+        let parent_request =
+            RepositoryPathRequest::new(self.repository_id, parent_relative.as_path())
+                .expect("parent request was already validated");
         let resolved = self.boundary.resolve_existing(&parent_request)?;
         PinnedDirectory::open(resolved.canonical_path(), resolved.object())
     }
@@ -366,11 +364,13 @@ impl PinnedDirectory {
                 path: path.to_path_buf(),
                 kind: source.kind(),
             })?;
-            let metadata = directory.metadata().map_err(|source| ProjectFileError::Io {
-                operation: FileOperation::InspectParent,
-                path: path.to_path_buf(),
-                kind: source.kind(),
-            })?;
+            let metadata = directory
+                .metadata()
+                .map_err(|source| ProjectFileError::Io {
+                    operation: FileOperation::InspectParent,
+                    path: path.to_path_buf(),
+                    kind: source.kind(),
+                })?;
             if !metadata.is_dir() {
                 return Err(ProjectFileError::ParentNotDirectory {
                     path: path.to_path_buf(),
@@ -466,7 +466,7 @@ fn read_optional_file(
         let before_object = object_from_metadata(&before)?;
         let before_modified = before.modified().ok();
         let mut bytes = Vec::with_capacity(before.len() as usize);
-        file.by_ref()
+        Read::by_ref(&mut file)
             .take((MAX_FILE_BYTES + 1) as u64)
             .read_to_end(&mut bytes)
             .map_err(|source| ProjectFileError::Io {
@@ -517,7 +517,9 @@ fn ensure_expectation(
     expected: FileExpectation,
     found: Option<FileRevision>,
 ) -> Result<(), ProjectFileError> {
-    let found = found.map(FileExpectation::Exact).unwrap_or(FileExpectation::Missing);
+    let found = found
+        .map(FileExpectation::Exact)
+        .unwrap_or(FileExpectation::Missing);
     if expected != found {
         return Err(ProjectFileError::Conflict { expected, found });
     }
@@ -619,13 +621,11 @@ impl StagedFile {
                 path: self.path.clone(),
                 kind: source.kind(),
             })?;
-        self.file
-            .sync_all()
-            .map_err(|source| ProjectFileError::Io {
-                operation: FileOperation::SyncStage,
-                path: self.path.clone(),
-                kind: source.kind(),
-            })
+        self.file.sync_all().map_err(|source| ProjectFileError::Io {
+            operation: FileOperation::SyncStage,
+            path: self.path.clone(),
+            kind: source.kind(),
+        })
     }
 
     fn metadata(&self) -> Result<Metadata, ProjectFileError> {
@@ -758,17 +758,35 @@ impl fmt::Display for ProjectFileError {
                 "file request repository mismatch: expected {expected}, found {found}"
             ),
             Self::PathNotAllowed { path } => {
-                write!(formatter, "file path is outside approved project roots: {}", path.display())
+                write!(
+                    formatter,
+                    "file path is outside approved project roots: {}",
+                    path.display()
+                )
             }
             Self::InvalidTarget { path } => {
-                write!(formatter, "file target has no final path component: {}", path.display())
+                write!(
+                    formatter,
+                    "file target has no final path component: {}",
+                    path.display()
+                )
             }
-            Self::Missing { path } => write!(formatter, "repository file is missing: {}", path.display()),
+            Self::Missing { path } => {
+                write!(formatter, "repository file is missing: {}", path.display())
+            }
             Self::SymlinkRejected { path } => {
-                write!(formatter, "repository file symlink is rejected: {}", path.display())
+                write!(
+                    formatter,
+                    "repository file symlink is rejected: {}",
+                    path.display()
+                )
             }
             Self::ParentNotDirectory { path } => {
-                write!(formatter, "repository file parent is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "repository file parent is not a directory: {}",
+                    path.display()
+                )
             }
             Self::ParentIdentityChanged {
                 path,
@@ -782,10 +800,18 @@ impl fmt::Display for ProjectFileError {
                 found
             ),
             Self::NotRegularFile { path } => {
-                write!(formatter, "repository path is not a regular file: {}", path.display())
+                write!(
+                    formatter,
+                    "repository path is not a regular file: {}",
+                    path.display()
+                )
             }
             Self::ChangedDuringRead { path } => {
-                write!(formatter, "repository file changed during read: {}", path.display())
+                write!(
+                    formatter,
+                    "repository file changed during read: {}",
+                    path.display()
+                )
             }
             Self::FileTooLarge { maximum, actual } => write!(
                 formatter,

@@ -1,9 +1,7 @@
 #![cfg(target_os = "linux")]
 
 use forge_core::projects::{AllowedProjectRoot, LanguageProfile, ProjectManifest};
-use forge_project::files::{
-    FileExpectation, ProjectFileAccess, ProjectFileError, WriteDurability,
-};
+use forge_project::files::{FileExpectation, ProjectFileAccess, ProjectFileError, WriteDurability};
 use forge_project::paths::RepositoryBoundary;
 use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
 use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
@@ -47,8 +45,7 @@ impl Fixture {
         fs::create_dir_all(repository.join("tests")).expect("create test directory");
         fs::write(repository.join("src/lib.rs"), b"pub fn original() {}\n")
             .expect("write source fixture");
-        fs::write(repository.join("tests/outside.rs"), b"outside\n")
-            .expect("write denied fixture");
+        fs::write(repository.join("tests/outside.rs"), b"outside\n").expect("write denied fixture");
 
         let repository_id = repository_id((sequence as u8).wrapping_add(10));
         let manifest = ProjectManifest::new(
@@ -87,10 +84,7 @@ impl Drop for Fixture {
 
 #[test]
 fn raw_read_preserves_bytes_and_returns_exact_revision() {
-    let fixture = Fixture::new(
-        "read",
-        vec![AllowedProjectRoot::relative("src").unwrap()],
-    );
+    let fixture = Fixture::new("read", vec![AllowedProjectRoot::relative("src").unwrap()]);
     let bytes = vec![0, 0xff, b'R', b'u', b's', b't', b'\n'];
     fs::write(fixture.repository.join("src/raw.bin"), &bytes).expect("write raw fixture");
 
@@ -100,7 +94,10 @@ fn raw_read_preserves_bytes_and_returns_exact_revision() {
 
     assert_eq!(snapshot.repository_id(), fixture.manifest.repository_id());
     assert_eq!(snapshot.relative_path().as_path(), Path::new("src/raw.bin"));
-    assert_eq!(snapshot.display_path(), fixture.repository.join("src/raw.bin"));
+    assert_eq!(
+        snapshot.display_path(),
+        fixture.repository.join("src/raw.bin")
+    );
     assert_eq!(snapshot.bytes(), bytes);
     assert_eq!(snapshot.revision().length(), bytes.len() as u64);
     assert_eq!(
@@ -136,21 +133,25 @@ fn atomic_replace_preserves_mode_and_returns_new_revision() {
     ));
     assert_ne!(result.revision(), before.revision());
     assert_eq!(fs::read(&target).unwrap(), b"pub fn replaced() {}\n");
-    assert_eq!(fs::metadata(&target).unwrap().permissions().mode() & 0o7777, 0o640);
+    assert_eq!(
+        fs::metadata(&target).unwrap().permissions().mode() & 0o7777,
+        0o640
+    );
     assert_eq!(access.read(&request).unwrap().revision(), result.revision());
 }
 
 #[test]
 fn missing_expectation_creates_new_file_without_partial_bytes() {
-    let fixture = Fixture::new(
-        "create",
-        vec![AllowedProjectRoot::relative("src").unwrap()],
-    );
+    let fixture = Fixture::new("create", vec![AllowedProjectRoot::relative("src").unwrap()]);
     let access = fixture.access();
     let request = fixture.request("src/new.rs");
 
     let result = access
-        .write_atomic(&request, FileExpectation::Missing, b"pub fn new_file() {}\n")
+        .write_atomic(
+            &request,
+            FileExpectation::Missing,
+            b"pub fn new_file() {}\n",
+        )
         .expect("create file");
 
     assert!(result.created());
@@ -217,10 +218,7 @@ fn missing_and_existing_expectations_are_not_interchangeable() {
 
 #[test]
 fn denied_root_and_wrong_repository_are_rejected_before_io() {
-    let fixture = Fixture::new(
-        "denied",
-        vec![AllowedProjectRoot::relative("src").unwrap()],
-    );
+    let fixture = Fixture::new("denied", vec![AllowedProjectRoot::relative("src").unwrap()]);
     let access = fixture.access();
     let denied = fixture.request("tests/outside.rs");
     assert!(matches!(
@@ -240,10 +238,7 @@ fn denied_root_and_wrong_repository_are_rejected_before_io() {
 
 #[test]
 fn symlink_and_directory_targets_are_never_treated_as_files() {
-    let fixture = Fixture::new(
-        "types",
-        vec![AllowedProjectRoot::relative("src").unwrap()],
-    );
+    let fixture = Fixture::new("types", vec![AllowedProjectRoot::relative("src").unwrap()]);
     let outside = fixture.root.join("outside.txt");
     fs::write(&outside, b"secret\n").expect("write outside fixture");
     symlink(&outside, fixture.repository.join("src/link.rs")).expect("create symlink");
@@ -252,8 +247,7 @@ fn symlink_and_directory_targets_are_never_treated_as_files() {
     let access = fixture.access();
     assert!(matches!(
         access.read(&fixture.request("src/link.rs")),
-        Err(ProjectFileError::SymlinkRejected { .. })
-            | Err(ProjectFileError::Boundary(_))
+        Err(ProjectFileError::SymlinkRejected { .. }) | Err(ProjectFileError::Boundary(_))
     ));
     assert!(matches!(
         access.read(&fixture.request("src/directory.rs")),
@@ -283,7 +277,10 @@ fn non_utf8_filename_round_trips_without_lossy_conversion() {
         )
         .expect("write non-UTF8 file");
 
-    assert_eq!(fs::read(fixture.repository.join(&relative)).unwrap(), b"second\n");
+    assert_eq!(
+        fs::read(fixture.repository.join(&relative)).unwrap(),
+        b"second\n"
+    );
     assert_eq!(access.read(&request).unwrap().revision(), result.revision());
 }
 

@@ -305,24 +305,25 @@ activate later-version work.
 
 The bounded authority migration, architecture foundations, all three mandatory
 structural guards, stable protocol contract, managed-process foundation, canonical
-repository boundary, atomic versioned local persistence, and stable SHA-256 identity
-and validated project manifest and repository registration are closed. Boundary-safe raw file access and conflict-safe atomic write is the only active V1 source capability:
+repository boundary, atomic versioned local persistence, stable SHA-256 identity,
+validated project registration, and boundary-safe raw file access are closed.
+Editor buffer identity and dirty-state truth is the only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-FILE-100
-ACTIVE_V1_CONTRIBUTION=BOUNDARY_SAFE_FILE_ACCESS_AND_ATOMIC_WRITE
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-FILE-100
-QUESTION=Can ForgeOS read and atomically replace raw repository files only through approved project roots, preserve exact bytes, detect changed-on-disk conflicts, reject boundary escapes, and preserve original bytes on every pre-commit failure?
-CURRENT_RESULT=PROJECT_MANIFEST_CLOSED_BOUNDARY_SAFE_FILE_ACCESS_ACTIVE
-BATON_OWNER=FORGEOS-V1-FILE-100
-ACTIVE_LANE=PROJECT_AND_PERSISTENCE
-ACTIVE_SLICE=FORGEOS-V1-FILE-100-SLICE-001
-FIRST_BLOCKER=FORGEOS_HAS_NO_MANIFEST_BOUND_RAW_FILE_ACCESS_OR_CONFLICT_SAFE_ATOMIC_WRITE
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-EDITOR-100
+ACTIVE_V1_CONTRIBUTION=EDITOR_BUFFER_IDENTITY_AND_DIRTY_STATE_MODEL
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-EDITOR-100
+QUESTION=Can ForgeOS maintain one canonical in-memory buffer per repository document with explicit content versions, cursor state, dirty state, disk baseline, save outcomes, and conflict state without modifying repository files?
+CURRENT_RESULT=BOUNDARY_SAFE_FILE_ACCESS_CLOSED_EDITOR_BUFFER_STATE_ACTIVE
+BATON_OWNER=FORGEOS-V1-EDITOR-100
+ACTIVE_LANE=EDITOR_AND_LANGUAGE
+ACTIVE_SLICE=FORGEOS-V1-EDITOR-100-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_NO_CANONICAL_BUFFER_REGISTRY_OR_EXPLICIT_DIRTY_CONFLICT_STATE
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-PARSER-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -337,8 +338,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-FILE-100
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-FILE-100-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-EDITOR-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-EDITOR-100-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -354,9 +355,13 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-FILE-100` is the only active source skill.
+`FORGEOS-V1-EDITOR-100` is the only active source skill.
 
-This slice may establish only manifest-bound raw file reads, exact revision identity, optimistic conflict detection, same-directory staged replacement, raw-byte preservation, allowed-root enforcement, and explicit pre-commit failure behavior. File trees, search, editor buffers, commands, terminal, Git, session, LSP, Nyx, recovery, and Forge World behavior remain separate capabilities.
+This slice may establish only in-memory buffer identity, canonical document
+ownership, content and cursor generations, dirty baselines, save outcomes, and
+explicit disk-conflict state. File mutation, file trees, search, parsing, commands,
+terminal, Git, session, LSP, Nyx, recovery, and Forge World behavior remain separate
+capabilities.
 
 ---
 

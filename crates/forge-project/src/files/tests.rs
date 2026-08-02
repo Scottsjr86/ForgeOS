@@ -1,6 +1,6 @@
 use super::*;
 use forge_core::projects::LanguageProfile;
-use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
+use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 static FIXTURE_COUNTER: AtomicU64 = AtomicU64::new(0);
@@ -60,8 +60,8 @@ impl Drop for Fixture {
 #[test]
 fn injected_failures_preserve_original_bytes_and_remove_stage() {
     let fixture = Fixture::new("injected");
-    let request = RepositoryPathRequest::new(fixture.access.repository_id(), "src/lib.rs")
-        .expect("request");
+    let request =
+        RepositoryPathRequest::new(fixture.access.repository_id(), "src/lib.rs").expect("request");
     let original = fixture.access.read(&request).expect("read original");
 
     for fault in [WriteFault::BeforeConflictRecheck, WriteFault::BeforeReplace] {
@@ -81,7 +81,12 @@ fn injected_failures_preserve_original_bytes_and_remove_stage() {
         let staged: Vec<_> = fs::read_dir(fixture.repository.join("src"))
             .unwrap()
             .filter_map(Result::ok)
-            .filter(|entry| entry.file_name().to_string_lossy().contains(".forgeos-write-"))
+            .filter(|entry| {
+                entry
+                    .file_name()
+                    .to_string_lossy()
+                    .contains(".forgeos-write-")
+            })
             .collect();
         assert!(staged.is_empty());
     }
