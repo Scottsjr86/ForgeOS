@@ -81,18 +81,11 @@ fn edits_advance_content_version_cursor_and_dirty_state() {
     let original = b"abc".to_vec();
     let disk = DiskVersion::for_bytes(&original);
     registry
-        .open_existing(
-            buffer_id(1),
-            document(1, "note.txt"),
-            disk,
-            original,
-        )
+        .open_existing(buffer_id(1), document(1, "note.txt"), disk, original)
         .expect("buffer opens");
     let buffer = registry.get_mut(buffer_id(1)).expect("buffer exists");
 
-    let version = buffer
-        .replace_range(1..2, b"XYZ")
-        .expect("edit succeeds");
+    let version = buffer.replace_range(1..2, b"XYZ").expect("edit succeeds");
     assert_eq!(version.get(), ContentVersion::initial().get() + 1);
     assert_eq!(buffer.bytes(), b"aXYZc");
     assert_eq!(buffer.cursor(), CursorState::collapsed(4));
@@ -114,18 +107,16 @@ fn editing_back_to_the_disk_bytes_restores_clean_state() {
     let original = b"abc".to_vec();
     let disk = DiskVersion::for_bytes(&original);
     registry
-        .open_existing(
-            buffer_id(1),
-            document(1, "note.txt"),
-            disk,
-            original,
-        )
+        .open_existing(buffer_id(1), document(1, "note.txt"), disk, original)
         .expect("buffer opens");
     let buffer = registry.get_mut(buffer_id(1)).expect("buffer exists");
 
     buffer.replace_range(1..2, b"Z").expect("first edit");
     buffer.replace_range(1..2, b"b").expect("revert edit");
-    assert_eq!(buffer.synchronization(), SynchronizationState::Clean { disk });
+    assert_eq!(
+        buffer.synchronization(),
+        SynchronizationState::Clean { disk }
+    );
     assert_eq!(buffer.close_disposition(), CloseDisposition::Safe);
 }
 
@@ -178,7 +169,10 @@ fn matching_save_success_marks_the_current_generation_clean() {
         .record_save_success(intent.content_version(), disk)
         .expect("save result applies");
 
-    assert_eq!(buffer.synchronization(), SynchronizationState::Clean { disk });
+    assert_eq!(
+        buffer.synchronization(),
+        SynchronizationState::Clean { disk }
+    );
     assert_eq!(
         buffer.last_save(),
         SaveOutcome::Succeeded {

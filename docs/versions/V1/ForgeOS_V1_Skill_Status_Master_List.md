@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_21.tar`, the canonical V1 skill tree, and the live session results through `FORGEOS-V1-FILE-100`.
-> `FORGEOS-V1-EDITOR-100` is currently active and awaiting operator validation.
+> Source basis: `Forge_OS_V1_base_22.tar`, the canonical V1 skill tree, and the live session results through `FORGEOS-V1-EDITOR-100`.
+> `FORGEOS-V1-PARSER-100` is currently active and awaiting operator validation.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 12 |
+| ✅ Completed / closed | 13 |
 | 🔨 Active / started | 1 |
-| 🟢 Available / ready to start | 11 |
+| 🟢 Available / ready to start | 10 |
 | 🔒 Locked by prerequisites | 43 |
 
-**Raw closed-node count:** 12 of 67, or 17.9%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 13 of 67, or 19.4%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -39,23 +39,22 @@
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
 | 2 | Functional V1 systems | 19 | available 1, locked 18 |
-| 1 | Local mechanisms | 16 | closed 2, active 1, available 10, locked 3 |
+| 1 | Local mechanisms | 16 | closed 3, active 1, available 9, locked 3 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-EDITOR-100` — Editor buffer identity and dirty-state model
+### 🔨 `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
 - **Current position:** Source patch prepared; behavior-only CI has not yet been returned by the operator.
-- **Direct prerequisites:** `FILE-100` and `CONTRACT-000` ✅
-- **Immediate unlock after closure:** None by itself. `EDITOR-200` also requires `FILE-200`.
+- **Direct prerequisites:** `ARCH-001` and `FILE-100` ✅
+- **Immediate unlock after closure:** None by itself. `EDITOR-201` also requires `EDITOR-200` and `LSP-100`.
 
 ## Available skills right now
 
 - 🟢 `FORGEOS-V1-PROJECT-200` — Persistent project registry and workspace restoration
-- 🟢 `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
 - 🟢 `FORGEOS-V1-SESSION-100` — Session and managed-service lifecycle contract
 - 🟢 `FORGEOS-V1-LSP-100` — Rust Analyzer process and JSON-RPC adapter
 - 🟢 `FORGEOS-V1-TERMINAL-100` — PTY spawn, I/O, resize, and termination
@@ -150,8 +149,8 @@ Concrete local mechanisms and adapters that make the systems real.
 | ✅ CLOSED | `FORGEOS-V1-PROJECT-100` | Validated project manifest and repository identity | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-SESSION-100` | Session and managed-service lifecycle contract | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | ✅ CLOSED | `FORGEOS-V1-FILE-100` | Boundary-safe file access and atomic write | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000` |
-| 🔨 ACTIVE | `FORGEOS-V1-EDITOR-100` | Editor buffer identity and dirty-state model | ✅ `FORGEOS-V1-FILE-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
-| 🟢 AVAILABLE | `FORGEOS-V1-PARSER-100` | Incremental Tree-sitter parsing adapter | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-FILE-100` |
+| ✅ CLOSED | `FORGEOS-V1-EDITOR-100` | Editor buffer identity and dirty-state model | ✅ `FORGEOS-V1-FILE-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
+| 🔨 ACTIVE | `FORGEOS-V1-PARSER-100` | Incremental Tree-sitter parsing adapter | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-FILE-100` |
 | 🟢 AVAILABLE | `FORGEOS-V1-LSP-100` | Rust Analyzer process and JSON-RPC adapter | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-TERMINAL-100` | PTY spawn, I/O, resize, and termination | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-COMMAND-100` | Registered command definition and execution policy | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-CONTRACT-000` |
@@ -199,7 +198,8 @@ The bedrock: architecture, contracts, guards, process/path/state foundations, an
 10. ✅ `FORGEOS-V1-HASH-000` — Stable artifact and request hashing
 11. ✅ `FORGEOS-V1-PROJECT-100` — Validated project manifest and repository identity
 12. ✅ `FORGEOS-V1-FILE-100` — Boundary-safe file access and atomic write
-13. 🔨 `FORGEOS-V1-EDITOR-100` — Editor buffer identity and dirty-state model
+13. ✅ `FORGEOS-V1-EDITOR-100` — Editor buffer identity and dirty-state model
+14. 🔨 `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
 
 ## Reading this list correctly
 

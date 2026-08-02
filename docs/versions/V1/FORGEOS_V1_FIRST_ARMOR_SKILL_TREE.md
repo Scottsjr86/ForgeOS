@@ -1098,7 +1098,7 @@ never closes the node.
 
 - **Owner:** `forge-editor`
 - **Prerequisites:** `FORGEOS-V1-FILE-100`, `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
 - **Must be true:** Buffer identity, content version, cursor state, dirty state, disk
   version, save outcome, and conflict state are explicit.
 - **Must not be true:** File path aliases may not create silent duplicate authorities
@@ -1111,7 +1111,7 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-ARCH-001`, `FORGEOS-V1-FILE-100`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Parser state updates against exact buffer versions and exposes
   syntax spans and parse errors without owning source bytes.
 - **Must not be true:** Parse state from an older buffer version may not be shown as
@@ -1455,10 +1455,10 @@ section ever disagree.
 
 ## 8. Current frontier
 
-All Tier-0 foundations, structural guards, validated project registration, and
-boundary-safe file access are closed. Editor buffer state is active because it is
-the smallest newly unlocked Tier-1 capability and creates explicit in-memory source
-truth without adding parser, process, filesystem, or UI behavior.
+All Tier-0 foundations, structural guards, validated project registration,
+boundary-safe file access, and editor buffer identity are closed. Incremental Rust
+syntax parsing is active because it is the smallest editor-language slice that can
+consume exact buffer generations without adding LSP, save, process, or UI behavior.
 
 Current frontier:
 
@@ -1476,14 +1476,14 @@ CLOSED
   FORGEOS-V1-HASH-000
   FORGEOS-V1-PROJECT-100
   FORGEOS-V1-FILE-100
+  FORGEOS-V1-EDITOR-100
 
-ACTIVE_SKILL=FORGEOS-V1-EDITOR-100
-ACTIVE_BLOCKER=FORGEOS_HAS_NO_CANONICAL_BUFFER_REGISTRY_OR_EXPLICIT_DIRTY_CONFLICT_STATE
-ACTIVE_SLICE=FORGEOS-V1-EDITOR-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-PARSER-100
+ACTIVE_BLOCKER=FORGEOS_HAS_NO_VERSION_BOUND_INCREMENTAL_RUST_PARSE_STATE
+ACTIVE_SLICE=FORGEOS-V1-PARSER-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-PROJECT-200
-  FORGEOS-V1-PARSER-100
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-SESSION-100
   FORGEOS-V1-LSP-100
@@ -1498,7 +1498,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-EDITOR-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-PARSER-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

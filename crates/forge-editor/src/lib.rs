@@ -5,3 +5,4 @@
 
 pub mod buffers;
 pub mod language;
+pub mod parsing;

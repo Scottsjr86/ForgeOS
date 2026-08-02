@@ -90,28 +90,28 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-PARSER-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-EDITOR-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-EDITOR-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-LSP-100,FORGEOS-V1-NYX-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-GIT-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-PARSER-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-PARSER-100
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=EDITOR_AND_LANGUAGE
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-EDITOR-100-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-PARSER-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
 
-All Tier-0 foundations, all three structural guards, project registration, and
-boundary-safe file access are closed. `FORGEOS-V1-EDITOR-100` is the only active
-source skill. Persistent project registry, parsing, Forge World, session, LSP, Nyx
-health, terminal, command, read-only Git, patch, and recovery remain available but
-inactive. The active slice may model in-memory buffer truth only; it may not mutate
-files, parse syntax, start processes, execute commands, inspect Git, or present UI
-state.
+All Tier-0 foundations, all three structural guards, project registration,
+boundary-safe file access, and editor buffer identity are closed.
+`FORGEOS-V1-PARSER-100` is the only active source skill. Persistent project
+registry, Forge World, session, LSP, Nyx health, terminal, command, read-only Git,
+patch, and recovery remain available but inactive. The active slice may parse exact
+Rust buffer generations only; it may not own source bytes, save files, start
+processes, execute commands, inspect Git, or present UI state.
 
 ## 3. Current-source intake law
 
@@ -778,60 +778,57 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-Editor buffer identity and dirty-state truth is active.
+Incremental Rust syntax parsing is active.
 
 ```yaml
-skill_id: FORGEOS-V1-EDITOR-100
+skill_id: FORGEOS-V1-PARSER-100
 state: ACTIVE
 lane: EDITOR_AND_LANGUAGE
-owning_subsystem: forge-editor
+owning_subsystem: forge-editor and forge-bridge
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_21.tar sha256 a8633b432379cff72cd432832b60dc10369430be62b5c23d46f1578e663a3c6c
+source_revision: Forge_OS_V1_base_22.tar sha256 37c1c20312a47788c72c1e8f4d1beb0ebda27ad0ce9b7f39884af9e9f6fc1009
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
+  - FORGEOS-V1-ARCH-001
   - FORGEOS-V1-FILE-100
-  - FORGEOS-V1-CONTRACT-000
 originating_path_or_probe: >
-  Open the same canonical repository document twice, edit local bytes, move the
-  cursor, observe disk changes, prepare saves, apply matching and stale save
-  results, and attempt destructive close through one in-memory buffer registry.
+  Open a Rust buffer, parse valid and invalid bytes, edit the buffer, request the
+  old syntax state, incrementally reparse against the exact previous bytes, and
+  inspect named spans, parser issues, and changed ranges.
 first_blocker: >
-  ForgeOS can read and atomically write approved repository files but has no
-  canonical in-memory buffer identity, content generation, dirty baseline, save
-  outcome, or disk-conflict model.
-active_slice: FORGEOS-V1-EDITOR-100-SLICE-001
+  ForgeOS has exact editor buffer generations but no real Rust parser state bound
+  to those generations, so syntax spans and errors cannot be shown truthfully.
+active_slice: FORGEOS-V1-PARSER-100-SLICE-001
 allowed_paths:
-  - crates/forge-editor/src/buffers.rs
+  - crates/forge-bridge/Cargo.toml
+  - crates/forge-bridge/src/lib.rs
+  - crates/forge-bridge/src/parsing.rs
   - crates/forge-editor/src/lib.rs
-  - crates/forge-editor/tests/buffer_state.rs
+  - crates/forge-editor/src/parsing.rs
+  - crates/forge-editor/tests/parser_state.rs
+  - Cargo.lock
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-FILE-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-EDITOR-100/**
 forbidden_paths_and_behavior:
-  - repository file reads, writes, staging, or replacement from forge-editor
-  - file-tree discovery or text search
-  - Tree-sitter, syntax parsing, or language intelligence
-  - LSP, PTY, process, command, Git, session, Nyx, agent, recovery, or UI behavior
-  - dependency-graph or Cargo.lock changes
+  - source-byte ownership inside parser state
+  - file reads, writes, save integration, file tree, or search
+  - Rust Analyzer, JSON-RPC, diagnostics synthesis, or completion
+  - PTY, command, Git, session, Nyx, agent, recovery, or UI behavior
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_editor::buffers::BufferId
-  - forge_editor::buffers::DocumentKey
-  - forge_editor::buffers::DiskVersion
-  - forge_editor::buffers::DiskBaseline
-  - forge_editor::buffers::ContentVersion
-  - forge_editor::buffers::CursorState
-  - forge_editor::buffers::SynchronizationState
-  - forge_editor::buffers::SaveIntent
-  - forge_editor::buffers::SaveOutcome
-  - forge_editor::buffers::EditorBuffer
-  - forge_editor::buffers::BufferRegistry
-  - forge_editor::buffers::BufferError
+  - forge_bridge::parsing::RustSyntaxParser
+  - forge_bridge::parsing::RustSyntaxSnapshot
+  - forge_bridge::parsing::SyntaxSpan
+  - forge_bridge::parsing::SyntaxIssue
+  - forge_bridge::parsing::SourceRange
+  - forge_editor::parsing::ParsedBuffer
+  - forge_editor::parsing::BufferParseError
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -841,45 +838,46 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  One document key resolves to one buffer authority; duplicate buffer IDs fail;
-  content and cursor versions are explicit; edits transition clean and dirty state
-  correctly; external disk changes create conflict without replacing local bytes;
-  save intent captures one exact generation and disk precondition; stale save
-  success cannot erase newer edits; failed or conflicting saves remain explicit;
-  destructive close is blocked for dirty or conflicted buffers; buffer operations
-  perform no filesystem mutation; and behavior-only CI plus all guards remain green.
+  Valid Rust yields named spans with no issues; invalid Rust yields explicit parser
+  issues rather than adapter failure; syntax snapshots are bound to one buffer,
+  document, content version, length, and hash; edits make the previous snapshot
+  stale; incremental reparse requires the exact prior bytes and reports changed
+  ranges; stale prior bytes cannot poison parser state; non-UTF8 parse failure leaves
+  plain-text editing available; and behavior-only CI plus all guards remain green.
 block_edge: >
-  Stop on duplicate document authority, path-derived buffer identity, silent local
-  byte replacement after disk change, lost dirty state, stale save result marking
-  newer edits clean, implicit conflict overwrite, filesystem effects from the editor
-  model, dependency-graph expansion, structural guard regression, source-size
-  warning, or CI failure.
+  Stop on stale syntax presented as current, source bytes retained by parser state,
+  cross-buffer or cross-document parse reuse, incremental updates from mismatched
+  prior bytes, invalid Rust treated as adapter success without issues, parser failure
+  breaking plain-text buffers, structural guard regression, source-size warning, or
+  CI failure.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py, observes duplicate-open, edit, cursor,
-  dirty, conflict, save-success, late-save, failure, and destructive-close fixtures
-  pass with the full Rust suite and all three structural guards, and explicitly
-  approves the editor-buffer model.
+  The user runs python3 scripts/run_ci.py, observes valid, invalid, stale, incremental,
+  mismatch, identity-isolation, non-UTF8 degradation, and version fixtures pass with
+  the full Rust suite and all three structural guards, and explicitly approves the
+  parser adapter.
 return_path: >
-  Close only FORGEOS-V1-EDITOR-100, keep FORGEOS-V1-EDITOR-200 locked until
-  FORGEOS-V1-FILE-200 closes, and reevaluate the current available frontier.
+  Close only FORGEOS-V1-PARSER-100, keep FORGEOS-V1-EDITOR-201 locked until both
+  FORGEOS-V1-EDITOR-200 and FORGEOS-V1-LSP-100 close, and reevaluate the current
+  available frontier.
 parallel_compatibility: NONE_IN_EDITOR_AND_LANGUAGE_LANE
 ```
 
-This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-PARSER-100`,
-`FORGEOS-V1-WORLD-100`, `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-LSP-100`,
-`FORGEOS-V1-NYX-100`, `FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-COMMAND-100`,
-`FORGEOS-V1-GIT-100`, `FORGEOS-V1-PATCH-100`, and `FORGEOS-V1-RECOVERY-100`
-remain available but inactive.
+This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-WORLD-100`,
+`FORGEOS-V1-SESSION-100`, `FORGEOS-V1-LSP-100`, `FORGEOS-V1-NYX-100`,
+`FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-COMMAND-100`, `FORGEOS-V1-GIT-100`,
+`FORGEOS-V1-PATCH-100`, and `FORGEOS-V1-RECOVERY-100` remain available but
+inactive.
 
 ---
 
-## 17. Direct unlock handling for editor buffer state
+## 17. Direct unlock handling for incremental parsing
 
-After `FORGEOS-V1-EDITOR-100` closes, no dependent becomes available solely from
-that closure. `FORGEOS-V1-EDITOR-200` remains locked until
-`FORGEOS-V1-FILE-200` also closes. Reevaluate the current available frontier and
-rerun behavior-only CI. Do not infer file-tree, parser, save, LSP, command, Git,
-session, Nyx, or Forge World behavior from the in-memory buffer model.
+After `FORGEOS-V1-PARSER-100` closes, no dependent becomes available solely from
+that closure. `FORGEOS-V1-EDITOR-201` remains locked until
+`FORGEOS-V1-EDITOR-200` and `FORGEOS-V1-LSP-100` also close. Reevaluate the
+current available frontier and rerun behavior-only CI. Do not infer save, LSP,
+diagnostics, navigation, completion, command, Git, session, Nyx, or Forge World
+behavior from Tree-sitter parsing.
 
 ## 18. Final closure routing
 

@@ -55,10 +55,7 @@ pub struct DocumentKey {
 }
 
 impl DocumentKey {
-    pub fn new(
-        repository_id: RepositoryId,
-        relative_path: RepositoryRelativePath,
-    ) -> Self {
+    pub fn new(repository_id: RepositoryId, relative_path: RepositoryRelativePath) -> Self {
         Self {
             repository_id,
             relative_path,
@@ -168,8 +165,12 @@ impl CursorState {
 /// Relationship between local bytes and the last known disk state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SynchronizationState {
-    Clean { disk: DiskVersion },
-    Dirty { base: DiskBaseline },
+    Clean {
+        disk: DiskVersion,
+    },
+    Dirty {
+        base: DiskBaseline,
+    },
     Conflict {
         base: DiskBaseline,
         observed: DiskBaseline,
@@ -288,12 +289,7 @@ pub struct EditorBuffer {
 }
 
 impl EditorBuffer {
-    fn existing(
-        id: BufferId,
-        document: DocumentKey,
-        disk: DiskVersion,
-        bytes: Vec<u8>,
-    ) -> Self {
+    fn existing(id: BufferId, document: DocumentKey, disk: DiskVersion, bytes: Vec<u8>) -> Self {
         Self {
             id,
             document,
@@ -353,9 +349,7 @@ impl EditorBuffer {
         match self.synchronization {
             SynchronizationState::Clean { .. } => CloseDisposition::Safe,
             SynchronizationState::Dirty { .. } => CloseDisposition::ConfirmationRequired,
-            SynchronizationState::Conflict { .. } => {
-                CloseDisposition::ConflictResolutionRequired
-            }
+            SynchronizationState::Conflict { .. } => CloseDisposition::ConflictResolutionRequired,
         }
     }
 
@@ -371,9 +365,8 @@ impl EditorBuffer {
         replacement: &[u8],
     ) -> Result<ContentVersion, BufferError> {
         validate_range(&range, self.bytes.len())?;
-        let mut updated = Vec::with_capacity(
-            self.bytes.len() - (range.end - range.start) + replacement.len(),
-        );
+        let mut updated =
+            Vec::with_capacity(self.bytes.len() - (range.end - range.start) + replacement.len());
         updated.extend_from_slice(&self.bytes[..range.start]);
         updated.extend_from_slice(replacement);
         updated.extend_from_slice(&self.bytes[range.end..]);
@@ -459,8 +452,8 @@ impl EditorBuffer {
             disk,
         };
 
-        let current_matches_saved = self.content_version == content_version
-            && disk.matches(&self.bytes);
+        let current_matches_saved =
+            self.content_version == content_version && disk.matches(&self.bytes);
         self.synchronization = if current_matches_saved {
             SynchronizationState::Clean { disk }
         } else {
@@ -634,11 +627,7 @@ impl BufferRegistry {
         Ok(removed)
     }
 
-    fn ensure_id_available(
-        &self,
-        id: BufferId,
-        document: &DocumentKey,
-    ) -> Result<(), BufferError> {
+    fn ensure_id_available(&self, id: BufferId, document: &DocumentKey) -> Result<(), BufferError> {
         if let Some(existing) = self.buffers.get(&id) {
             return Err(BufferError::DuplicateBufferId {
                 id,
