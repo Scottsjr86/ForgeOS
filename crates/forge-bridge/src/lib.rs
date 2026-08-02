@@ -4,6 +4,7 @@
 //! their named modules and are added only by the skills that prove them.
 
 pub mod adapters;
+pub mod lsp;
 pub mod parsing;
 pub mod ports;
 pub mod processes;

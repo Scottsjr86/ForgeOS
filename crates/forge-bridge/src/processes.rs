@@ -340,6 +340,27 @@ fn exit_from_status(status: ExitStatus) -> ProcessExit {
     ProcessExit::new(status.code(), status.success())
 }
 
+
+/// Applies the same isolated process-group policy used by the process foundation.
+pub(crate) fn configure_managed_process(command: &mut Command) {
+    configure_process_group(command);
+}
+
+/// Terminates one managed process tree without exposing platform details.
+pub(crate) fn terminate_managed_process(
+    child: &mut Child,
+    process_group: u32,
+    poll_interval: Duration,
+    termination_grace: Duration,
+) -> io::Result<()> {
+    terminate_child_tree(child, process_group, poll_interval, termination_grace).map(|_| ())
+}
+
+/// Best-effort hard cleanup for descendants after the process-group leader exits.
+pub(crate) fn terminate_remaining_managed_process_group(process_group: u32) {
+    terminate_remaining_process_group(process_group);
+}
+
 #[cfg(unix)]
 fn configure_process_group(command: &mut Command) {
     use std::os::unix::process::CommandExt;

@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_22.tar`, the canonical V1 skill tree, and the live session results through `FORGEOS-V1-EDITOR-100`.
-> `FORGEOS-V1-PARSER-100` is currently active and awaiting operator validation.
+> Source basis: `Forge_OS_V1_base_23.tar`, the canonical V1 skill tree, and the live session results through `FORGEOS-V1-PARSER-100`.
+> `FORGEOS-V1-LSP-100` is currently active and awaiting operator validation.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 13 |
+| ✅ Completed / closed | 14 |
 | 🔨 Active / started | 1 |
-| 🟢 Available / ready to start | 10 |
+| 🟢 Available / ready to start | 9 |
 | 🔒 Locked by prerequisites | 43 |
 
-**Raw closed-node count:** 13 of 67, or 19.4%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 14 of 67, or 20.9%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -39,24 +39,23 @@
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
 | 2 | Functional V1 systems | 19 | available 1, locked 18 |
-| 1 | Local mechanisms | 16 | closed 3, active 1, available 9, locked 3 |
+| 1 | Local mechanisms | 16 | closed 4, active 1, available 8, locked 3 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
+### 🔨 `FORGEOS-V1-LSP-100` — Rust Analyzer process and JSON-RPC adapter
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
 - **Current position:** Source patch prepared; behavior-only CI has not yet been returned by the operator.
-- **Direct prerequisites:** `ARCH-001` and `FILE-100` ✅
-- **Immediate unlock after closure:** None by itself. `EDITOR-201` also requires `EDITOR-200` and `LSP-100`.
+- **Direct prerequisites:** `CONTRACT-000`, `PROCESS-000`, and `GUARD-002` ✅
+- **Immediate unlock after closure:** None by itself. `EDITOR-201` also requires `EDITOR-200`.
 
 ## Available skills right now
 
 - 🟢 `FORGEOS-V1-PROJECT-200` — Persistent project registry and workspace restoration
 - 🟢 `FORGEOS-V1-SESSION-100` — Session and managed-service lifecycle contract
-- 🟢 `FORGEOS-V1-LSP-100` — Rust Analyzer process and JSON-RPC adapter
 - 🟢 `FORGEOS-V1-TERMINAL-100` — PTY spawn, I/O, resize, and termination
 - 🟢 `FORGEOS-V1-COMMAND-100` — Registered command definition and execution policy
 - 🟢 `FORGEOS-V1-GIT-100` — Read-only Git adapter
@@ -123,8 +122,8 @@ Functional subsystems assembled from local mechanisms.
 | 🔒 LOCKED | `FORGEOS-V1-SESSION-200` | Dedicated ForgeOS session bootstrap | 🟢 `FORGEOS-V1-SESSION-100` |
 | 🔒 LOCKED | `FORGEOS-V1-SESSION-201` | Managed ForgeOS and Nyx service lifecycle | 🟢 `FORGEOS-V1-SESSION-100`<br>🟢 `FORGEOS-V1-NYX-100` |
 | 🔒 LOCKED | `FORGEOS-V1-FILE-200` | Repository file tree and search | ✅ `FORGEOS-V1-FILE-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
-| 🔒 LOCKED | `FORGEOS-V1-EDITOR-200` | Multi-buffer file editing and atomic save | 🔨 `FORGEOS-V1-EDITOR-100`<br>🔒 `FORGEOS-V1-FILE-200` |
-| 🔒 LOCKED | `FORGEOS-V1-EDITOR-201` | Rust syntax and language-intelligence integration | 🔒 `FORGEOS-V1-EDITOR-200`<br>🟢 `FORGEOS-V1-PARSER-100`<br>🟢 `FORGEOS-V1-LSP-100` |
+| 🔒 LOCKED | `FORGEOS-V1-EDITOR-200` | Multi-buffer file editing and atomic save | ✅ `FORGEOS-V1-EDITOR-100`<br>🔒 `FORGEOS-V1-FILE-200` |
+| 🔒 LOCKED | `FORGEOS-V1-EDITOR-201` | Rust syntax and language-intelligence integration | 🔒 `FORGEOS-V1-EDITOR-200`<br>✅ `FORGEOS-V1-PARSER-100`<br>🔨 `FORGEOS-V1-LSP-100` |
 | 🔒 LOCKED | `FORGEOS-V1-TERMINAL-200` | Managed embedded terminal sessions | 🟢 `FORGEOS-V1-TERMINAL-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-COMMAND-200` | Registered project command execution and output history | 🟢 `FORGEOS-V1-COMMAND-100`<br>🔒 `FORGEOS-V1-TERMINAL-200` |
 | 🔒 LOCKED | `FORGEOS-V1-GIT-200` | Real Git status, branch, revision, and diff inspection | 🟢 `FORGEOS-V1-GIT-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
@@ -150,8 +149,8 @@ Concrete local mechanisms and adapters that make the systems real.
 | 🟢 AVAILABLE | `FORGEOS-V1-SESSION-100` | Session and managed-service lifecycle contract | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | ✅ CLOSED | `FORGEOS-V1-FILE-100` | Boundary-safe file access and atomic write | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000` |
 | ✅ CLOSED | `FORGEOS-V1-EDITOR-100` | Editor buffer identity and dirty-state model | ✅ `FORGEOS-V1-FILE-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
-| 🔨 ACTIVE | `FORGEOS-V1-PARSER-100` | Incremental Tree-sitter parsing adapter | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-FILE-100` |
-| 🟢 AVAILABLE | `FORGEOS-V1-LSP-100` | Rust Analyzer process and JSON-RPC adapter | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
+| ✅ CLOSED | `FORGEOS-V1-PARSER-100` | Incremental Tree-sitter parsing adapter | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-FILE-100` |
+| 🔨 ACTIVE | `FORGEOS-V1-LSP-100` | Rust Analyzer process and JSON-RPC adapter | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-TERMINAL-100` | PTY spawn, I/O, resize, and termination | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-COMMAND-100` | Registered command definition and execution policy | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | 🟢 AVAILABLE | `FORGEOS-V1-GIT-100` | Read-only Git adapter | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
@@ -199,7 +198,8 @@ The bedrock: architecture, contracts, guards, process/path/state foundations, an
 11. ✅ `FORGEOS-V1-PROJECT-100` — Validated project manifest and repository identity
 12. ✅ `FORGEOS-V1-FILE-100` — Boundary-safe file access and atomic write
 13. ✅ `FORGEOS-V1-EDITOR-100` — Editor buffer identity and dirty-state model
-14. 🔨 `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
+14. ✅ `FORGEOS-V1-PARSER-100` — Incremental Tree-sitter parsing adapter
+15. 🔨 `FORGEOS-V1-LSP-100` — Rust Analyzer process and JSON-RPC adapter
 
 ## Reading this list correctly
 

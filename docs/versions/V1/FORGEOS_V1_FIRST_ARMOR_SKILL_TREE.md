@@ -1111,7 +1111,10 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-ARCH-001`, `FORGEOS-V1-FILE-100`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-PARSER-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-PARSER-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** Parser state updates against exact buffer versions and exposes
   syntax spans and parse errors without owning source bytes.
 - **Must not be true:** Parse state from an older buffer version may not be shown as
@@ -1125,9 +1128,10 @@ never closes the node.
 - **Owner:** `forge-editor`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** ForgeOS starts Rust Analyzer, manages document versions, routes
-  requests and responses, handles restart, and reports unsupported capabilities.
+  requests and responses, commits editor language generations only after delivery,
+  handles restart, and reports unsupported capabilities.
 - **Must not be true:** Responses may not cross project or document versions silently.
 - **User acceptance:** The user observes startup, diagnostics, restart, and one
   intentional protocol error.
@@ -1457,8 +1461,7 @@ section ever disagree.
 
 All Tier-0 foundations, structural guards, validated project registration,
 boundary-safe file access, and editor buffer identity are closed. Incremental Rust
-syntax parsing is active because it is the smallest editor-language slice that can
-consume exact buffer generations without adding LSP, save, process, or UI behavior.
+Rust Analyzer integration is active because parser and buffer truth now exist, and the next bounded editor-language blocker is project-bound JSON-RPC with exact document generations.
 
 Current frontier:
 
@@ -1477,16 +1480,16 @@ CLOSED
   FORGEOS-V1-PROJECT-100
   FORGEOS-V1-FILE-100
   FORGEOS-V1-EDITOR-100
+  FORGEOS-V1-PARSER-100
 
-ACTIVE_SKILL=FORGEOS-V1-PARSER-100
-ACTIVE_BLOCKER=FORGEOS_HAS_NO_VERSION_BOUND_INCREMENTAL_RUST_PARSE_STATE
-ACTIVE_SLICE=FORGEOS-V1-PARSER-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-LSP-100
+ACTIVE_BLOCKER=FORGEOS_HAS_NO_PROJECT_BOUND_RUST_ANALYZER_JSON_RPC_ADAPTER
+ACTIVE_SLICE=FORGEOS-V1-LSP-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-PROJECT-200
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-SESSION-100
-  FORGEOS-V1-LSP-100
   FORGEOS-V1-NYX-100
   FORGEOS-V1-TERMINAL-100
   FORGEOS-V1-COMMAND-100
@@ -1498,7 +1501,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-PARSER-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-LSP-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields
