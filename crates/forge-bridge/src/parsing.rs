@@ -241,7 +241,9 @@ impl RustSyntaxParser {
         parser
             .set_language(&language)
             .map_err(|error| RustParseError::Language(error.to_string()))?;
-        let tree = parser.parse(source, None).ok_or(RustParseError::Cancelled)?;
+        let tree = parser
+            .parse(source, None)
+            .ok_or(RustParseError::Cancelled)?;
         let source_hash = source_identity(source);
         let full_range = SourceRange::new(
             0,
@@ -320,7 +322,9 @@ impl RustSyntaxParser {
 /// Exact reason Rust parsing could not produce a current snapshot.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RustParseError {
-    InvalidUtf8 { valid_up_to: usize },
+    InvalidUtf8 {
+        valid_up_to: usize,
+    },
     Language(String),
     Cancelled,
     UnchangedSource,
@@ -413,11 +417,7 @@ impl From<SourcePoint> for Point {
     }
 }
 
-fn collect_nodes(
-    node: Node<'_>,
-    spans: &mut Vec<SyntaxSpan>,
-    issues: &mut Vec<SyntaxIssue>,
-) {
+fn collect_nodes(node: Node<'_>, spans: &mut Vec<SyntaxSpan>, issues: &mut Vec<SyntaxIssue>) {
     if node.is_named() {
         spans.push(SyntaxSpan::from_node(node));
     }
