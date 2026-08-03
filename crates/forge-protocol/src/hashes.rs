@@ -23,6 +23,8 @@ pub enum HashDomain {
     ToolRequest = 3,
     Snapshot = 4,
     ResultPayload = 5,
+    PermissionDecision = 6,
+    ResumeToken = 7,
 }
 
 impl HashDomain {
@@ -389,6 +391,8 @@ mod tests {
             hash_canonical_bytes(HashDomain::ToolRequest, payload),
             hash_canonical_bytes(HashDomain::Snapshot, payload),
             hash_canonical_bytes(HashDomain::ResultPayload, payload),
+            hash_canonical_bytes(HashDomain::PermissionDecision, payload),
+            hash_canonical_bytes(HashDomain::ResumeToken, payload),
         ];
         for left in 0..hashes.len() {
             for right in left + 1..hashes.len() {

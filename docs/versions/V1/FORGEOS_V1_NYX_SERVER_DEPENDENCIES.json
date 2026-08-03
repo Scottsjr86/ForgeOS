@@ -1,0 +1,272 @@
+{
+  "schema": "FORGEOS_NYX_CROSS_REPO_DEPENDENCY_V1",
+  "contract_id": "FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT",
+  "status": "ACTIVE",
+  "forge_release": "FORGEOS_V1_FIRST_ARMOR",
+  "authorities": {
+    "forge_skill_contracts": "Forge_OS_V1/docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md",
+    "forge_execution_router": "Forge_OS_V1/docs/versions/V1/V1_EXECUTION_ROUTER.md",
+    "nyx_skill_contracts": "Nyx_Server/docs/workflow/skill_trees/NYX-SKILL-*.md",
+    "nyx_dependency_graph": "Nyx_Server/docs/workflow/skill_trees/NYX-SKILL-GRAPH.json",
+    "nyx_state_authority": "Nyx_Server/docs/workflow/skill_trees/NYX-SKILL-SEALED-LEDGER.jsonl",
+    "nyx_live_projection": "Nyx_Server/docs/workflow/skill_trees/NYX-SKILL-ROUTER_STATE.json"
+  },
+  "closure_law": {
+    "implementation_before_gate": "ForgeOS may implement and test only its client, adapter, orchestration, and presentation side against explicit fixtures before the Nyx gate is satisfied.",
+    "closure_before_gate": "FORBIDDEN",
+    "fixture_only_closure": "FORBIDDEN",
+    "minimum_state_meaning": "Every listed Nyx skill must be BANKED or RELEASE_EARNED in the Nyx append-only ledger. A prose claim, source presence, green compile, locally proved state, or copied fixture is insufficient.",
+    "minimum_proof_meaning": "The Nyx proof receipt must meet or exceed the listed proof level and exercise the real server/engine path required by the Forge closure witness.",
+    "status_resolution": "Never copy Nyx status into ForgeOS as authority. Resolve current state from the supplied Nyx ledger/router projection at the time of Forge closure.",
+    "separate_patch_rule": "A blocker owned by Nyx produces a separate Nyx_Server patch. A blocker owned by ForgeOS produces a separate Forge_OS_V1 patch. Never fix both by placing Nyx implementation in ForgeOS."
+  },
+  "dependencies": [
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-100",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-100",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "API-FOUND-008",
+        "API-VERSION-010",
+        "API-SYS-044",
+        "API-SYS-047"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Configured Unix/TCP client transport, handshake request framing, response decoding, compatibility classification, and typed ForgeOS-side probe results.",
+      "nyx_owns": "The real health endpoint, public contract-version posture, capability discovery, canonical schemas, and truthful readiness data.",
+      "forbidden_forge_implementation": "No health server, capability registry, protocol-version authority, model call, or Nyx runtime may be implemented inside ForgeOS.",
+      "closure_witness": "A real Nyx process answers the ForgeOS probe; fixtures may prove client behavior but cannot close the skill by themselves."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-101",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-101",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "POLICY-CHECKPOINT-001",
+        "POLICY-APPROVAL-001",
+        "POLICY-TOOL-015",
+        "PERSIST-IDEMP-KEY-001"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Typed display and transport of grants, checkpoint identities, decisions, expirations, and resume tokens.",
+      "nyx_owns": "Checkpoint creation, approval binding, accepted-operation identity, duplicate-approval prevention, and immutable request semantics.",
+      "forbidden_forge_implementation": "ForgeOS may not mint Nyx checkpoints, reinterpret approval scope, regenerate a gated action, or maintain a second permission engine.",
+      "closure_witness": "ForgeOS round-trips an exact Nyx-issued checkpoint and proves mutation, expiry, denial, or duplicate approval cannot authorize a different operation."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-SESSION-201",
+      "gate_id": "NYX-GATE-FORGEOS-V1-SESSION-201",
+      "gate_kind": "SERVICE_CONSUMER_GATE",
+      "required_nyx_skills": [
+        "API-FOUND-008"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Launching, supervising, restarting, and stopping the external Nyx service process as part of a ForgeOS session.",
+      "nyx_owns": "Its executable server path and truthful bounded health response.",
+      "forbidden_forge_implementation": "ForgeOS may supervise Nyx but may not embed, fork, or recreate the Nyx server/runtime inside forge-session or forge-nyx-client.",
+      "closure_witness": "The managed external Nyx process becomes healthy, is detected unhealthy after failure, restarts under policy, and stops cleanly."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-200",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-200",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "API-SYS-020",
+        "API-SYS-021",
+        "API-SYS-022",
+        "API-SYS-027",
+        "ROUTING-REG-012",
+        "PERSIST-SESSION-001"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Model/session selection UI state, client streaming consumption, reconnect behavior, and typed error presentation.",
+      "nyx_owns": "Model catalog truth, route selection, governed chat execution, streaming events, server-owned sessions/threads, and persisted conversation identity.",
+      "forbidden_forge_implementation": "ForgeOS may not call local model runtimes directly, own the model registry, store canonical Nyx conversation state, or synthesize stream events.",
+      "closure_witness": "ForgeOS lists Nyx-provided models, selects one, streams a real response, reconnects to the same server-owned conversation, and preserves model attribution."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-201",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-201",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "REPO-READ-001",
+        "REPO-SYS-024",
+        "TOOL-SYS-022",
+        "TOOL-CAP-031"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Supplying the active ForgeOS project contract and presenting recorded tool calls/results.",
+      "nyx_owns": "Sandboxed repository reads, safe-read tool descriptors and dispatch, source provenance, Git-status metadata consumption, and audit records.",
+      "forbidden_forge_implementation": "forge-nyx-client may not read repository files on Nyx behalf, fabricate tool results, bypass Nyx policy, or become a second Repo/Tool engine.",
+      "closure_witness": "Nyx uses its own governed read tools against the ForgeOS-declared project and returns source-linked evidence that ForgeOS can independently compare to the repository."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-202",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-202",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "TOOL-CAP-034",
+        "AGENT-CAP-031",
+        "PERSIST-CAP-035"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Declaring ForgeOS registered commands, presenting the exact pending action, transporting decisions, and showing execution records.",
+      "nyx_owns": "Tool request generation, checkpoint pause, exact one-time resume, durable pending-operation identity, denial, expiry, and no-duplicate-effects behavior.",
+      "forbidden_forge_implementation": "ForgeOS may not rerun Nyx planning after approval, replace argv/path/scope, silently execute an equivalent command, or maintain a hidden pending-action queue.",
+      "closure_witness": "Approve, deny, expire, and restart paths operate on the identical Nyx pending operation and produce no duplicate or substituted effects."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-300",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-300",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "API-CAP-030",
+        "REPO-CAP-030",
+        "AGENT-CAP-030"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_USER",
+      "forge_owns": "The user-facing project-selection context, chat surface, citations display, and independent comparison controls.",
+      "nyx_owns": "The governed local-model run, repeated safe-read loop, repository answer, exact snippets/hashes, selection rationale, and complete run record.",
+      "forbidden_forge_implementation": "ForgeOS may not precompute the answer, inject hidden source context, imitate citations, or execute a second agent loop.",
+      "closure_witness": "A user asks about real source through ForgeOS and verifies Nyx-cited files, snippets, and run evidence against the active repository."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-301",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-301",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "AGENT-CAP-031",
+        "PERSIST-CAP-035",
+        "API-CAP-034"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_USER",
+      "forge_owns": "Approval/denial controls, exact pending-action rendering, and user-visible audit navigation.",
+      "nyx_owns": "The suspended run, immutable action identity, one-time continuation, durable checkpoint, and complete reconstructable run evidence.",
+      "forbidden_forge_implementation": "ForgeOS may not mutate the pending action, fabricate a resume, regenerate the command, or claim an approval occurred without Nyx evidence.",
+      "closure_witness": "A user approves, denies, expires, and restarts a real gated run while ForgeOS resolves every visible claim to Nyx-owned evidence."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-NYX-400",
+      "gate_id": "NYX-GATE-FORGEOS-V1-NYX-400",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "AGENT-INTEG-040",
+        "AGENT-INTEG-041",
+        "API-CAP-033",
+        "ROUTING-INTEG-042",
+        "PERSIST-CAP-035"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_USER",
+      "forge_owns": "Integrated service supervision, client/UI orchestration, project binding, user controls, and truthful presentation of Nyx-owned state.",
+      "nyx_owns": "The complete governed agent path, durable/restartable run identity, local runtime lifecycle, sessions, tools, policy, checkpoints, and evidence.",
+      "forbidden_forge_implementation": "No model host, conversation store, tool router, policy engine, checkpoint engine, run recorder, or local-agent runtime may be duplicated in ForgeOS.",
+      "closure_witness": "The full local journey runs against a real managed Nyx process, survives restart, preserves project/session identity, and keeps denied authority denied."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-AGENT-100",
+      "gate_id": "NYX-GATE-FORGEOS-V1-AGENT-100",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "AGENT-FOUND-002",
+        "AGENT-RUN-001",
+        "AGENT-BUDGET-001",
+        "ROUTING-COST-001",
+        "PERSIST-RUN-001"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "The ForgeOS task envelope fields for repository, revision, worktree, allowed paths, required commands, and user-visible budget controls.",
+      "nyx_owns": "Versioned agent request/response contracts, bounded run semantics, model/tool/token/time budgets, route cost evidence, and durable run records.",
+      "forbidden_forge_implementation": "ForgeOS may not invent terminal agent status, calculate provider truth from prose, or keep a competing canonical agent run record.",
+      "closure_witness": "ForgeOS can round-trip complete, failed, cancelled, and budget-exhausted Nyx records while repository/worktree fields remain Forge-owned."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-AGENT-200",
+      "gate_id": "NYX-GATE-FORGEOS-V1-AGENT-200",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "AGENT-CAP-030",
+        "AGENT-CAP-034",
+        "ROUTING-CAP-037",
+        "POLICY-SYS-030"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_SYSTEM",
+      "forge_owns": "Creating the isolated Git worktree, binding exact source revision/scope, presenting provider/model/budget choices, and transporting the task.",
+      "nyx_owns": "The governed repository task, cancellation semantics, explicitly allowlisted remote route, privacy/network/cost policy, and run evidence.",
+      "forbidden_forge_implementation": "ForgeOS may not contact the remote model provider around Nyx, run its own coding-agent loop, or let Nyx mutate the authoritative worktree directly.",
+      "closure_witness": "A real remote Nyx route executes or cancels one scoped task against an isolated ForgeOS-created worktree with complete policy, route, cost, and run evidence."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-AGENT-300",
+      "gate_id": "NYX-GATE-FORGEOS-V1-AGENT-300",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "AGENT-CAP-030",
+        "AGENT-CAP-034",
+        "ROUTING-CAP-037",
+        "TOOL-SYS-043"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_USER",
+      "forge_owns": "The bounded-task review screen, worktree isolation, exact source scope, dispatch confirmation, and returned-artifact intake.",
+      "nyx_owns": "The remote governed task, cancellation, route evidence, and inert patch proposal that never applies itself.",
+      "forbidden_forge_implementation": "ForgeOS may not fake agent progress or results; Nyx may not bypass the ForgeOS worktree/scope contract or apply its proposal.",
+      "closure_witness": "A user dispatches one real bounded task and confirms Nyx returned an inert, attributable result while the primary worktree remained unchanged."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-AGENT-400",
+      "gate_id": "NYX-GATE-FORGEOS-V1-AGENT-400",
+      "gate_kind": "DIRECT_NYX_CLOSURE_GATE",
+      "required_nyx_skills": [
+        "AGENT-INTEG-040",
+        "AGENT-INTEG-041",
+        "ROUTING-CAP-037",
+        "TOOL-SYS-043",
+        "POLICY-CAP-043"
+      ],
+      "minimum_nyx_state": "BANKED",
+      "minimum_proof_level": "PROOF_USER",
+      "forge_owns": "Source/worktree isolation, patch review/application, local validation, commit flow, and the final user approval boundary.",
+      "nyx_owns": "The complete governed remote agent path, durable/cancellable run, allowlisted remote route, inert patch proposal, and hash-bound approval posture.",
+      "forbidden_forge_implementation": "ForgeOS may not become a second remote-agent runtime; Nyx may not auto-apply, alter the primary worktree, award Forge closure, or treat provider output as local proof.",
+      "closure_witness": "The complete real task returns an inert patch, ForgeOS reviews and validates it locally, and no mutation occurs before explicit ForgeOS-side approval."
+    }
+  ],
+  "forge_only_consumers": [
+    {
+      "forge_skill_id": "FORGEOS-V1-AGENT-201",
+      "rule": "No new direct Nyx skill gate. It consumes the returned artifact from FORGEOS-V1-AGENT-200 and owns hash/base validation, diff review, rejection, and controlled ForgeOS-side application."
+    },
+    {
+      "forge_skill_id": "FORGEOS-V1-PATCH-300",
+      "rule": "No new direct Nyx skill gate. It owns ForgeOS-side review and application after the upstream Nyx-gated agent result exists."
+    }
+  ],
+  "current_seam_findings": [
+    {
+      "finding_id": "FORGEOS-NYX-SEAM-001",
+      "status": "OPEN_CONTRACT_MISMATCH",
+      "forge_source": "Forge_OS_V1/crates/forge-nyx-client/src/protocol.rs",
+      "forge_behavior": "Private binary request/response magic FGNYXQ/FGNYXR over configured Unix or TCP transport.",
+      "nyx_source": "Nyx_Server/crates/nyx_server/src/http/mod.rs",
+      "nyx_behavior": "HTTP/JSON server routes including GET /v1/nyx/health; the current health response contains status, version, and boot_ts.",
+      "negative_evidence": "Nyx_Server contains no FGNYXQ or FGNYXR handler or canonical contract.",
+      "closure_effect": "FORGEOS-V1-NYX-100 cannot close from its current Forge-only fixtures or wire format.",
+      "allowed_resolution": [
+        "Preferred: ForgeOS consumes a canonical versioned Nyx HTTP/JSON health and capability-discovery contract once the required Nyx API skills are banked.",
+        "Alternative: Nyx_Server defines and implements an explicit versioned binary handshake under Nyx API authority, then ForgeOS consumes that published contract."
+      ],
+      "forbidden_resolution": "Do not implement a handshake server, capability registry, or Nyx runtime inside ForgeOS merely to satisfy the Forge client tests."
+    }
+  ]
+}

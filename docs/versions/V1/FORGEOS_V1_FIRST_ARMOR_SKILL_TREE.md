@@ -496,6 +496,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-400` — Nyx is the integrated local AI host and bounded operator
 
 - **Owner:** `nyx_server`, `forge-nyx-client`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-400` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `AGENT-INTEG-040`, `AGENT-INTEG-041`, `API-CAP-033`, `ROUTING-INTEG-042`, `PERSIST-CAP-035`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_USER`.
+- **Repository boundary:** No model host, conversation store, tool router, policy engine, checkpoint engine, run recorder, or local-agent runtime may be duplicated in ForgeOS.
 - **Prerequisites:** `FORGEOS-V1-NYX-300`, `FORGEOS-V1-NYX-301`,
   `FORGEOS-V1-RECOVERY-300`
 - **Initial state:** `LOCKED`
@@ -513,6 +516,9 @@ never closes the node.
 ## `FORGEOS-V1-AGENT-400` — ForgeOS integrates one heavyweight remote coding agent safely
 
 - **Owner:** `nyx_server`, `forge-nyx-client`, `forge-git`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-AGENT-400` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `AGENT-INTEG-040`, `AGENT-INTEG-041`, `ROUTING-CAP-037`, `TOOL-SYS-043`, `POLICY-CAP-043`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_USER`.
+- **Repository boundary:** ForgeOS may not become a second remote-agent runtime; Nyx may not auto-apply, alter the primary worktree, award Forge closure, or treat provider output as local proof.
 - **Prerequisites:** `FORGEOS-V1-AGENT-300`, `FORGEOS-V1-PATCH-300`,
   `FORGEOS-V1-VERIFY-300`, `FORGEOS-V1-NYX-400`
 - **Initial state:** `LOCKED`
@@ -653,6 +659,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-300` — The user receives project-aware assistance from a local model
 
 - **Owner:** `nyx_server`, `forge-nyx-client`, `forge-world`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-300` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `API-CAP-030`, `REPO-CAP-030`, `AGENT-CAP-030`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_USER`.
+- **Repository boundary:** ForgeOS may not precompute the answer, inject hidden source context, imitate citations, or execute a second agent loop.
 - **Prerequisites:** `FORGEOS-V1-NYX-200`, `FORGEOS-V1-NYX-201`,
   `FORGEOS-V1-PROJECT-300`
 - **Initial state:** `LOCKED`
@@ -668,6 +677,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-301` — The user controls Nyx tool execution through resumable approval
 
 - **Owner:** `nyx_server`, `forge-nyx-client`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-301` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `AGENT-CAP-031`, `PERSIST-CAP-035`, `API-CAP-034`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_USER`.
+- **Repository boundary:** ForgeOS may not mutate the pending action, fabricate a resume, regenerate the command, or claim an approval occurred without Nyx evidence.
 - **Prerequisites:** `FORGEOS-V1-NYX-202`, `FORGEOS-V1-TERMINAL-300`,
   `FORGEOS-V1-GIT-300`
 - **Initial state:** `LOCKED`
@@ -683,6 +695,9 @@ never closes the node.
 ## `FORGEOS-V1-AGENT-300` — The user sends one bounded coding task to a remote agent worktree
 
 - **Owner:** `nyx_server`, `forge-nyx-client`, `forge-git`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-AGENT-300` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `AGENT-CAP-030`, `AGENT-CAP-034`, `ROUTING-CAP-037`, `TOOL-SYS-043`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_USER`.
+- **Repository boundary:** ForgeOS may not fake agent progress or results; Nyx may not bypass the ForgeOS worktree/scope contract or apply its proposal.
 - **Prerequisites:** `FORGEOS-V1-AGENT-200`, `FORGEOS-V1-GIT-300`,
   `FORGEOS-V1-NYX-300`
 - **Initial state:** `LOCKED`
@@ -809,6 +824,9 @@ never closes the node.
 ## `FORGEOS-V1-SESSION-201` — Managed ForgeOS and Nyx service lifecycle
 
 - **Owner:** `forge-session`, `forge-nyx-client`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-SESSION-201` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `API-FOUND-008`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** ForgeOS may supervise Nyx but may not embed, fork, or recreate the Nyx server/runtime inside forge-session or forge-nyx-client.
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`
 - **Initial state:** `LOCKED`
 - **Must be true:** Required services start in declared order, expose health, restart
@@ -920,6 +938,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-200` — Local model selection and Nyx conversation lifecycle
 
 - **Owner:** `nyx_server`, `forge-nyx-client`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-200` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `API-SYS-020`, `API-SYS-021`, `API-SYS-022`, `API-SYS-027`, `ROUTING-REG-012`, `PERSIST-SESSION-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** ForgeOS may not call local model runtimes directly, own the model registry, store canonical Nyx conversation state, or synthesize stream events.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-SESSION-201`
 - **Initial state:** `LOCKED`
 - **Must be true:** ForgeOS discovers Nyx, lists available local models, selects one,
@@ -935,6 +956,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-201` — Project-aware Nyx read tools
 
 - **Owner:** `nyx_server`, `forge-nyx-client`, `forge-project`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-201` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `REPO-READ-001`, `REPO-SYS-024`, `TOOL-SYS-022`, `TOOL-CAP-031`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** forge-nyx-client may not read repository files on Nyx behalf, fabricate tool results, bypass Nyx policy, or become a second Repo/Tool engine.
 - **Prerequisites:** `FORGEOS-V1-NYX-200`, `FORGEOS-V1-FILE-200`,
   `FORGEOS-V1-GIT-200`
 - **Initial state:** `LOCKED`
@@ -950,6 +974,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-202` — Safe registered commands and exact checkpoint resume
 
 - **Owner:** `nyx_server`, `forge-nyx-client`, `forge-terminal`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-202` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `TOOL-CAP-034`, `AGENT-CAP-031`, `PERSIST-CAP-035`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** ForgeOS may not rerun Nyx planning after approval, replace argv/path/scope, silently execute an equivalent command, or maintain a hidden pending-action queue.
 - **Prerequisites:** `FORGEOS-V1-NYX-101`, `FORGEOS-V1-NYX-201`,
   `FORGEOS-V1-COMMAND-200`
 - **Initial state:** `LOCKED`
@@ -966,6 +993,9 @@ never closes the node.
 ## `FORGEOS-V1-AGENT-200` — OpenAI heavyweight task dispatch
 
 - **Owner:** `nyx_server`, `forge-nyx-client`, `forge-git`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-AGENT-200` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `AGENT-CAP-030`, `AGENT-CAP-034`, `ROUTING-CAP-037`, `POLICY-SYS-030`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** ForgeOS may not contact the remote model provider around Nyx, run its own coding-agent loop, or let Nyx mutate the authoritative worktree directly.
 - **Prerequisites:** `FORGEOS-V1-AGENT-100`, `FORGEOS-V1-NYX-200`,
   `FORGEOS-V1-GIT-201`
 - **Initial state:** `LOCKED`
@@ -1215,9 +1245,16 @@ never closes the node.
 ## `FORGEOS-V1-NYX-100` — Nyx health and versioned client protocol
 
 - **Owner:** `forge-nyx-client`, `nyx_server`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-100` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `API-FOUND-008`, `API-VERSION-010`, `API-SYS-044`, `API-SYS-047`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** No health server, capability registry, protocol-version authority, model call, or Nyx runtime may be implemented inside ForgeOS.
+- **Current seam finding:** ForgeOS currently encodes a private `FGNYXQ` / `FGNYXR` binary handshake, while Nyx_Server currently exposes HTTP/JSON and has no matching handler. Forge fixtures cannot close this skill until both repositories consume one Nyx-owned public contract.
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
 - **Current state:** `ACTIVE`
+- **Forge client source records (not cross-repo closure):**
+  `docs/versions/V1/skills/FORGEOS-V1-NYX-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-NYX-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** ForgeOS discovers Nyx through configured transport, negotiates a
   supported protocol, reads health and capabilities, and distinguishes unavailable,
   incompatible, and unhealthy states.
@@ -1230,6 +1267,9 @@ never closes the node.
 ## `FORGEOS-V1-NYX-101` — Permission grant, checkpoint, and immutable resume token
 
 - **Owner:** `nyx_server`, `forge-nyx-client`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-101` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `POLICY-CHECKPOINT-001`, `POLICY-APPROVAL-001`, `POLICY-TOOL-015`, `PERSIST-IDEMP-KEY-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** ForgeOS may not mint Nyx checkpoints, reinterpret approval scope, regenerate a gated action, or maintain a second permission engine.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-HASH-000`
 - **Initial state:** `LOCKED`
@@ -1243,6 +1283,9 @@ never closes the node.
 ## `FORGEOS-V1-AGENT-100` — Remote-agent task and budget record
 
 - **Owner:** `forge-nyx-client`, `nyx_server`
+- **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-AGENT-100` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+- **Required Nyx evidence before Forge closure:** `AGENT-FOUND-002`, `AGENT-RUN-001`, `AGENT-BUDGET-001`, `ROUTING-COST-001`, `PERSIST-RUN-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
+- **Repository boundary:** ForgeOS may not invent terminal agent status, calculate provider truth from prose, or keep a competing canonical agent run record.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-STATE-000`, `FORGEOS-V1-HASH-000`
 - **Initial state:** `LOCKED`
@@ -1489,9 +1532,8 @@ Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, read-only Git inspection, typed Git mutation and
 linked-worktree control, stable all-or-nothing patch application, and persistent
 project registry/workspace restoration are closed. Nyx health and versioned client
-protocol are active because they are the remaining lowest-depth client foundation
-with a bounded real probe and they unlock permissions, remote-agent records, and
-managed service lifecycle.
+protocol remain active because the Forge client is locally implemented but the real
+Nyx-owned public contract and real-process witness are still missing.
 
 Current frontier:
 
@@ -1521,7 +1563,7 @@ CLOSED
   FORGEOS-V1-PROJECT-200
 
 ACTIVE_SKILL=FORGEOS-V1-NYX-100
-ACTIVE_BLOCKER=FORGE_NYX_CLIENT_EXPOSES_ONLY_EMPTY_PROTOCOL_AND_TRANSPORT_NAMESPACES_WITH_NO_REAL_ENDPOINT_PROBE_VERSION_NEGOTIATION_HEALTH_READ_OR_TYPED_COMPATIBILITY_RESULT
+ACTIVE_BLOCKER=FORGE_CLIENT_PRIVATE_FGNYX_BINARY_HANDSHAKE_HAS_NO_MATCHING_NYX_SERVER_HANDLER_OR_CANONICAL_NYX_PUBLIC_CONTRACT
 ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
 
 AVAILABLE

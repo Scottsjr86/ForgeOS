@@ -11,6 +11,8 @@ V1 skill tree: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 V1 execution router: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
 V1 closure experiment: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
 V1 status mirror: `docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md`
+Nyx cross-repo closure contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+Nyx cross-repo machine map: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json`
 Active release target: `FORGEOS_V1_FIRST_ARMOR`
 Four-version product contract: `docs/High_Level.md`
 
@@ -310,9 +312,9 @@ validated project registration, boundary-safe raw file access, editor buffer ide
 incremental Rust syntax parsing, the Rust Analyzer JSON-RPC adapter, native PTY
 support, immutable registered-command policy, deterministic session lifecycle,
 read-only native Git inspection, typed Git mutation/worktree control, stable
-all-or-nothing patch application, and persistent project registry/workspace restoration
-are closed. Nyx health and versioned client protocol are the only active V1 source
-capability:
+all-or-nothing patch application and persistent project registry/workspace restoration
+are closed. Nyx health and versioned client protocol remain the active V1 capability
+because the Forge client is locally implemented but the real Nyx contract seam is open:
 
 ```text
 PROGRAM_MODE=SLICE
@@ -321,12 +323,12 @@ ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 ACTIVE_RELEASE_GATE=FORGEOS-V1-NYX-100
 ACTIVE_V1_CONTRIBUTION=NYX_HEALTH_AND_VERSIONED_CLIENT_PROTOCOL
 ACTIVE_CAPABILITY_ID=FORGEOS-V1-NYX-100
-QUESTION=Can ForgeOS discover Nyx through one configured local transport, negotiate an explicitly supported protocol, read declared health and capabilities, and distinguish unavailable, incompatible, unhealthy, and ready states without bypassing Nyx?
-CURRENT_RESULT=PROJECT_REGISTRY_CLOSED_NYX_HEALTH_ACTIVE
+QUESTION=Can ForgeOS and a real Nyx_Server process consume one Nyx-owned versioned public health and capability contract without ForgeOS embedding or bypassing Nyx?
+CURRENT_RESULT=FORGE_NYX_CLIENT_LOCALLY_IMPLEMENTED_CROSS_REPO_PROTOCOL_MISMATCH_OPEN
 BATON_OWNER=FORGEOS-V1-NYX-100
 ACTIVE_LANE=NYX_LOCAL_AI
 ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
-FIRST_BLOCKER=FORGE_NYX_CLIENT_EXPOSES_ONLY_EMPTY_PROTOCOL_AND_TRANSPORT_NAMESPACES_WITH_NO_REAL_ENDPOINT_PROBE_VERSION_NEGOTIATION_HEALTH_READ_OR_TYPED_COMPATIBILITY_RESULT
+FIRST_BLOCKER=FORGE_CLIENT_PRIVATE_FGNYX_BINARY_HANDSHAKE_HAS_NO_MATCHING_NYX_SERVER_HANDLER_OR_CANONICAL_NYX_PUBLIC_CONTRACT
 CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
 AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
@@ -343,8 +345,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-NYX-100
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-NYX-100-SLICE-001
+OPERATOR_VALIDATION_STATE=BLOCKED_ON_NYX_CROSS_REPO_GATE
+NEXT_REQUIRED_ACTION=RESOLVE_NYX_OWNED_PUBLIC_HEALTH_AND_CAPABILITY_CONTRACT_THEN_ADAPT_FORGE_CLIENT_WITHOUT_EMBEDDING_NYX
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -362,12 +364,11 @@ The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
 `FORGEOS-V1-NYX-100` is the only active source skill.
 
-This slice may establish only the ForgeOS-side Nyx handshake contract, configured
-Unix-socket or TCP probing, explicit supported-version negotiation, service-version,
-health, and capability decoding, and typed unavailable, incompatible, unhealthy, and
-ready outcomes. Model selection, conversations, tool permission, service lifecycle,
-remote agents, direct model-provider calls, `nyx_server` source, and Forge World
-presentation remain separate capabilities.
+This slice may establish only the ForgeOS-side Nyx client/adapter and the shared
+Nyx-owned health and capability contract. The existing private binary fixture is not
+a closure witness. Model selection, conversations, tool permission, service lifecycle,
+remote agents, direct model-provider calls, `nyx_server` implementation, and Forge
+World presentation remain separate capabilities.
 
 ## 7. Program modes
 

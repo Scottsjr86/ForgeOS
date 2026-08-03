@@ -7,6 +7,7 @@ Canonical V1 worksheet: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 Fresh-session header: `docs/ForgeOS_header.md`
 Current program mode: `SLICE`
 Current release target: `FORGEOS_V1_FIRST_ARMOR`
+Nyx cross-repo contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 
 ---
 
@@ -83,10 +84,10 @@ AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL
 CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
 ACTIVE_LANE=NYX_LOCAL_AI
 ACTIVE_QUESTION=Can ForgeOS discover Nyx through one configured local transport, negotiate an explicitly supported protocol, read declared health and capabilities, and distinguish unavailable, incompatible, unhealthy, and ready states without bypassing Nyx?
-FIRST_BLOCKER=FORGE_NYX_CLIENT_EXPOSES_ONLY_EMPTY_PROTOCOL_AND_TRANSPORT_NAMESPACES_WITH_NO_REAL_ENDPOINT_PROBE_VERSION_NEGOTIATION_HEALTH_READ_OR_TYPED_COMPATIBILITY_RESULT
+FIRST_BLOCKER=FORGE_CLIENT_PRIVATE_FGNYX_BINARY_HANDSHAKE_HAS_NO_MATCHING_NYX_SERVER_HANDLER_OR_CANONICAL_NYX_PUBLIC_CONTRACT
 ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
-SOURCE_IMPLEMENTATION_ALLOWED=YES
-CURRENT_RESULT=PROJECT_REGISTRY_CLOSED_NYX_HEALTH_ACTIVE
+SOURCE_IMPLEMENTATION_ALLOWED=YES_FORGE_CLIENT_ONLY_NO_NYX_SERVER_SUBSTITUTE
+CURRENT_RESULT=FORGE_NYX_CLIENT_LOCALLY_IMPLEMENTED_CROSS_REPO_PROTOCOL_MISMATCH_OPEN
 RETURN_PATH=CLOSE_ONLY_FORGEOS-V1-NYX-100_THEN_UNLOCK_NYX-101_AGENT-100_AND_SESSION-201
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -96,12 +97,13 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 Persistent project registry and workspace restoration are closed. `FORGEOS-V1-NYX-100`
 is the only active source skill. Dedicated session bootstrap, repository file browsing,
 managed terminal sessions, integrated Git inspection, Forge World, and recovery remain
-available but inactive. The active slice may own only the ForgeOS-side Nyx handshake,
-configured Unix or TCP transport probing, explicit protocol negotiation, declared
-health and capability decoding, and typed unavailable, incompatible, unhealthy, and
-ready results. It may not select models, create conversations, grant tools, manage the
-Nyx service process, contact model providers directly, edit `nyx_server`, or present UI
-state.
+available but inactive. ForgeOS now has a local Unix/TCP client implementation and
+fixture coverage, but its private `FGNYXQ` / `FGNYXR` wire format is not implemented by
+Nyx_Server, which currently exposes HTTP/JSON routes. The active skill therefore owns
+only the ForgeOS client/adapter side and remains cross-repository incomplete. It may not
+select models, create conversations, grant tools, manage the Nyx service process,
+contact model providers directly, edit `nyx_server`, present UI state, or add a server
+inside ForgeOS to make its private fixture pass against itself.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source
@@ -284,6 +286,29 @@ No repository may quietly absorb another repository's authority.
 - Real tools own their native execution results.
 
 The detailed seam law belongs in `docs/GOVERNING_LAWS.md`.
+
+### 5.1 Nyx cross-repository closure gate
+
+Every ForgeOS skill carrying a `NYX-GATE-*` marker must satisfy the exact Nyx
+requirements in
+`docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`.
+
+```text
+Forge client or integration source may be implemented against explicit fixtures
+  -> allowed while the Nyx gate is unresolved
+
+Forge skill closure or CLOSED status
+  -> forbidden until every listed Nyx skill is BANKED or RELEASE_EARNED
+  -> required Nyx proof level and real-server witness must pass
+```
+
+If the first blocker belongs to a listed Nyx skill, switch repositories through a
+separate Nyx_Server patch. Do not widen `forge-nyx-client`, `forge-session`, or any
+Forge crate into a second health server, model host, session store, policy engine,
+checkpoint engine, tool engine, agent runtime, or run ledger.
+
+A Forge fixture may prove request bytes, decoding, failure classification, and UI
+behavior. It cannot prove that Nyx implements the corresponding server capability.
 
 ---
 

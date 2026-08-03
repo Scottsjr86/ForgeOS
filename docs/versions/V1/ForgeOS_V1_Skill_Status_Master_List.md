@@ -2,8 +2,8 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_32.tar`, the canonical V1 skill tree, and the accepted behavior-only CI result through `FORGEOS-V1-PROJECT-200`.
-> `FORGEOS-V1-NYX-100` is currently active and awaiting operator validation.
+> Source basis: `Forge_OS_V1_base_33.tar`, the canonical V1 skill tree, and the accepted behavior-only CI result through `FORGEOS-V1-PROJECT-200`.
+> `FORGEOS-V1-NYX-100` is currently active. Its private `FGNYXQ` / `FGNYXR` client and fixtures are local-only because Nyx_Server currently exposes HTTP/JSON and no matching handler. Closure is blocked until both repos consume one Nyx-owned public contract and `NYX-GATE-FORGEOS-V1-NYX-100` passes.
 
 ## Snapshot
 
@@ -48,7 +48,7 @@
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
-- **Current position:** ForgeOS-side handshake and configured transport probe prepared; behavior-only CI is pending from the operator.
+- **Current position:** ForgeOS-side client and fixtures are locally implemented, but the private binary handshake has no matching Nyx_Server handler; the cross-repository gate remains open.
 - **Direct prerequisites:** `CONTRACT-000`, `PROCESS-000`, and `GUARD-002` ✅
 - **Immediate unlock after closure:** `NYX-101`, `AGENT-100`, and `SESSION-201` become available.
 
