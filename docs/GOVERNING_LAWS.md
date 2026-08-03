@@ -7,6 +7,7 @@ interfaces, tests, experiments, packaging, and release claims
 Fresh-session header: `docs/ForgeOS_header.md`
 Live execution authority: `docs/workflow/WORKFLOW_AUTHORITY.md`
 Canonical V1 worksheet: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
+Nyx capability ownership authority: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 
 ---
 
@@ -124,6 +125,10 @@ Forge Core may not own:
 - host process supervision.
 
 ### 2.2 `nyx_server`
+
+Detailed current and future Nyx ownership is cataloged in
+`docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`. Any
+Nyx-facing patch must review that catalog before source edits.
 
 `nyx_server` is the sole ForgeOS AI host and bounded AI operator.
 

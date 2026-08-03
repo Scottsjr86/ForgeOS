@@ -3,6 +3,7 @@
 Status: `ACTIVE_CLOSURE_AUTHORITY`
 Contract ID: `FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT`
 Wiring cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
+Capability and ownership cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Machine mirror: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json`
 Forge skill authority: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 Forge execution authority: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
@@ -56,16 +57,19 @@ missing server into ForgeOS is forbidden.
 
 ---
 
-## 0.2 Mandatory wiring review
+## 0.2 Mandatory wiring and ownership review
 
 Before a model edits any ForgeOS path for a skill listed in this contract, it
 must complete the preflight in
-`docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and inspect the
-current Nyx source that owns the exact surface.
+`docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and
+`docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`, then
+inspect the current Nyx source that owns the exact surface.
 
 The gate table answers "which Nyx proof must exist." The wiring cheat sheet
-answers "how ForgeOS is allowed to connect to that Nyx behavior." Both are
-required. Neither authorizes a Forge-owned replacement for missing Nyx code.
+answers "how ForgeOS is allowed to connect." The ownership cheat sheet answers
+"which repository and Nyx engine own the behavior now and at full maturity."
+All three are required. None authorizes a Forge-owned replacement for missing
+Nyx code.
 
 ## 1. State and proof law
 

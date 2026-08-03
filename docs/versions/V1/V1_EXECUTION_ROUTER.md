@@ -11,6 +11,7 @@ Mission authority: `docs/MISSION_FORGEOS.md`
 Fresh-session authority: `docs/ForgeOS_header.md`
 Future closure authority: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
 Nyx wiring cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
+Nyx capability and ownership cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Nyx cross-repo closure contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 Nyx cross-repo machine map: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json`
 
@@ -67,13 +68,20 @@ must contain:
 ```text
 required_reading:
   - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+  - docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md
   - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
 nyx_wiring_review: COMPLETE
+nyx_ownership_review: COMPLETE
+nyx_requested_behavior: <plain-language behavior>
+nyx_canonical_owner: FORGE_CORE|FORGE_ADAPTER|NYX_SERVER|REAL_TOOL|LINUX_HOST
+nyx_engine_family: API|AGENT|CONTEXT|MEMORY|OBSERVABILITY|PERSISTENCE|POLICY|REPO|ROUTING|TEMPORAL|TOOLS|WORKFLOW|NONE
 nyx_surface_touched: <exact route, DTO, process seam, or adapter>
-nyx_implementation_state: CURRENTLY_IMPLEMENTED|CONTRACT_ONLY|PLANNED|MISSING
+nyx_implementation_state: REAL|PARTIAL|CONTRACT_ONLY|PLANNED|MISSING
 nyx_source_files_checked:
   - <current Nyx source paths>
 nyx_target_repository: Forge_OS_V1|Nyx_Server
+nyx_forge_role: <client, process supervisor, UI, envelope provider, verifier, or none>
+nyx_duplicate_implementation_check: PASS
 nyx_forbidden_substitute_confirmed: true
 ```
 
@@ -82,8 +90,8 @@ This applies to every `FORGEOS-V1-NYX-*`, every `FORGEOS-V1-AGENT-*`, every
 record derived from Nyx. Missing fields mean the packet is incomplete and source
 edits stop.
 
-The wiring cheat sheet is a mandatory integration map, not a substitute for
-current Nyx source. Contract changes require the current Nyx repository and a
+The wiring and ownership cheat sheets are mandatory integration maps, not
+substitutes for current Nyx source. Contract changes require the current Nyx repository and a
 Nyx-owned patch first.
 
 ## 1. Non-authority

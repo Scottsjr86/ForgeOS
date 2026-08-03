@@ -8,6 +8,7 @@ Fresh-session authority: `docs/ForgeOS_header.md`
 Future execution authority: `docs/workflow/WORKFLOW_AUTHORITY.md`
 Future router authority: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
 Mandatory Nyx wiring map: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
+Mandatory Nyx capability ownership map: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Nyx cross-repo closure contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 
 ---
@@ -57,9 +58,11 @@ closed.
 ## 0.1 Nyx node preflight law
 
 Every Nyx or agent node in this tree inherits the mandatory preflight in
-`FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`. Before implementation, the active
-packet must identify the exact Nyx surface, current implementation state, live
-Nyx source files checked, owning repository, and forbidden Forge substitute.
+`FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and
+`FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`. Before implementation,
+the active packet must identify the requested behavior, canonical owner, Nyx
+engine family, exact surface, current implementation state, live Nyx source files
+checked, legal Forge role, owning repository, and duplicate-implementation check.
 
 No `FORGEOS-V1-NYX-*` or `FORGEOS-V1-AGENT-*` node may close from a copied DTO,
 Forge fixture, mock server, direct provider call, or Forge-owned replacement for

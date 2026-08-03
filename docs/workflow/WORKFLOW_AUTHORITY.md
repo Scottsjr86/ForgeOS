@@ -8,6 +8,7 @@ Fresh-session header: `docs/ForgeOS_header.md`
 Current program mode: `SLICE`
 Current release target: `FORGEOS_V1_FIRST_ARMOR`
 Nyx wiring cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
+Nyx capability and ownership cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Nyx cross-repo contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 
 ---
@@ -58,11 +59,13 @@ Before source edits, the patching model must read:
 
 ```text
 docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md
 docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
 ```
 
-and report the exact preflight receipt defined by the wiring cheat sheet. It
-must inspect the current Nyx source files that own the surface. If the current
+and report the exact preflight receipt defined by both cheat sheets. It must
+name the canonical owner and inspect the current Nyx source files that own the
+surface. If the current
 Nyx repository is absent, the model may not invent or alter a Nyx public
 contract, claim real compatibility, or close a Nyx-gated Forge skill.
 
@@ -123,7 +126,8 @@ CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 NYX_WIRING_CHEAT_SHEET_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
-NYX_WIRING_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
+NYX_CAPABILITY_OWNERSHIP_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
+NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 ```
 
 Persistent project registry and workspace restoration are closed. `FORGEOS-V1-NYX-100`

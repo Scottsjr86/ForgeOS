@@ -3,6 +3,7 @@
 Status: `SOURCE_PROVED_CROSS_REPO_GATE_OPEN`
 Capability: Nyx health and versioned client protocol
 Mandatory wiring review: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
+Mandatory capability ownership review: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Cross-repo gate authority: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 Forge client source proved: `2026-08-03`
 Source authority: `Forge_OS_V1_base_33.tar`
