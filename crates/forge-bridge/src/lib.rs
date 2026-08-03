@@ -5,6 +5,7 @@
 
 pub mod adapters;
 pub mod git;
+pub mod git_mutation;
 pub mod lsp;
 pub mod parsing;
 pub mod ports;

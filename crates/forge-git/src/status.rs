@@ -249,8 +249,7 @@ fn parse_entry(records: &[&[u8]]) -> Result<(GitStatusEntry, usize), String> {
                 .get(1)
                 .copied()
                 .ok_or_else(|| "rename/copy status record is missing original path".to_owned())?;
-            let (mut entry, _) =
-                parse_tracked(record, GitStatusEntryKind::RenameOrCopy, 10)?;
+            let (mut entry, _) = parse_tracked(record, GitStatusEntryKind::RenameOrCopy, 10)?;
             entry.original_path = Some(GitPath::from_bytes(original)?);
             Ok((entry, 2))
         }
@@ -326,7 +325,5 @@ fn nul_records(bytes: &[u8]) -> Result<Vec<&[u8]>, String> {
     if !bytes.ends_with(&[0]) {
         return Err("porcelain-v2 status output is not NUL terminated".to_owned());
     }
-    Ok(bytes[..bytes.len() - 1]
-        .split(|byte| *byte == 0)
-        .collect())
+    Ok(bytes[..bytes.len() - 1].split(|byte| *byte == 0).collect())
 }

@@ -210,7 +210,7 @@ pub struct NativeGitExit {
 }
 
 impl NativeGitExit {
-    fn from_status(status: ExitStatus) -> Self {
+    pub(crate) fn from_status(status: ExitStatus) -> Self {
         Self {
             success: status.success(),
             code: status.code(),
@@ -270,11 +270,7 @@ pub struct NativeGitInvocationError {
 }
 
 impl NativeGitInvocationError {
-    fn new(
-        request: &GitReadRequest,
-        stage: NativeGitFailureStage,
-        error: io::Error,
-    ) -> Self {
+    fn new(request: &GitReadRequest, stage: NativeGitFailureStage, error: io::Error) -> Self {
         Self {
             operation: request.label(),
             stage,
@@ -365,12 +361,12 @@ impl NativeGitAdapter {
             command.env("PATH", path);
         }
 
-        let child = command
-            .spawn()
-            .map_err(|error| NativeGitInvocationError::new(request, NativeGitFailureStage::Spawn, error))?;
-        let output = child
-            .wait_with_output()
-            .map_err(|error| NativeGitInvocationError::new(request, NativeGitFailureStage::Wait, error))?;
+        let child = command.spawn().map_err(|error| {
+            NativeGitInvocationError::new(request, NativeGitFailureStage::Spawn, error)
+        })?;
+        let output = child.wait_with_output().map_err(|error| {
+            NativeGitInvocationError::new(request, NativeGitFailureStage::Wait, error)
+        })?;
         Ok(NativeGitOutput {
             exit: NativeGitExit::from_status(output.status),
             stdout: output.stdout,

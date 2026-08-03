@@ -199,7 +199,9 @@ fn parse_status(bytes: &[u8]) -> Result<GitDiffStatus, String> {
     } else {
         let digits = &bytes[1..];
         if digits.iter().any(|byte| !byte.is_ascii_digit()) {
-            return Err(format!("raw diff similarity score is malformed: {digits:?}"));
+            return Err(format!(
+                "raw diff similarity score is malformed: {digits:?}"
+            ));
         }
         let score = String::from_utf8(digits.to_vec())
             .expect("validated decimal bytes are UTF-8")

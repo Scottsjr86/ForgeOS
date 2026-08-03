@@ -1182,7 +1182,10 @@ never closes the node.
 - **Owner:** `forge-git`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-PATH-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-GIT-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-GIT-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** Branch, revision, status, worktree list, and diff are represented
   through typed outcomes with native error preservation.
 - **Must not be true:** Parsing may not collapse distinct Git states or assume English
@@ -1195,7 +1198,7 @@ never closes the node.
 
 - **Owner:** `forge-git`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-GIT-100`, `FORGEOS-V1-CONTRACT-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
 - **Must be true:** Stage, unstage, commit, confirmed restore, create worktree, and
   remove worktree use explicit typed requests and report resulting repository state.
 - **Must not be true:** Broad destructive defaults, implicit `--force`, or ambiguous
@@ -1474,9 +1477,10 @@ section ever disagree.
 All Tier-0 foundations, structural guards, validated project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy, and
-deterministic session lifecycle are closed. Read-only Git inspection is active
-because it is the smallest remaining Tier-1 mechanism and the shortest route to
-source-grounded developer status without permitting mutation.
+deterministic session lifecycle and read-only Git inspection are closed. Typed Git
+mutation and linked-worktree control are active because they are the smallest
+remaining Tier-1 mechanism and the shortest route from repository truth into the
+real source-control loop without opening broad or forceful mutation.
 
 Current frontier:
 
@@ -1500,10 +1504,11 @@ CLOSED
   FORGEOS-V1-TERMINAL-100
   FORGEOS-V1-COMMAND-100
   FORGEOS-V1-SESSION-100
+  FORGEOS-V1-GIT-100
 
-ACTIVE_SKILL=FORGEOS-V1-GIT-100
-ACTIVE_BLOCKER=FORGEOS_HAS_REPOSITORY_AND_PROCESS_FOUNDATIONS_BUT_NO_READ_ONLY_NATIVE_GIT_ADAPTER_OR_TYPED_MACHINE_FORMAT_RESULTS
-ACTIVE_SLICE=FORGEOS-V1-GIT-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-GIT-101
+ACTIVE_BLOCKER=FORGEOS_CAN_INSPECT_NATIVE_GIT_STATE_BUT_HAS_NO_TYPED_MUTATION_OR_LINKED_WORKTREE_CONTROL_SURFACE
+ACTIVE_SLICE=FORGEOS-V1-GIT-101-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-PROJECT-200
@@ -1517,7 +1522,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-GIT-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-GIT-101` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

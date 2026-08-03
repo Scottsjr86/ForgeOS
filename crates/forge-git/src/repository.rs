@@ -8,8 +8,8 @@ use crate::diff::{parse_diff, DiffScope, GitDiff};
 use crate::status::{parse_status, GitHead, GitStatusSnapshot};
 use crate::worktree::{parse_worktrees, GitWorktreeSnapshot};
 use forge_bridge::git::{
-    GitDiffInvocation, GitReadRequest, NativeGitAdapter, NativeGitExit,
-    NativeGitInvocationError, NativeGitOutput,
+    GitDiffInvocation, GitReadRequest, NativeGitAdapter, NativeGitExit, NativeGitInvocationError,
+    NativeGitOutput,
 };
 use forge_protocol::identities::RepositoryId;
 use std::ffi::OsStr;
@@ -178,11 +178,7 @@ impl GitRepositoryInspector {
         root: impl AsRef<Path>,
         program: impl AsRef<OsStr>,
     ) -> Result<Self, GitInspectError> {
-        Self::open_with_adapter(
-            repository_id,
-            root,
-            NativeGitAdapter::with_program(program),
-        )
+        Self::open_with_adapter(repository_id, root, NativeGitAdapter::with_program(program))
     }
 
     fn open_with_adapter(
@@ -215,9 +211,11 @@ impl GitRepositoryInspector {
     /// Reads branch, revision, and typed working-tree status in one native snapshot.
     pub fn inspect_status(&self) -> Result<GitStatusSnapshot, GitInspectError> {
         let output = self.invoke(GitInspectOperation::Status, GitReadRequest::Status)?;
-        parse_status(self.repository_id, output.stdout()).map_err(|message| GitInspectError::MalformedOutput {
-            operation: GitInspectOperation::Status,
-            message,
+        parse_status(self.repository_id, output.stdout()).map_err(|message| {
+            GitInspectError::MalformedOutput {
+                operation: GitInspectOperation::Status,
+                message,
+            }
         })
     }
 
@@ -265,7 +263,7 @@ impl GitRepositoryInspector {
         expect_success(operation, self.adapter.invoke(&self.root, &request)?)
     }
 
-    fn revalidate_root(&self) -> Result<(), GitInspectError> {
+    pub(crate) fn revalidate_root(&self) -> Result<(), GitInspectError> {
         let (root, found) = inspect_root(&self.root)?;
         if root != self.root || found != self.root_object {
             return Err(GitInspectError::RootIdentityChanged {
@@ -357,11 +355,10 @@ impl DiffScope {
         match self {
             Self::Worktree => GitDiffInvocation::worktree(),
             Self::Staged => GitDiffInvocation::staged(),
-            Self::Between { base, target } => GitDiffInvocation::between(
-                base.as_str().to_owned(),
-                target.as_str().to_owned(),
-            )
-            .expect("typed Git object IDs are valid diff arguments"),
+            Self::Between { base, target } => {
+                GitDiffInvocation::between(base.as_str().to_owned(), target.as_str().to_owned())
+                    .expect("typed Git object IDs are valid diff arguments")
+            }
         }
     }
 }

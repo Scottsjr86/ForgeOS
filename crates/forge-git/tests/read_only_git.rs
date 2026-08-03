@@ -114,7 +114,6 @@ fn git_ok(root: &Path, arguments: &[&str]) -> Output {
     output
 }
 
-
 #[test]
 fn diff_range_rejects_git_option_injection_before_spawn() {
     let valid = "0".repeat(40);
@@ -229,12 +228,16 @@ fn worktree_porcelain_reports_primary_and_linked_worktrees() {
         .iter()
         .find(|worktree| worktree.path().as_bytes() == primary_bytes.as_slice())
         .unwrap();
-    assert!(matches!(primary.state(), GitWorktreeState::Branch(branch) if branch.as_bytes() == b"refs/heads/main"));
+    assert!(
+        matches!(primary.state(), GitWorktreeState::Branch(branch) if branch.as_bytes() == b"refs/heads/main")
+    );
     let feature = worktrees
         .iter()
         .find(|worktree| worktree.path().as_bytes() == linked_bytes.as_slice())
         .unwrap();
-    assert!(matches!(feature.state(), GitWorktreeState::Branch(branch) if branch.as_bytes() == b"refs/heads/feature"));
+    assert!(
+        matches!(feature.state(), GitWorktreeState::Branch(branch) if branch.as_bytes() == b"refs/heads/feature")
+    );
 }
 
 #[test]
@@ -251,7 +254,10 @@ fn worktree_diff_exposes_typed_entry_and_exact_patch_bytes() {
     assert_eq!(entry.status().code(), b'M');
     assert_eq!(entry.source_path().as_bytes(), b"tracked.txt");
     assert_eq!(entry.destination_path(), None);
-    assert!(diff.patch_bytes().windows(7).any(|window| window == b"+second"));
+    assert!(diff
+        .patch_bytes()
+        .windows(7)
+        .any(|window| window == b"+second"));
 }
 
 #[test]
@@ -268,7 +274,10 @@ fn staged_and_worktree_diffs_remain_distinct() {
     let staged = inspector.inspect_diff(DiffScope::Staged).unwrap();
     let worktree = inspector.inspect_diff(DiffScope::Worktree).unwrap();
     assert_ne!(staged.patch_bytes(), worktree.patch_bytes());
-    assert!(staged.patch_bytes().windows(7).any(|window| window == b"+staged"));
+    assert!(staged
+        .patch_bytes()
+        .windows(7)
+        .any(|window| window == b"+staged"));
     assert!(worktree
         .patch_bytes()
         .windows(9)
@@ -278,11 +287,23 @@ fn staged_and_worktree_diffs_remain_distinct() {
 #[test]
 fn exact_revision_range_diff_is_typed_and_binary_safe() {
     let repository = TempRepository::committed("diff-range");
-    let first = repository.inspector().inspect_head().unwrap().revision().unwrap().clone();
+    let first = repository
+        .inspector()
+        .inspect_head()
+        .unwrap()
+        .revision()
+        .unwrap()
+        .clone();
     fs::write(repository.root.join("tracked.txt"), b"first\ncommitted\n").unwrap();
     git_ok(&repository.root, &["add", "--", "tracked.txt"]);
     git_ok(&repository.root, &["commit", "-q", "-m", "second"]);
-    let second = repository.inspector().inspect_head().unwrap().revision().unwrap().clone();
+    let second = repository
+        .inspector()
+        .inspect_head()
+        .unwrap()
+        .revision()
+        .unwrap()
+        .clone();
     let diff = repository
         .inspector()
         .inspect_diff(DiffScope::between(first, second))
@@ -300,7 +321,13 @@ fn read_only_inspection_preserves_native_repository_state() {
     fs::write(repository.root.join("untracked.txt"), b"loose\n").unwrap();
     let before_status = git_ok(
         &repository.root,
-        &["status", "--porcelain=v2", "--branch", "-z", "--untracked-files=all"],
+        &[
+            "status",
+            "--porcelain=v2",
+            "--branch",
+            "-z",
+            "--untracked-files=all",
+        ],
     )
     .stdout;
     let before_revision = repository.revision();
@@ -313,13 +340,18 @@ fn read_only_inspection_preserves_native_repository_state() {
 
     let after_status = git_ok(
         &repository.root,
-        &["status", "--porcelain=v2", "--branch", "-z", "--untracked-files=all"],
+        &[
+            "status",
+            "--porcelain=v2",
+            "--branch",
+            "-z",
+            "--untracked-files=all",
+        ],
     )
     .stdout;
     assert_eq!(before_status, after_status);
     assert_eq!(before_revision, repository.revision());
 }
-
 
 #[test]
 fn non_utf8_status_paths_are_preserved_without_replacement() {
@@ -363,7 +395,10 @@ fn malformed_machine_output_is_a_typed_parse_failure() {
 #[test]
 fn non_repository_preserves_native_exit_and_stderr() {
     let unique = NEXT_TEMP.fetch_add(1, Ordering::Relaxed);
-    let root = std::env::temp_dir().join(format!("forgeos-git-100-plain-{}-{unique}", std::process::id()));
+    let root = std::env::temp_dir().join(format!(
+        "forgeos-git-100-plain-{}-{unique}",
+        std::process::id()
+    ));
     fs::create_dir(&root).unwrap();
     let error = GitRepositoryInspector::open(repository_id(2), &root).unwrap_err();
     match error {

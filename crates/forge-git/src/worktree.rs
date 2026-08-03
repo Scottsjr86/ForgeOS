@@ -65,7 +65,6 @@ impl GitWorktree {
     }
 }
 
-
 /// Complete worktree listing bound to one stable repository identity.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GitWorktreeSnapshot {
@@ -103,11 +102,15 @@ struct WorktreeBuilder {
 impl WorktreeBuilder {
     fn finish(self) -> Result<GitWorktree, String> {
         Ok(GitWorktree {
-            path: self.path.ok_or_else(|| "worktree record is missing path".to_owned())?,
-            head: self.head.ok_or_else(|| "worktree record is missing HEAD".to_owned())?,
-            state: self
-                .state
-                .ok_or_else(|| "worktree record is missing branch/detached/bare state".to_owned())?,
+            path: self
+                .path
+                .ok_or_else(|| "worktree record is missing path".to_owned())?,
+            head: self
+                .head
+                .ok_or_else(|| "worktree record is missing HEAD".to_owned())?,
+            state: self.state.ok_or_else(|| {
+                "worktree record is missing branch/detached/bare state".to_owned()
+            })?,
             locked_reason: self.locked_reason,
             prunable_reason: self.prunable_reason,
             attributes: self.attributes,
@@ -157,10 +160,16 @@ fn parse_field(record: &[u8], builder: &mut WorktreeBuilder) -> Result<(), Strin
         None => (record, &[][..]),
     };
     match key {
-        b"worktree" => {
-            set_once(&mut builder.path, GitPath::from_bytes(value)?, "worktree path")
-        }
-        b"HEAD" => set_once(&mut builder.head, GitObjectId::parse(value)?, "worktree HEAD"),
+        b"worktree" => set_once(
+            &mut builder.path,
+            GitPath::from_bytes(value)?,
+            "worktree path",
+        ),
+        b"HEAD" => set_once(
+            &mut builder.head,
+            GitObjectId::parse(value)?,
+            "worktree HEAD",
+        ),
         b"branch" => set_once(
             &mut builder.state,
             GitWorktreeState::Branch(GitRefName::from_bytes(value)?),
