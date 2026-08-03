@@ -8,6 +8,7 @@ pub mod git;
 pub mod git_mutation;
 pub mod lsp;
 pub mod parsing;
+pub mod patch;
 pub mod ports;
 pub mod processes;
 pub mod pty;

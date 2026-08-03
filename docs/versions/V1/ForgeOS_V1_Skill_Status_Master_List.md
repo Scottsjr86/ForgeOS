@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_28.tar`, the canonical V1 skill tree, and the accepted behavior-only CI result through `FORGEOS-V1-GIT-100`.
-> `FORGEOS-V1-GIT-101` is currently active and awaiting operator validation.
+> Source basis: `Forge_OS_V1_base_30.tar`, the canonical V1 skill tree, and the accepted behavior-only CI result through `FORGEOS-V1-GIT-101`.
+> `FORGEOS-V1-PATCH-100` is currently active and awaiting operator validation.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 19 |
+| ✅ Completed / closed | 20 |
 | 🔨 Active / started | 1 |
-| 🟢 Available / ready to start | 6 |
+| 🟢 Available / ready to start | 5 |
 | 🔒 Locked by prerequisites | 41 |
 
-**Raw closed-node count:** 19 of 67, or 28.4%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 20 of 67, or 29.9%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -39,24 +39,23 @@
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
 | 2 | Functional V1 systems | 19 | available 2, locked 17 |
-| 1 | Local mechanisms | 16 | closed 9, active 1, available 4, locked 2 |
+| 1 | Local mechanisms | 16 | closed 10, active 1, available 3, locked 2 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-GIT-101` — Git mutation and worktree primitives
+### 🔨 `FORGEOS-V1-PATCH-100` — Patch identity, base validation, and safe application primitive
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
 - **Current position:** Source patch prepared; behavior-only CI has not yet been returned by the operator.
-- **Direct prerequisites:** `GIT-100` and `CONTRACT-000` ✅
-- **Immediate unlock after closure:** None independently; `GIT-201` still requires `GIT-200` and `PATCH-100`.
+- **Direct prerequisites:** `PATH-000`, `STATE-000`, and `HASH-000` ✅
+- **Immediate unlock after closure:** None independently; `GIT-201` still requires `GIT-200`, but its `GIT-101` and `PATCH-100` prerequisites will be complete.
 
 ## Available skills right now
 
 - 🟢 `FORGEOS-V1-PROJECT-200` — Persistent project registry and workspace restoration
 - 🟢 `FORGEOS-V1-SESSION-200` — Dedicated ForgeOS session bootstrap
-- 🟢 `FORGEOS-V1-PATCH-100` — Patch identity, base validation, and safe application primitive
 - 🟢 `FORGEOS-V1-NYX-100` — Nyx health and versioned client protocol
 - 🟢 `FORGEOS-V1-WORLD-100` — Source-backed view projection and input action routing
 - 🟢 `FORGEOS-V1-RECOVERY-100` — Workspace snapshot and crash-journal primitive
@@ -124,12 +123,12 @@ Functional subsystems assembled from local mechanisms.
 | 🔒 LOCKED | `FORGEOS-V1-TERMINAL-200` | Managed embedded terminal sessions | ✅ `FORGEOS-V1-TERMINAL-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-COMMAND-200` | Registered project command execution and output history | ✅ `FORGEOS-V1-COMMAND-100`<br>🔒 `FORGEOS-V1-TERMINAL-200` |
 | 🔒 LOCKED | `FORGEOS-V1-GIT-200` | Real Git status, branch, revision, and diff inspection | ✅ `FORGEOS-V1-GIT-100`<br>🟢 `FORGEOS-V1-PROJECT-200` |
-| 🔒 LOCKED | `FORGEOS-V1-GIT-201` | Safe Git mutation and isolated worktree control | 🔨 `FORGEOS-V1-GIT-101`<br>🔒 `FORGEOS-V1-GIT-200`<br>🟢 `FORGEOS-V1-PATCH-100` |
+| 🔒 LOCKED | `FORGEOS-V1-GIT-201` | Safe Git mutation and isolated worktree control | ✅ `FORGEOS-V1-GIT-101`<br>🔒 `FORGEOS-V1-GIT-200`<br>🔨 `FORGEOS-V1-PATCH-100` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-200` | Local model selection and Nyx conversation lifecycle | 🟢 `FORGEOS-V1-NYX-100`<br>🔒 `FORGEOS-V1-SESSION-201` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-201` | Project-aware Nyx read tools | 🔒 `FORGEOS-V1-NYX-200`<br>🔒 `FORGEOS-V1-FILE-200`<br>🔒 `FORGEOS-V1-GIT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-202` | Safe registered commands and exact checkpoint resume | 🔒 `FORGEOS-V1-NYX-101`<br>🔒 `FORGEOS-V1-NYX-201`<br>🔒 `FORGEOS-V1-COMMAND-200` |
 | 🔒 LOCKED | `FORGEOS-V1-AGENT-200` | OpenAI heavyweight task dispatch | 🔒 `FORGEOS-V1-AGENT-100`<br>🔒 `FORGEOS-V1-NYX-200`<br>🔒 `FORGEOS-V1-GIT-201` |
-| 🔒 LOCKED | `FORGEOS-V1-AGENT-201` | Returned patch intake, review, and controlled application | 🔒 `FORGEOS-V1-AGENT-200`<br>🔒 `FORGEOS-V1-PATCH-100`<br>🔒 `FORGEOS-V1-GIT-201` |
+| 🔒 LOCKED | `FORGEOS-V1-AGENT-201` | Returned patch intake, review, and controlled application | 🔒 `FORGEOS-V1-AGENT-200`<br>🔨 `FORGEOS-V1-PATCH-100`<br>🔒 `FORGEOS-V1-GIT-201` |
 | 🔒 LOCKED | `FORGEOS-V1-VERIFY-200` | Version-bound build and test result records | 🔒 `FORGEOS-V1-COMMAND-200`<br>🔒 `FORGEOS-V1-GIT-200`<br>✅ `FORGEOS-V1-STATE-000` |
 | 🔒 LOCKED | `FORGEOS-V1-WORLD-200` | Basic Bevy shell and truthful status HUD | 🟢 `FORGEOS-V1-WORLD-100`<br>🟢 `FORGEOS-V1-PROJECT-200`<br>🔒 `FORGEOS-V1-TERMINAL-200`<br>🔒 `FORGEOS-V1-GIT-200`<br>🔒 `FORGEOS-V1-NYX-200`<br>🔒 `FORGEOS-V1-VERIFY-200` |
 | 🔒 LOCKED | `FORGEOS-V1-RECOVERY-200` | Durable workspace and service recovery | 🔒 `FORGEOS-V1-RECOVERY-100`<br>🟢 `FORGEOS-V1-PROJECT-200`<br>🔒 `FORGEOS-V1-SESSION-201`<br>🔒 `FORGEOS-V1-TERMINAL-200`<br>🔒 `FORGEOS-V1-NYX-200` |
@@ -151,11 +150,11 @@ Concrete local mechanisms and adapters that make the systems real.
 | ✅ CLOSED | `FORGEOS-V1-TERMINAL-100` | PTY spawn, I/O, resize, and termination | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | ✅ CLOSED | `FORGEOS-V1-COMMAND-100` | Registered command definition and execution policy | ✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | ✅ CLOSED | `FORGEOS-V1-GIT-100` | Read-only Git adapter | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
-| 🔨 ACTIVE | `FORGEOS-V1-GIT-101` | Git mutation and worktree primitives | ✅ `FORGEOS-V1-GIT-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
+| ✅ CLOSED | `FORGEOS-V1-GIT-101` | Git mutation and worktree primitives | ✅ `FORGEOS-V1-GIT-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | 🟢 AVAILABLE | `FORGEOS-V1-NYX-100` | Nyx health and versioned client protocol | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-101` | Permission grant, checkpoint, and immutable resume token | 🟢 `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
 | 🔒 LOCKED | `FORGEOS-V1-AGENT-100` | Remote-agent task and budget record | 🟢 `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
-| 🟢 AVAILABLE | `FORGEOS-V1-PATCH-100` | Patch identity, base validation, and safe application primitive | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
+| 🔨 ACTIVE | `FORGEOS-V1-PATCH-100` | Patch identity, base validation, and safe application primitive | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
 | 🟢 AVAILABLE | `FORGEOS-V1-WORLD-100` | Source-backed view projection and input action routing | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-GUARD-001`<br>✅ `FORGEOS-V1-GUARD-002` |
 | 🟢 AVAILABLE | `FORGEOS-V1-RECOVERY-100` | Workspace snapshot and crash-journal primitive | ✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-HASH-000` |
 
@@ -201,7 +200,8 @@ The bedrock: architecture, contracts, guards, process/path/state foundations, an
 17. ✅ `FORGEOS-V1-COMMAND-100` — Registered command definition and execution policy
 18. ✅ `FORGEOS-V1-SESSION-100` — Session and managed-service lifecycle contract
 19. ✅ `FORGEOS-V1-GIT-100` — Read-only Git adapter
-20. 🔨 `FORGEOS-V1-GIT-101` — Git mutation and worktree primitives
+20. ✅ `FORGEOS-V1-GIT-101` — Git mutation and worktree primitives
+21. 🔨 `FORGEOS-V1-PATCH-100` — Patch identity, base validation, and safe application primitive
 
 ## Reading this list correctly
 

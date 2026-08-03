@@ -308,25 +308,26 @@ structural guards, stable protocol contract, managed-process foundation, canonic
 repository boundary, atomic versioned local persistence, stable SHA-256 identity,
 validated project registration, boundary-safe raw file access, editor buffer identity,
 incremental Rust syntax parsing, the Rust Analyzer JSON-RPC adapter, native PTY
-support, immutable registered-command policy, deterministic session lifecycle, and
-read-only native Git inspection are closed. Typed Git mutation and linked-worktree
-control are the only active V1 source capability:
+support, immutable registered-command policy, deterministic session lifecycle,
+read-only native Git inspection, and typed Git mutation/worktree control are closed.
+Stable patch identity, base validation, hostile-input rejection, and all-or-nothing
+worktree application are the only active V1 source capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-GIT-101
-ACTIVE_V1_CONTRIBUTION=TYPED_GIT_MUTATION_AND_LINKED_WORKTREE_PRIMITIVES
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-GIT-101
-QUESTION=Can ForgeOS stage, unstage, commit, explicitly confirmed restore, create a linked worktree, and remove a clean linked worktree through typed exact requests without shell prose, force flags, ambiguous pathspecs, or hidden repository crossing?
-CURRENT_RESULT=READ_ONLY_GIT_CLOSED_GIT_MUTATION_ACTIVE
-BATON_OWNER=FORGEOS-V1-GIT-101
+ACTIVE_RELEASE_GATE=FORGEOS-V1-PATCH-100
+ACTIVE_V1_CONTRIBUTION=STABLE_PATCH_IDENTITY_BASE_VALIDATION_AND_SAFE_APPLICATION
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-PATCH-100
+QUESTION=Can ForgeOS receive one exact patch envelope, verify its identity, declared base revision, file table, text-only path-safe payload, and current file preconditions, then apply it without partial acceptance or hidden worktree damage?
+CURRENT_RESULT=GIT_MUTATION_CLOSED_PATCH_APPLICATION_ACTIVE
+BATON_OWNER=FORGEOS-V1-PATCH-100
 ACTIVE_LANE=GIT_AND_PATCHES
-ACTIVE_SLICE=FORGEOS-V1-GIT-101-SLICE-001
-FIRST_BLOCKER=FORGEOS_CAN_INSPECT_NATIVE_GIT_STATE_BUT_HAS_NO_TYPED_MUTATION_OR_LINKED_WORKTREE_CONTROL_SURFACE
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SLICE=FORGEOS-V1-PATCH-100-SLICE-001
+FIRST_BLOCKER=FORGEOS_CAN_MUTATE_GIT_THROUGH_TYPED_REQUESTS_BUT_HAS_NO_STABLE_PATCH_ENVELOPE_BASE_VALIDATION_OR_ALL_OR_NOTHING_APPLICATION_SURFACE
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -341,8 +342,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-GIT-101
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-GIT-101-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-PATCH-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-PATCH-100-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -358,13 +359,14 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-GIT-101` is the only active source skill.
+`FORGEOS-V1-PATCH-100` is the only active source skill.
 
-This slice may establish only typed exact-path staging and unstaging, exact-state
-commit creation, explicitly confirmed restore, linked-worktree creation, and clean
-linked-worktree removal. Shell prose, force flags, ambiguous or broad pathspecs,
-merge, rebase, tag or config mutation, patch application, project-registry mutation,
-Nyx, session bootstrap, and Forge World presentation remain separate capabilities.
+This slice may establish only stable patch envelopes, Nyx-side transport validation,
+exact repository and base checks, narrow text-patch parsing, fixed native check and
+apply commands, declared after-state verification, and rollback of touched files.
+Binary, rename/copy, mode-changing, escaping, partially applicable, arbitrary-option,
+project-registry, complete Git workflow, agent, recovery, and Forge World behavior
+remain separate capabilities.
 
 ## 7. Program modes
 

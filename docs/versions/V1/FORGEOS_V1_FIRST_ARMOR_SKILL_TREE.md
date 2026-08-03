@@ -1198,7 +1198,10 @@ never closes the node.
 
 - **Owner:** `forge-git`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-GIT-100`, `FORGEOS-V1-CONTRACT-000`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-GIT-101/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-GIT-101/USER_GUIDE_SOURCE.md`
 - **Must be true:** Stage, unstage, commit, confirmed restore, create worktree, and
   remove worktree use explicit typed requests and report resulting repository state.
 - **Must not be true:** Broad destructive defaults, implicit `--force`, or ambiguous
@@ -1253,7 +1256,7 @@ never closes the node.
 - **Owner:** `forge-git`, `forge-nyx-client`
 - **Prerequisites:** `FORGEOS-V1-PATH-000`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-HASH-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** Patches have stable identity, declared base revision, file table,
   content hash, validation result, and atomic apply outcome.
 - **Must not be true:** Mismatched-base, path-escaping, malformed, hidden binary, or
@@ -1477,10 +1480,12 @@ section ever disagree.
 All Tier-0 foundations, structural guards, validated project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy, and
-deterministic session lifecycle and read-only Git inspection are closed. Typed Git
-mutation and linked-worktree control are active because they are the smallest
-remaining Tier-1 mechanism and the shortest route from repository truth into the
-real source-control loop without opening broad or forceful mutation.
+deterministic session lifecycle, read-only Git inspection, and typed Git mutation
+and linked-worktree control are closed. Stable patch identity, base validation,
+hostile-input rejection, and all-or-nothing worktree application are active because
+they remain in the current Git/patch lane, close a prerequisite for safe integrated
+Git mutation, and have a shorter bounded route to the real source-change loop than
+opening a new Nyx or presentation branch.
 
 Current frontier:
 
@@ -1505,24 +1510,24 @@ CLOSED
   FORGEOS-V1-COMMAND-100
   FORGEOS-V1-SESSION-100
   FORGEOS-V1-GIT-100
+  FORGEOS-V1-GIT-101
 
-ACTIVE_SKILL=FORGEOS-V1-GIT-101
-ACTIVE_BLOCKER=FORGEOS_CAN_INSPECT_NATIVE_GIT_STATE_BUT_HAS_NO_TYPED_MUTATION_OR_LINKED_WORKTREE_CONTROL_SURFACE
-ACTIVE_SLICE=FORGEOS-V1-GIT-101-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-PATCH-100
+ACTIVE_BLOCKER=FORGEOS_CAN_MUTATE_GIT_THROUGH_TYPED_REQUESTS_BUT_HAS_NO_STABLE_PATCH_ENVELOPE_BASE_VALIDATION_OR_ALL_OR_NOTHING_APPLICATION_SURFACE
+ACTIVE_SLICE=FORGEOS-V1-PATCH-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-PROJECT-200
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-NYX-100
-  FORGEOS-V1-PATCH-100
   FORGEOS-V1-RECOVERY-100
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-GIT-101` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-PATCH-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

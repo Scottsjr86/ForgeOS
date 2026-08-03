@@ -5,6 +5,8 @@
 
 pub mod diff;
 pub mod mutation;
+mod patch_format;
+pub mod patches;
 pub mod repository;
 pub mod status;
 pub mod types;

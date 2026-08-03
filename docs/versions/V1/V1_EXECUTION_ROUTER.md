@@ -90,15 +90,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-PATCH-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-GIT-101]
-ACTIVE_BATON_OWNER=FORGEOS-V1-GIT-101
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101]
+AVAILABLE_SKILLS=[FORGEOS-V1-PROJECT-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-PATCH-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-PATCH-100
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=GIT_AND_PATCHES
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-GIT-101-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-PATCH-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -108,13 +108,15 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 All Tier-0 foundations, all three structural guards, project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
-deterministic session lifecycle, and read-only native Git inspection are closed.
-`FORGEOS-V1-GIT-101` is the only active source skill. Persistent project registry,
-dedicated session bootstrap, Forge World, Nyx health, patch intake, and recovery
-remain available but inactive. The active slice may own typed stage, unstage, commit,
-confirmed restore, and clean linked-worktree create/remove primitives only; it may
-not use shell prose, force flags, ambiguous pathspecs, patch application, project
-state mutation, or presentation state.
+deterministic session lifecycle, read-only native Git inspection, and typed Git
+mutation/worktree primitives are closed. `FORGEOS-V1-PATCH-100` is the only active
+source skill. Persistent project registry, dedicated session bootstrap, Forge World,
+Nyx health, and recovery remain available but inactive. The active slice may own
+stable patch envelopes, text-patch validation, exact base and file preconditions,
+fixed native `git apply --check`, ordinary non-rejecting application, postcondition
+verification, and rollback of touched files only; it may not accept binary, rename,
+mode-changing, escaping, mismatched-base, partially applicable, or arbitrary Git
+option surfaces.
 
 ## 3. Current-source intake law
 
@@ -781,66 +783,69 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-Typed Git mutation and linked-worktree primitives are active.
+Stable patch identity, base validation, and safe application are active.
 
 ```yaml
-skill_id: FORGEOS-V1-GIT-101
+skill_id: FORGEOS-V1-PATCH-100
 state: ACTIVE
 lane: GIT_AND_PATCHES
-owning_subsystem: forge-git, forge-bridge
+owning_subsystem: forge-git, forge-nyx-client, forge-bridge, forge-protocol
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_28.tar sha256 5a10bd2a04171232e068ad3e0547068c666cb648a7f8f95e96d39bb4009abc75
+source_revision: Forge_OS_V1_base_30.tar sha256 e202929d2b9d502527c1451a68aadf589c08dbe0720ee197d86f165733a0f581
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-GIT-100
-  - FORGEOS-V1-CONTRACT-000
+  - FORGEOS-V1-PATH-000
+  - FORGEOS-V1-STATE-000
+  - FORGEOS-V1-HASH-000
 originating_path_or_probe: >
-  Bind one stable RepositoryId to exact stage, unstage, commit, confirmed restore,
-  linked-worktree creation, and clean linked-worktree removal requests; require exact
-  HEAD, staged-patch, path-content, target-path, branch, and worktree identity where
-  applicable; invoke only fixed shell-free Git argument shapes; and report the
-  resulting typed repository status and worktree state.
+  Receive one exact patch offer with stable PatchId, repository identity, declared
+  base revision, sorted file table, before and after content hashes, payload hash,
+  and structured identity; validate a narrow text-only unified diff against the real
+  repository; execute fixed native Git check and apply paths; verify the declared
+  resulting files; and restore every touched file if apply or verification fails.
 first_blocker: >
-  ForgeOS can inspect native Git state without mutation, but forge-git and
-  forge-bridge contain no typed mutation requests, no explicit destructive
-  confirmation, no exact stale-state preconditions, and no safe linked-worktree
-  create/remove surface.
-active_slice: FORGEOS-V1-GIT-101-SLICE-001
+  ForgeOS can inspect and mutate native Git state through typed requests, but it has
+  no shared patch envelope, no Nyx intake validation, no exact payload-to-file-table
+  parser, no base and current-file preconditions, and no all-or-nothing application
+  outcome.
+active_slice: FORGEOS-V1-PATCH-100-SLICE-001
 allowed_paths:
-  - crates/forge-bridge/src/git.rs
-  - crates/forge-bridge/src/git_mutation.rs
+  - crates/forge-protocol/src/patches.rs
+  - crates/forge-protocol/src/lib.rs
+  - crates/forge-bridge/src/patch.rs
   - crates/forge-bridge/src/lib.rs
+  - crates/forge-git/src/patches.rs
+  - crates/forge-git/src/patch_format.rs
   - crates/forge-git/src/lib.rs
-  - crates/forge-git/src/mutation.rs
-  - crates/forge-git/src/repository.rs
-  - crates/forge-git/tests/git_mutation.rs
+  - crates/forge-git/tests/patch_application.rs
+  - crates/forge-nyx-client/src/patches.rs
+  - crates/forge-nyx-client/src/lib.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-GIT-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-GIT-101/**
 forbidden_paths_and_behavior:
-  - shell command prose, arbitrary Git options, broad pathspecs, implicit restore scope, or implicit force
-  - merge, rebase, tag, branch deletion, configuration mutation, worktree prune, repair, move, lock, or unlock
-  - primary-worktree removal, dirty linked-worktree removal, stale commit, stale restore, or repository crossing
-  - patch application, project registry persistence, Nyx, session bootstrap, recovery, or UI state
+  - shell prose, arbitrary Git options, reject mode, 3-way fallback, index mutation, cached apply, or unsafe paths
+  - binary patches, NUL-bearing payloads, rename/copy metadata, executable or arbitrary mode changes, quoted or whitespace-ambiguous paths
+  - mismatched repository or base revision, stale before-hash state, undeclared payload files, partial acceptance, or success without after-hash verification
+  - merge, rebase, cherry-pick, project registry persistence, complete Git workflow integration, Nyx model behavior, recovery orchestration, or UI state
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
   - nyx_server source
 public_contracts_touched:
-  - forge_bridge::git_mutation::GitMutationRequest
-  - forge_bridge::git_mutation::NativeGitMutationAdapter
-  - forge_bridge::git_mutation::NativeGitMutationOutput
-  - forge_git::mutation::GitRepositoryMutator
-  - forge_git::mutation::StageRequest
-  - forge_git::mutation::UnstageRequest
-  - forge_git::mutation::RestoreRequest
-  - forge_git::mutation::CommitRequest
-  - forge_git::mutation::CreateWorktreeRequest
-  - forge_git::mutation::RemoveWorktreeRequest
-  - forge_git::mutation::GitMutationOutcome
-  - forge_git::mutation::GitMutationError
+  - forge_protocol::patches::PatchBaseRevision
+  - forge_protocol::patches::PatchFileAction
+  - forge_protocol::patches::PatchFileRecord
+  - forge_protocol::patches::PatchEnvelope
+  - forge_nyx_client::patches::NyxPatchOffer
+  - forge_bridge::patch::NativePatchAdapter
+  - forge_bridge::patch::NativePatchOperation
+  - forge_git::patches::GitPatchApplier
+  - forge_git::patches::PatchValidationResult
+  - forge_git::patches::PatchApplyOutcome
+  - forge_git::patches::PatchApplyError
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -850,50 +855,47 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  Exact literal paths can be staged and unstaged without touching unselected paths;
-  confirmed restore rejects changed path contents and discards only selected paths;
-  commit binds exact HEAD and staged-patch identity, supplies explicit author data,
-  disables hooks and signing, and reports the resulting revision; linked worktree
-  creation uses an exact start object and new validated branch without force; only a
-  registered clean non-primary worktree with the expected HEAD can be removed;
-  repository mismatch, stale HEAD/index/path state, duplicate paths, missing Git,
-  invalid targets, dirty worktrees, and native nonzero exits remain typed failures;
-  unrelated files and refs remain unchanged on rejected operations; behavior-only CI
+  Stable payload and structured identities survive transport; tampered bytes or
+  metadata fail before Git ownership; exact repository and base revision are checked;
+  the parsed payload file set and actions exactly match the declared sorted file
+  table; traversal, symlink, binary, malformed, rename/copy, mode-changing, stale,
+  and mismatched inputs are typed failures; fixed native check rejects partially
+  applicable patches without worktree changes; valid add, modify, and delete patches
+  apply; declared after hashes are verified; apply or verification failure restores
+  every touched file; unrelated source and refs remain unchanged; behavior-only CI
   and all structural guards remain green.
 block_edge: >
-  Any shell interpolation, arbitrary option injection, wildcard or directory-wide
-  destructive default, implicit force, hook execution, stale-state mutation,
-  repository-boundary crossing, primary or dirty worktree deletion, hidden native
-  failure, source-size warning, structural guard regression, or behavior-only CI
-  failure.
+  Any identity drift, base mismatch accepted as valid, hidden binary or path escape,
+  arbitrary Git option, reject or 3-way fallback, stale precondition mutation,
+  partial accepted result, failed rollback hidden as success, source-size warning,
+  structural guard regression, or behavior-only CI failure.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and observes exact stage, duplicate-path,
-  stale-content stage, exact unstage, stale-index unstage, confirmed restore,
-  stale restore, exact commit, stale commit, hook suppression, linked-worktree create,
-  existing-target rejection, clean removal, dirty removal rejection, primary removal
-  rejection, repository mismatch, missing executable, native pathspec failure, and
-  non-UTF8 path fixtures pass with the full Rust suite and all three structural
-  guards.
+  The user runs python3 scripts/run_ci.py and observes stable envelope, Nyx transport
+  tamper, exact validation, valid apply, repository and base mismatch, file-table
+  mismatch, undeclared traditional secondary diff, traversal, binary, partial
+  applicability, stale before state, after-hash rollback, add/delete, symlink,
+  concurrent-lock, and missing-Git fixtures pass with
+  the full Rust suite and all three structural guards.
 return_path: >
-  Close only FORGEOS-V1-GIT-101; keep FORGEOS-V1-GIT-201 locked until
-  FORGEOS-V1-GIT-200 and FORGEOS-V1-PATCH-100 also close; then reevaluate only the
-  current available frontier.
+  Close only FORGEOS-V1-PATCH-100; then reevaluate FORGEOS-V1-GIT-201 because its
+  GIT-101 and PATCH-100 prerequisites will be closed while GIT-200 remains open;
+  reevaluate only the current available frontier and do not infer integrated patch,
+  agent, verification, or Forge World workflows.
 parallel_compatibility: NONE_IN_GIT_AND_PATCHES_LANE
 ```
 
 This packet is active. `FORGEOS-V1-PROJECT-200`, `FORGEOS-V1-SESSION-200`,
-`FORGEOS-V1-WORLD-100`, `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATCH-100`, and
-`FORGEOS-V1-RECOVERY-100` remain available but inactive.
+`FORGEOS-V1-WORLD-100`, `FORGEOS-V1-NYX-100`, and `FORGEOS-V1-RECOVERY-100`
+remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for Git mutation
+## 17. Direct unlock handling for patch application
 
-Closing `FORGEOS-V1-GIT-101` does not independently unlock a higher node.
-`FORGEOS-V1-GIT-201` remains locked until `FORGEOS-V1-GIT-200` and
-`FORGEOS-V1-PATCH-100` also close. Reevaluate only the current available frontier;
-do not infer integrated Git workflows, patch intake, agent worktrees, verification,
-or Forge World presentation from local mutation primitives.
+Closing `FORGEOS-V1-PATCH-100` does not independently unlock
+`FORGEOS-V1-GIT-201`; `FORGEOS-V1-GIT-200` remains required. Patch intake and
+application proof also does not imply agent dispatch, returned-patch review,
+verification records, or complete source-control workflow closure.
 
 ## 18. Final closure routing
 

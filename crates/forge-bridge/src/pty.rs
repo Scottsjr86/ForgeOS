@@ -4,7 +4,7 @@
 //! interface. Stable ForgeOS terminal identity and session policy remain in
 //! `forge-terminal`.
 
-use portable_pty::{native_pty_system, CommandBuilder, ExitStatus, MasterPty, PtySize, PtySystem};
+use portable_pty::{native_pty_system, CommandBuilder, ExitStatus, MasterPty, PtySize};
 use std::ffi::{OsStr, OsString};
 use std::fmt;
 use std::io::{self, Read, Write};
