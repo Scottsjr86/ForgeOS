@@ -309,25 +309,26 @@ repository boundary, atomic versioned local persistence, stable SHA-256 identity
 validated project registration, boundary-safe raw file access, editor buffer identity,
 incremental Rust syntax parsing, the Rust Analyzer JSON-RPC adapter, native PTY
 support, immutable registered-command policy, deterministic session lifecycle,
-read-only native Git inspection, typed Git mutation/worktree control, and stable
-all-or-nothing patch application are closed. Persistent project registry and
-workspace restoration are the only active V1 source capability:
+read-only native Git inspection, typed Git mutation/worktree control, stable
+all-or-nothing patch application, and persistent project registry/workspace restoration
+are closed. Nyx health and versioned client protocol are the only active V1 source
+capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-PROJECT-200
-ACTIVE_V1_CONTRIBUTION=PERSISTENT_PROJECT_REGISTRY_AND_WORKSPACE_RESTORATION
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-PROJECT-200
-QUESTION=Can ForgeOS atomically persist multiple validated projects with stable identity, exact repository object binding, registered command definitions, deterministic recent-open state, and the last safe workspace snapshot, then reopen or remove them without touching repository source?
-CURRENT_RESULT=PATCH_APPLICATION_CLOSED_PROJECT_REGISTRY_ACTIVE
-BATON_OWNER=FORGEOS-V1-PROJECT-200
-ACTIVE_LANE=PROJECT_AND_WORKSPACE
-ACTIVE_SLICE=FORGEOS-V1-PROJECT-200-SLICE-001
-FIRST_BLOCKER=FORGEOS_CAN_VALIDATE_ONE_PROJECT_MANIFEST_AND_REPOSITORY_BOUNDARY_BUT_HAS_NO_ATOMIC_MULTI_PROJECT_REGISTRY_RECENT_OPEN_ORDER_OR_WORKSPACE_RESTORATION_SURFACE
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-NYX-100
+ACTIVE_V1_CONTRIBUTION=NYX_HEALTH_AND_VERSIONED_CLIENT_PROTOCOL
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-NYX-100
+QUESTION=Can ForgeOS discover Nyx through one configured local transport, negotiate an explicitly supported protocol, read declared health and capabilities, and distinguish unavailable, incompatible, unhealthy, and ready states without bypassing Nyx?
+CURRENT_RESULT=PROJECT_REGISTRY_CLOSED_NYX_HEALTH_ACTIVE
+BATON_OWNER=FORGEOS-V1-NYX-100
+ACTIVE_LANE=NYX_LOCAL_AI
+ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
+FIRST_BLOCKER=FORGE_NYX_CLIENT_EXPOSES_ONLY_EMPTY_PROTOCOL_AND_TRANSPORT_NAMESPACES_WITH_NO_REAL_ENDPOINT_PROBE_VERSION_NEGOTIATION_HEALTH_READ_OR_TYPED_COMPATIBILITY_RESULT
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -342,8 +343,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-PROJECT-200
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-PROJECT-200-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-NYX-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-NYX-100-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -359,14 +360,14 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-PROJECT-200` is the only active source skill.
+`FORGEOS-V1-NYX-100` is the only active source skill.
 
-This slice may establish only canonical multi-project registry state, exact retained
-command definitions, deterministic recent-open ordering, safe workspace payload
-retention, atomic publication, repository-object revalidation, same-object relocation,
-and source-preserving registry removal. File browsing, editor save, terminal and
-command execution, Git integration, live-process recovery, Nyx behavior, and Forge
-World presentation remain separate capabilities.
+This slice may establish only the ForgeOS-side Nyx handshake contract, configured
+Unix-socket or TCP probing, explicit supported-version negotiation, service-version,
+health, and capability decoding, and typed unavailable, incompatible, unhealthy, and
+ready outcomes. Model selection, conversations, tool permission, service lifecycle,
+remote agents, direct model-provider calls, `nyx_server` source, and Forge World
+presentation remain separate capabilities.
 
 ## 7. Program modes
 

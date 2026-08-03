@@ -779,7 +779,10 @@ never closes the node.
 
 - **Owner:** `forge-project`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-PROJECT-100`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-PROJECT-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-PROJECT-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** Projects persist with stable identity, repository root, display
   name, registered commands, recent-open state, and last safe workspace snapshot.
 - **Must not be true:** Display name, path string alone, or list order may not become
@@ -1214,7 +1217,7 @@ never closes the node.
 - **Owner:** `forge-nyx-client`, `nyx_server`
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
 - **Must be true:** ForgeOS discovers Nyx through configured transport, negotiates a
   supported protocol, reads health and capabilities, and distinguishes unavailable,
   incompatible, and unhealthy states.
@@ -1484,10 +1487,11 @@ All Tier-0 foundations, structural guards, validated project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, read-only Git inspection, typed Git mutation and
-linked-worktree control, and stable all-or-nothing patch application are closed.
-Persistent project registry and workspace restoration are active because they are
-the central shortest route to repository browsing, managed terminals, and integrated
-Git inspection while remaining bounded to project state and filesystem identity.
+linked-worktree control, stable all-or-nothing patch application, and persistent
+project registry/workspace restoration are closed. Nyx health and versioned client
+protocol are active because they are the remaining lowest-depth client foundation
+with a bounded real probe and they unlock permissions, remote-agent records, and
+managed service lifecycle.
 
 Current frontier:
 
@@ -1514,22 +1518,25 @@ CLOSED
   FORGEOS-V1-GIT-100
   FORGEOS-V1-GIT-101
   FORGEOS-V1-PATCH-100
+  FORGEOS-V1-PROJECT-200
 
-ACTIVE_SKILL=FORGEOS-V1-PROJECT-200
-ACTIVE_BLOCKER=FORGEOS_CAN_VALIDATE_ONE_PROJECT_MANIFEST_AND_REPOSITORY_BOUNDARY_BUT_HAS_NO_ATOMIC_MULTI_PROJECT_REGISTRY_RECENT_OPEN_ORDER_OR_WORKSPACE_RESTORATION_SURFACE
-ACTIVE_SLICE=FORGEOS-V1-PROJECT-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-NYX-100
+ACTIVE_BLOCKER=FORGE_NYX_CLIENT_EXPOSES_ONLY_EMPTY_PROTOCOL_AND_TRANSPORT_NAMESPACES_WITH_NO_REAL_ENDPOINT_PROBE_VERSION_NEGOTIATION_HEALTH_READ_OR_TYPED_COMPATIBILITY_RESULT
+ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
+  FORGEOS-V1-FILE-200
+  FORGEOS-V1-TERMINAL-200
+  FORGEOS-V1-GIT-200
   FORGEOS-V1-WORLD-100
-  FORGEOS-V1-NYX-100
   FORGEOS-V1-RECOVERY-100
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-PROJECT-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-NYX-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

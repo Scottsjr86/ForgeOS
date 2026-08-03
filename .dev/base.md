@@ -21,7 +21,7 @@ set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
 cd "$ROOT"
 
-OUT_NAME="${1:-Forge_OS_V1_base_32.tar}"
+OUT_NAME="${1:-Forge_OS_V1_base_33.tar}"
 OUT="$ROOT/$OUT_NAME"
 
 case "$OUT_NAME" in

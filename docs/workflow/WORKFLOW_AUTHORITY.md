@@ -76,31 +76,32 @@ The bounded authority migration is complete and source execution is active:
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS-V1-PROJECT-200
+BATON_OWNER=FORGEOS-V1-NYX-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_SKILLS=[FORGEOS-V1-PROJECT-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-RECOVERY-100]
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100]
-ACTIVE_LANE=PROJECT_AND_WORKSPACE
-ACTIVE_QUESTION=Can ForgeOS atomically persist multiple validated projects with stable identity, exact repository object binding, registered command definitions, deterministic recent-open state, and the last safe workspace snapshot, then reopen or remove them without touching repository source?
-FIRST_BLOCKER=FORGEOS_CAN_VALIDATE_ONE_PROJECT_MANIFEST_AND_REPOSITORY_BOUNDARY_BUT_HAS_NO_ATOMIC_MULTI_PROJECT_REGISTRY_RECENT_OPEN_ORDER_OR_WORKSPACE_RESTORATION_SURFACE
-ACTIVE_SLICE=FORGEOS-V1-PROJECT-200-SLICE-001
+ACTIVE_SKILLS=[FORGEOS-V1-NYX-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
+ACTIVE_LANE=NYX_LOCAL_AI
+ACTIVE_QUESTION=Can ForgeOS discover Nyx through one configured local transport, negotiate an explicitly supported protocol, read declared health and capabilities, and distinguish unavailable, incompatible, unhealthy, and ready states without bypassing Nyx?
+FIRST_BLOCKER=FORGE_NYX_CLIENT_EXPOSES_ONLY_EMPTY_PROTOCOL_AND_TRANSPORT_NAMESPACES_WITH_NO_REAL_ENDPOINT_PROBE_VERSION_NEGOTIATION_HEALTH_READ_OR_TYPED_COMPATIBILITY_RESULT
+ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
 SOURCE_IMPLEMENTATION_ALLOWED=YES
-CURRENT_RESULT=PATCH_APPLICATION_CLOSED_PROJECT_REGISTRY_ACTIVE
-RETURN_PATH=CLOSE_ONLY_FORGEOS-V1-PROJECT-200_THEN_UNLOCK_FILE-200_TERMINAL-200_AND_GIT-200
+CURRENT_RESULT=PROJECT_REGISTRY_CLOSED_NYX_HEALTH_ACTIVE
+RETURN_PATH=CLOSE_ONLY_FORGEOS-V1-NYX-100_THEN_UNLOCK_NYX-101_AGENT-100_AND_SESSION-201
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
 
-Stable patch identity and all-or-nothing application are closed. `FORGEOS-V1-PROJECT-200`
-is the only active source skill. Dedicated session bootstrap, Forge World, Nyx health,
-and recovery remain available but inactive. The active slice may own canonical
-multi-project registry bytes, exact command-definition retention, deterministic
-recent-open order, safe workspace payload retention, atomic registry publication,
-repository-object revalidation, relocation of the same directory object, and source-
-preserving removal only; it may not browse files, execute commands, mutate Git,
-restore live processes, or present UI state.
+Persistent project registry and workspace restoration are closed. `FORGEOS-V1-NYX-100`
+is the only active source skill. Dedicated session bootstrap, repository file browsing,
+managed terminal sessions, integrated Git inspection, Forge World, and recovery remain
+available but inactive. The active slice may own only the ForgeOS-side Nyx handshake,
+configured Unix or TCP transport probing, explicit protocol negotiation, declared
+health and capability decoding, and typed unavailable, incompatible, unhealthy, and
+ready results. It may not select models, create conversations, grant tools, manage the
+Nyx service process, contact model providers directly, edit `nyx_server`, or present UI
+state.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source

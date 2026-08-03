@@ -294,7 +294,7 @@ mod tests {
             ["check"],
             CommandWorkingDirectory::repository_root(),
             CommandEnvironmentPolicy::clear(vec![
-                CommandEnvironmentVariable::inherit("PATH").unwrap(),
+                CommandEnvironmentVariable::inherit("PATH").unwrap()
             ])
             .unwrap(),
             CommandTimeout::after(Duration::from_secs(30)).unwrap(),

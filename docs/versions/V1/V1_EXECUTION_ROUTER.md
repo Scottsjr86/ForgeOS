@@ -90,15 +90,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-NYX-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-PROJECT-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-PROJECT-200
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-NYX-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-NYX-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=PROJECT_AND_WORKSPACE
+ACTIVE_LANE=NYX_LOCAL_AI
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=EXECUTE_FORGEOS-V1-PROJECT-200-SLICE-001
+NEXT_ACTION=EXECUTE_FORGEOS-V1-NYX-100-SLICE-001
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -108,15 +108,15 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 All Tier-0 foundations, all three structural guards, project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
-deterministic session lifecycle, native Git inspection and mutation, and stable
-all-or-nothing patch application are closed. `FORGEOS-V1-PROJECT-200` is the only
-active source skill. Dedicated session bootstrap, Forge World, Nyx health, and
-recovery remain available but inactive. The active slice may own canonical
-multi-project registry state, exact command-definition retention, deterministic
-recent-open state, safe workspace snapshot payloads, atomic publication, repository
-object revalidation, relocation of the same directory object, and source-preserving
-registry removal only. It may not browse repository files, execute commands, mutate
-Git, restore live processes, or present UI state.
+deterministic session lifecycle, native Git inspection and mutation, stable
+all-or-nothing patch application, and persistent project registry/workspace restoration
+are closed. `FORGEOS-V1-NYX-100` is the only active source skill. Dedicated session
+bootstrap, repository file browsing, managed terminal sessions, integrated Git
+inspection, Forge World, and recovery remain available but inactive. The active slice
+may own the ForgeOS-side Nyx handshake, configured Unix or TCP transport probing,
+explicit protocol negotiation, health and capability decoding, and typed probe results
+only. It may not select models, create conversations, grant tools, manage service
+lifecycle, contact model providers directly, edit `nyx_server`, or present UI state.
 
 ## 3. Current-source intake law
 
@@ -783,60 +783,61 @@ Do not manufacture a local substitute or absorb the other repository's authority
 
 ## 16. Current registered frontier
 
-Persistent project registry and workspace restoration are active.
+Nyx health and versioned client protocol are active.
 
 ```yaml
-skill_id: FORGEOS-V1-PROJECT-200
+skill_id: FORGEOS-V1-NYX-100
 state: ACTIVE
-lane: PROJECT_AND_WORKSPACE
-owning_subsystem: forge-project, forge-core
+lane: NYX_LOCAL_AI
+owning_subsystem: forge-nyx-client
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_31.tar sha256 6507a74c14c041a9f151e5e3366275324003d52b2ada0cff17a6382883157ee3
+source_revision: Forge_OS_V1_base_32.tar sha256 c3888552959f9c4a54e2e9cb78540d5c0da1f24e310d59f4d8557c4ef85e180c
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-PROJECT-100
+  - FORGEOS-V1-CONTRACT-000
+  - FORGEOS-V1-PROCESS-000
+  - FORGEOS-V1-GUARD-002
 originating_path_or_probe: >
-  Create one atomic registry outside disposable repositories; register multiple
-  validated project manifests and exact command definitions; rename and open projects;
-  retain deterministic recent-open state and one safe workspace payload; close and
-  reopen the registry; relocate only the same repository directory object; remove one
-  project record; and prove repository source remains unchanged throughout.
+  Configure one local Unix-socket or TCP Nyx endpoint; send the exact versioned
+  handshake; decode the selected protocol, service version, declared health, and
+  capability set; and exercise compatible, unavailable, incompatible, malformed, and
+  unhealthy fixtures without contacting any model provider around Nyx.
 first_blocker: >
-  ForgeOS can validate one project manifest and bind it to one repository object, but
-  it has no canonical multi-project registry record, no atomic registry publication,
-  no exact command-definition retention, no deterministic recent-open ordering, and
-  no durable last-safe-workspace restoration surface.
-active_slice: FORGEOS-V1-PROJECT-200-SLICE-001
+  forge-nyx-client exposes only empty protocol and transport namespaces. ForgeOS has
+  no real configured endpoint probe, no handshake bytes, no supported-version
+  negotiation, no health or capability read, and no typed result separating an
+  unavailable service from an incompatible or unhealthy one.
+active_slice: FORGEOS-V1-NYX-100-SLICE-001
 allowed_paths:
-  - crates/forge-core/src/project_registry.rs
-  - crates/forge-core/src/command_codec.rs
-  - crates/forge-core/src/lib.rs
-  - crates/forge-core/tests/project_registry_state.rs
-  - crates/forge-project/src/registry_store.rs
-  - crates/forge-project/src/lib.rs
-  - crates/forge-project/tests/project_registry_persistence.rs
+  - crates/forge-nyx-client/src/protocol.rs
+  - crates/forge-nyx-client/src/transport.rs
+  - crates/forge-nyx-client/src/lib.rs
+  - crates/forge-nyx-client/tests/nyx_health.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-PATCH-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-PROJECT-200/**
 forbidden_paths_and_behavior:
-  - repository source writes, file-tree browsing, search, editor save, terminal or command execution, Git mutation, Nyx behavior, recovery replay, or UI state
-  - wall-clock recent ordering, path-string-only project identity, silent default creation after corrupt state, copied or replaced repository acceptance, or process-liveness claims
+  - nyx_server source, model-provider calls, model selection, conversation state, tool permissions, checkpoints, agent dispatch, service lifecycle, project state, Git behavior, or UI state
+  - treating socket or HTTP success as compatibility, accepting an unoffered protocol, hiding malformed responses, or converting unavailable or unhealthy state into ready
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
-  - nyx_server source
 public_contracts_touched:
-  - forge_core::command_codec::decode_registered_command
-  - forge_core::project_registry::ProjectRegistryState
-  - forge_core::project_registry::PersistentProjectEntry
-  - forge_core::project_registry::PersistedCommandDefinition
-  - forge_core::project_registry::RecentOpenState
-  - forge_core::project_registry::SafeWorkspaceSnapshot
-  - forge_project::registry_store::PersistentProjectRegistry
-  - forge_project::registry_store::RestoredProject
-  - forge_project::registry_store::PersistentProjectRegistryError
+  - forge_nyx_client::protocol::NyxProtocolVersion
+  - forge_nyx_client::protocol::NyxCapability
+  - forge_nyx_client::protocol::NyxHealth
+  - forge_nyx_client::protocol::NyxHandshakeRequest
+  - forge_nyx_client::protocol::NyxHandshakeResponse
+  - forge_nyx_client::protocol::NyxProtocolError
+  - forge_nyx_client::transport::NyxTransportEndpoint
+  - forge_nyx_client::transport::NyxClientConfig
+  - forge_nyx_client::transport::NyxProbeOutcome
+  - forge_nyx_client::transport::NyxProbeStatus
+  - forge_nyx_client::transport::NyxUnavailableReason
+  - forge_nyx_client::transport::NyxIncompatibility
+  - forge_nyx_client::transport::probe_nyx
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -846,45 +847,43 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  Registry bytes are versioned, deterministic, golden-locked, and reopen equivalently;
-  project and repository identities remain unique; exact manifests, command bytes,
-  display roots, repository object identities, recent-open state, and safe workspace
-  payloads survive restart; corrupt or unsupported state fails closed; copied or
-  replaced roots fail reopening; relocation accepts only the same directory object;
-  failed mutations publish no partial registry; selected-project changes preserve
-  unrelated project records; removal deletes only registry state; repository source
-  remains byte-identical; behavior-only CI and all structural guards remain green.
+  A configured Unix-socket or TCP endpoint receives a deterministic framed handshake;
+  compatible healthy Nyx selects only an offered protocol and returns exact service
+  version and canonical capabilities; missing endpoints classify unavailable;
+  successful exchanges selecting unoffered protocols or malformed response bytes
+  classify incompatible; degraded or unhealthy responses retain their declared health
+  and capabilities while classifying unhealthy; no outcome panics or bypasses Nyx;
+  behavior-only CI and all structural guards remain green.
 block_edge: >
-  Any path-string-only identity, wall-clock ordering, lost command definition,
-  automatic reset after corruption, replaced-root acceptance, partial registry
-  publication, repository source mutation, source-size warning, structural guard
-  regression, or behavior-only CI failure.
+  Transport success alone becomes compatibility, an unoffered protocol is accepted,
+  malformed response bytes become ready, unavailable or unhealthy state is hidden,
+  capabilities are lost or nondeterministic, direct provider access appears, source-size
+  warnings occur, structural guards regress, or behavior-only CI fails.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and observes canonical registry round-trip,
-  golden identity, register, rename, deterministic open/close order, snapshot restore,
-  exact command retention, multi-project isolation, duplicate rejection, same-object
-  relocation, replaced-root rejection, corrupt-state rejection, interrupted-stage
-  visibility, and source-preserving removal fixtures pass with the full Rust suite and
-  all three structural guards.
+  The user runs python3 scripts/run_ci.py and observes compatible healthy negotiation,
+  missing-endpoint unavailable classification, unoffered-version incompatibility,
+  malformed-response incompatibility without a crash, and unhealthy health/capability
+  retention fixtures pass with the full Rust suite and all three structural guards.
 return_path: >
-  Close only FORGEOS-V1-PROJECT-200; then mark FORGEOS-V1-FILE-200,
-  FORGEOS-V1-TERMINAL-200, and FORGEOS-V1-GIT-200 available because their remaining
+  Close only FORGEOS-V1-NYX-100; then mark FORGEOS-V1-NYX-101,
+  FORGEOS-V1-AGENT-100, and FORGEOS-V1-SESSION-201 available because their remaining
   direct prerequisites are closed; reevaluate only those direct unlocks and the
   current available frontier.
-parallel_compatibility: NONE_IN_PROJECT_AND_WORKSPACE_LANE
+parallel_compatibility: NONE_IN_NYX_LOCAL_AI_LANE
 ```
 
-This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-WORLD-100`,
-`FORGEOS-V1-NYX-100`, and `FORGEOS-V1-RECOVERY-100` remain available but inactive.
+This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-FILE-200`,
+`FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`, `FORGEOS-V1-WORLD-100`, and
+`FORGEOS-V1-RECOVERY-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for persistent projects
+## 17. Direct unlock handling for Nyx health
 
-Closing `FORGEOS-V1-PROJECT-200` makes `FORGEOS-V1-FILE-200`,
-`FORGEOS-V1-TERMINAL-200`, and `FORGEOS-V1-GIT-200` structurally available. It does
-not independently prove file browsing, editor save, terminal rendering, command
-execution, Git presentation, recovery orchestration, or Forge World integration.
+Closing `FORGEOS-V1-NYX-100` makes `FORGEOS-V1-NYX-101`,
+`FORGEOS-V1-AGENT-100`, and `FORGEOS-V1-SESSION-201` structurally available. It does
+not independently prove permissions, checkpoints, task records, managed service
+lifecycle, model selection, conversations, project-aware tools, or agent execution.
 
 ## 18. Final closure routing
 
