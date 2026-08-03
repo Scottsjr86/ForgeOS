@@ -7,3 +7,4 @@ pub mod files;
 pub mod paths;
 pub mod persistence;
 pub mod registry;
+pub mod registry_store;

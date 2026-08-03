@@ -4,9 +4,11 @@
 //! their named modules and are added only by the skills that prove them.
 
 pub mod capabilities;
+pub mod command_codec;
 pub mod commands;
 pub mod hashing;
 pub mod missions;
+pub mod project_registry;
 pub mod projects;
 pub mod state;
 pub mod workspaces;
