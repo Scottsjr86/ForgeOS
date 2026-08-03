@@ -20,9 +20,16 @@ pub struct GitMutationRequest {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum GitMutationKind {
-    Stage { paths: Vec<OsString> },
-    Unstage { paths: Vec<OsString> },
-    RestoreWorktree { source: String, paths: Vec<OsString> },
+    Stage {
+        paths: Vec<OsString>,
+    },
+    Unstage {
+        paths: Vec<OsString>,
+    },
+    RestoreWorktree {
+        source: String,
+        paths: Vec<OsString>,
+    },
     Commit {
         message: Vec<u8>,
         author_name: String,
@@ -33,7 +40,9 @@ enum GitMutationKind {
         branch: String,
         start: String,
     },
-    RemoveWorktree { path: OsString },
+    RemoveWorktree {
+        path: OsString,
+    },
 }
 
 impl GitMutationRequest {
@@ -108,9 +117,7 @@ impl GitMutationRequest {
         })
     }
 
-    pub fn remove_worktree(
-        path: impl AsRef<OsStr>,
-    ) -> Result<Self, GitMutationArgumentError> {
+    pub fn remove_worktree(path: impl AsRef<OsStr>) -> Result<Self, GitMutationArgumentError> {
         let path = path.as_ref().to_os_string();
         validate_absolute_path("worktree_path", &path)?;
         Ok(Self {
@@ -250,7 +257,10 @@ impl fmt::Display for GitMutationArgumentError {
                 write!(formatter, "Git mutation path {index} contains NUL")
             }
             Self::AbsolutePath { index } => {
-                write!(formatter, "Git mutation path {index} must be repository-relative")
+                write!(
+                    formatter,
+                    "Git mutation path {index} must be repository-relative"
+                )
             }
             Self::EmptyCommitMessage => formatter.write_str("Git commit message is empty"),
             Self::CommitMessageContainsNul => {
@@ -267,9 +277,7 @@ impl fmt::Display for GitMutationArgumentError {
             Self::WorktreePathNotAbsolute => {
                 formatter.write_str("Git worktree path must be absolute")
             }
-            Self::WorktreePathContainsNul => {
-                formatter.write_str("Git worktree path contains NUL")
-            }
+            Self::WorktreePathContainsNul => formatter.write_str("Git worktree path contains NUL"),
         }
     }
 }
@@ -295,10 +303,7 @@ fn validate_paths(paths: &[OsString]) -> Result<(), GitMutationArgumentError> {
     Ok(())
 }
 
-fn validate_object_id(
-    field: &'static str,
-    value: &str,
-) -> Result<(), GitMutationArgumentError> {
+fn validate_object_id(field: &'static str, value: &str) -> Result<(), GitMutationArgumentError> {
     if matches!(value.len(), 40 | 64)
         && value
             .bytes()
@@ -332,10 +337,12 @@ fn validate_branch_name(value: &str) -> Result<(), GitMutationArgumentError> {
         && !value.contains("@{")
         && !value.contains("//")
         && value != "@"
-        && value.split('/').all(|part| !part.starts_with('.') && !part.ends_with('.'))
-        && value.bytes().all(|byte| {
-            byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'/')
-        });
+        && value
+            .split('/')
+            .all(|part| !part.starts_with('.') && !part.ends_with('.'))
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'/'));
     if valid {
         Ok(())
     } else {

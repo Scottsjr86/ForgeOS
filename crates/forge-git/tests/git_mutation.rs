@@ -4,9 +4,8 @@ use forge_bridge::git_mutation::NativeGitMutationFailureStage;
 use forge_git::mutation::{
     expected_file_state, staged_patch_identity, CommitRequest, CreateWorktreeRequest,
     ExpectedWorktreeState, GitBranchName, GitCommitIdentity, GitMutationError,
-    GitMutationOperation, GitPathExpectation, GitRepositoryMutator,
-    RemoveWorktreeConfirmation, RemoveWorktreeRequest, RestoreConfirmation, RestoreRequest,
-    StageRequest, UnstageRequest,
+    GitMutationOperation, GitPathExpectation, GitRepositoryMutator, RemoveWorktreeConfirmation,
+    RemoveWorktreeRequest, RestoreConfirmation, RestoreRequest, StageRequest, UnstageRequest,
 };
 use forge_git::repository::GitRepositoryInspector;
 use forge_git::status::GitStatusEntryKind;
@@ -176,15 +175,18 @@ fn duplicate_paths_are_rejected_before_git_runs() {
 fn changed_worktree_bytes_reject_stale_stage_without_index_mutation() {
     let repository = TempRepository::committed("stage-stale");
     let original = expectation(&repository.root, "tracked.txt");
-    fs::write(repository.root.join("tracked.txt"), b"changed after selection\n").unwrap();
-    let request = StageRequest::new(
-        repository_id(1),
-        Some(repository.head()),
-        vec![original],
+    fs::write(
+        repository.root.join("tracked.txt"),
+        b"changed after selection\n",
     )
     .unwrap();
+    let request =
+        StageRequest::new(repository_id(1), Some(repository.head()), vec![original]).unwrap();
     let error = repository.mutator().stage(request).unwrap_err();
-    assert!(matches!(error, GitMutationError::WorktreePathChanged { .. }));
+    assert!(matches!(
+        error,
+        GitMutationError::WorktreePathChanged { .. }
+    ));
     assert!(repository
         .inspector()
         .inspect_diff(forge_git::diff::DiffScope::Staged)
@@ -209,8 +211,20 @@ fn unstage_removes_only_explicit_literal_path() {
     let outcome = GitRepositoryMutator::from_inspector(inspector)
         .unstage(request)
         .unwrap();
-    assert_eq!(status_entry(outcome.status(), b"tracked.txt").status().unwrap().index(), b'.');
-    assert_eq!(status_entry(outcome.status(), b"other.txt").status().unwrap().index(), b'M');
+    assert_eq!(
+        status_entry(outcome.status(), b"tracked.txt")
+            .status()
+            .unwrap()
+            .index(),
+        b'.'
+    );
+    assert_eq!(
+        status_entry(outcome.status(), b"other.txt")
+            .status()
+            .unwrap()
+            .index(),
+        b'M'
+    );
 }
 
 #[test]
@@ -250,8 +264,14 @@ fn confirmed_restore_discards_only_the_exact_selected_path() {
     )
     .unwrap();
     let outcome = repository.mutator().restore(request).unwrap();
-    assert_eq!(fs::read(repository.root.join("tracked.txt")).unwrap(), b"first\n");
-    assert_eq!(fs::read(repository.root.join("other.txt")).unwrap(), b"keep me\n");
+    assert_eq!(
+        fs::read(repository.root.join("tracked.txt")).unwrap(),
+        b"first\n"
+    );
+    assert_eq!(
+        fs::read(repository.root.join("other.txt")).unwrap(),
+        b"keep me\n"
+    );
     assert_eq!(outcome.operation(), GitMutationOperation::RestoreWorktree);
 }
 
@@ -272,7 +292,10 @@ fn stale_restore_expectation_preserves_changed_bytes() {
         repository.mutator().restore(request).unwrap_err(),
         GitMutationError::WorktreePathChanged { .. }
     ));
-    assert_eq!(fs::read(repository.root.join("tracked.txt")).unwrap(), b"newer edit\n");
+    assert_eq!(
+        fs::read(repository.root.join("tracked.txt")).unwrap(),
+        b"newer edit\n"
+    );
 }
 
 #[test]
@@ -460,7 +483,10 @@ fn dirty_linked_worktree_is_not_removed() {
         repository.mutator().remove_worktree(remove).unwrap_err(),
         GitMutationError::WorktreeNotClean(_)
     ));
-    assert_eq!(fs::read(target.join("untracked.txt")).unwrap(), b"do not lose\n");
+    assert_eq!(
+        fs::read(target.join("untracked.txt")).unwrap(),
+        b"do not lose\n"
+    );
 }
 
 #[test]
@@ -566,7 +592,10 @@ fn non_utf8_path_is_staged_without_lossy_conversion() {
         .status()
         .entries()
         .iter()
-        .find(|entry| entry.kind() == GitStatusEntryKind::Ordinary && entry.path().as_bytes() == raw.as_slice())
+        .find(|entry| {
+            entry.kind() == GitStatusEntryKind::Ordinary
+                && entry.path().as_bytes() == raw.as_slice()
+        })
         .unwrap();
     assert_eq!(entry.status().unwrap().index(), b'A');
 }

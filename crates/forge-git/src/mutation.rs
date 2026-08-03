@@ -16,9 +16,9 @@ use std::ffi::{OsStr, OsString};
 use std::fmt;
 use std::fs;
 use std::io;
-use std::path::{Path, PathBuf};
 #[cfg(unix)]
 use std::os::unix::ffi::OsStrExt;
+use std::path::{Path, PathBuf};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ExpectedWorktreeState {
     Missing,
@@ -54,7 +54,10 @@ pub struct GitCommitIdentity {
     email: String,
 }
 impl GitCommitIdentity {
-    pub fn new(name: impl Into<String>, email: impl Into<String>) -> Result<Self, GitMutationError> {
+    pub fn new(
+        name: impl Into<String>,
+        email: impl Into<String>,
+    ) -> Result<Self, GitMutationError> {
         let name = name.into();
         let email = email.into();
         validate_identity("name", &name)?;
@@ -89,7 +92,9 @@ impl GitBranchName {
             && !value.contains("@{")
             && !value.contains("//")
             && value != "@"
-            && value.split('/').all(|part| !part.starts_with('.') && !part.ends_with('.'))
+            && value
+                .split('/')
+                .all(|part| !part.starts_with('.') && !part.ends_with('.'))
             && value.bytes().all(|byte| {
                 byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'/')
             });
@@ -405,7 +410,10 @@ impl fmt::Display for GitMutationError {
                 "Git mutation repository identity mismatch: expected {expected}, got {actual}"
             ),
             Self::HeadChanged { expected, actual } => {
-                write!(formatter, "Git HEAD changed: expected {expected:?}, got {actual:?}")
+                write!(
+                    formatter,
+                    "Git HEAD changed: expected {expected:?}, got {actual:?}"
+                )
             }
             Self::StagedStateChanged { expected, actual } => write!(
                 formatter,
@@ -413,7 +421,11 @@ impl fmt::Display for GitMutationError {
             ),
             Self::EmptyStagedState => formatter.write_str("Git staged state is empty"),
             Self::DuplicatePath(path) => {
-                write!(formatter, "Git mutation path is duplicated: {}", path.display())
+                write!(
+                    formatter,
+                    "Git mutation path is duplicated: {}",
+                    path.display()
+                )
             }
             Self::WorktreePathChanged {
                 path,
@@ -428,10 +440,18 @@ impl fmt::Display for GitMutationError {
                 write!(formatter, "failed to inspect {}: {message}", path.display())
             }
             Self::WorktreePathNotFile(path) => {
-                write!(formatter, "Git mutation path is not a regular file: {}", path.display())
+                write!(
+                    formatter,
+                    "Git mutation path is not a regular file: {}",
+                    path.display()
+                )
             }
             Self::WorktreePathSymlink(path) => {
-                write!(formatter, "Git mutation path may not be a symlink: {}", path.display())
+                write!(
+                    formatter,
+                    "Git mutation path may not be a symlink: {}",
+                    path.display()
+                )
             }
             Self::InvalidCommitIdentity { field, message } => {
                 write!(formatter, "invalid Git commit identity {field}: {message}")
@@ -447,7 +467,11 @@ impl fmt::Display for GitMutationError {
                 path.display()
             ),
             Self::WorktreeTargetExists(path) => {
-                write!(formatter, "linked-worktree target already exists: {}", path.display())
+                write!(
+                    formatter,
+                    "linked-worktree target already exists: {}",
+                    path.display()
+                )
             }
             Self::WorktreeTargetParentInvalid(path) => write!(
                 formatter,
@@ -548,20 +572,14 @@ impl GitRepositoryMutator {
         let native = GitMutationRequest::stage(expectation_paths(&request.paths))?;
         self.run(GitMutationOperation::Stage, native)
     }
-    pub fn unstage(
-        &self,
-        request: UnstageRequest,
-    ) -> Result<GitMutationOutcome, GitMutationError> {
+    pub fn unstage(&self, request: UnstageRequest) -> Result<GitMutationOutcome, GitMutationError> {
         self.validate_repository(request.repository_id)?;
         self.validate_head(Some(&request.expected_head))?;
         self.validate_staged_hash(request.expected_staged_patch, false)?;
         let native = GitMutationRequest::unstage(relative_paths(&request.paths))?;
         self.run(GitMutationOperation::Unstage, native)
     }
-    pub fn restore(
-        &self,
-        request: RestoreRequest,
-    ) -> Result<GitMutationOutcome, GitMutationError> {
+    pub fn restore(&self, request: RestoreRequest) -> Result<GitMutationOutcome, GitMutationError> {
         self.validate_repository(request.repository_id)?;
         self.validate_head(Some(&request.expected_head))?;
         self.validate_expectations(&request.paths)?;
@@ -574,10 +592,7 @@ impl GitRepositoryMutator {
         )?;
         self.run(GitMutationOperation::RestoreWorktree, native)
     }
-    pub fn commit(
-        &self,
-        request: CommitRequest,
-    ) -> Result<GitMutationOutcome, GitMutationError> {
+    pub fn commit(&self, request: CommitRequest) -> Result<GitMutationOutcome, GitMutationError> {
         self.validate_repository(request.repository_id)?;
         self.validate_head(request.expected_head.as_ref())?;
         self.validate_staged_hash(request.expected_staged_patch, true)?;
@@ -688,25 +703,23 @@ impl GitRepositoryMutator {
                 target.to_path_buf(),
             ));
         };
-        let metadata = fs::symlink_metadata(parent).map_err(|error| {
-            GitMutationError::WorktreePathIo {
+        let metadata =
+            fs::symlink_metadata(parent).map_err(|error| GitMutationError::WorktreePathIo {
                 path: parent.to_path_buf(),
                 kind: error.kind(),
                 message: error.to_string(),
-            }
-        })?;
+            })?;
         if metadata.file_type().is_symlink() || !metadata.is_dir() {
             return Err(GitMutationError::WorktreeTargetParentInvalid(
                 parent.to_path_buf(),
             ));
         }
-        let canonical_parent = fs::canonicalize(parent).map_err(|error| {
-            GitMutationError::WorktreePathIo {
+        let canonical_parent =
+            fs::canonicalize(parent).map_err(|error| GitMutationError::WorktreePathIo {
                 path: parent.to_path_buf(),
                 kind: error.kind(),
                 message: error.to_string(),
-            }
-        })?;
+            })?;
         if canonical_parent != parent {
             return Err(GitMutationError::WorktreeTargetParentInvalid(
                 parent.to_path_buf(),
@@ -725,13 +738,12 @@ impl GitRepositoryMutator {
         target: &Path,
         expected_head: &GitObjectId,
     ) -> Result<PathBuf, GitMutationError> {
-        let canonical = fs::canonicalize(target).map_err(|error| {
-            GitMutationError::WorktreePathIo {
+        let canonical =
+            fs::canonicalize(target).map_err(|error| GitMutationError::WorktreePathIo {
                 path: target.to_path_buf(),
                 kind: error.kind(),
                 message: error.to_string(),
-            }
-        })?;
+            })?;
         if canonical == self.root() {
             return Err(GitMutationError::WorktreeIsPrimary(canonical));
         }
@@ -752,9 +764,11 @@ impl GitRepositoryMutator {
         }
         let linked = GitRepositoryInspector::open(self.repository_id(), &canonical)?;
         let status = linked.inspect_status()?;
-        let actual_head = status.head().revision().cloned().ok_or_else(|| {
-            GitMutationError::WorktreeNotClean(canonical.clone())
-        })?;
+        let actual_head = status
+            .head()
+            .revision()
+            .cloned()
+            .ok_or_else(|| GitMutationError::WorktreeNotClean(canonical.clone()))?;
         if &actual_head != expected_head {
             return Err(GitMutationError::WorktreeHeadChanged {
                 expected: expected_head.clone(),
@@ -778,12 +792,14 @@ impl GitRepositoryMutator {
                 operation, output,
             )));
         }
-        let status = self.inspector.inspect_status().map_err(|source| {
-            GitMutationError::AppliedButInspectionFailed { operation, source }
-        })?;
-        let worktrees = self.inspector.inspect_worktrees().map_err(|source| {
-            GitMutationError::AppliedButInspectionFailed { operation, source }
-        })?;
+        let status = self
+            .inspector
+            .inspect_status()
+            .map_err(|source| GitMutationError::AppliedButInspectionFailed { operation, source })?;
+        let worktrees = self
+            .inspector
+            .inspect_worktrees()
+            .map_err(|source| GitMutationError::AppliedButInspectionFailed { operation, source })?;
         Ok(GitMutationOutcome {
             repository_id: self.repository_id(),
             operation,
@@ -804,7 +820,9 @@ pub fn staged_patch_identity(
         staged.patch_bytes(),
     ))
 }
-pub fn expected_file_state(path: impl AsRef<Path>) -> Result<ExpectedWorktreeState, GitMutationError> {
+pub fn expected_file_state(
+    path: impl AsRef<Path>,
+) -> Result<ExpectedWorktreeState, GitMutationError> {
     inspect_file_state(path.as_ref())
 }
 fn native_failure(
