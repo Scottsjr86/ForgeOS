@@ -7,6 +7,8 @@ Product authority: `docs/High_Level.md`
 Fresh-session authority: `docs/ForgeOS_header.md`
 Future execution authority: `docs/workflow/WORKFLOW_AUTHORITY.md`
 Future router authority: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
+Mandatory Nyx wiring map: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
+Nyx cross-repo closure contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 
 ---
 
@@ -51,6 +53,18 @@ will still begin only from an `AVAILABLE` node whose direct prerequisites are
 closed.
 
 ---
+
+## 0.1 Nyx node preflight law
+
+Every Nyx or agent node in this tree inherits the mandatory preflight in
+`FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`. Before implementation, the active
+packet must identify the exact Nyx surface, current implementation state, live
+Nyx source files checked, owning repository, and forbidden Forge substitute.
+
+No `FORGEOS-V1-NYX-*` or `FORGEOS-V1-AGENT-*` node may close from a copied DTO,
+Forge fixture, mock server, direct provider call, or Forge-owned replacement for
+Nyx sessions, context, tools, policy, checkpoints, memory, runtime, agents, or
+run evidence.
 
 ## 1. V1 completion law
 

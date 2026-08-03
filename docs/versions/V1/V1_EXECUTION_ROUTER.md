@@ -10,6 +10,7 @@ Permanent laws: `docs/GOVERNING_LAWS.md`
 Mission authority: `docs/MISSION_FORGEOS.md`
 Fresh-session authority: `docs/ForgeOS_header.md`
 Future closure authority: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
+Nyx wiring cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
 Nyx cross-repo closure contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 Nyx cross-repo machine map: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json`
 
@@ -57,6 +58,33 @@ visually attractive, easy to implement, mentioned by a model, or requested
 without closed prerequisites.
 
 ---
+
+## 0.1 Nyx-facing routing preflight
+
+Before this router may authorize a Nyx-facing source edit, the execution packet
+must contain:
+
+```text
+required_reading:
+  - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
+nyx_wiring_review: COMPLETE
+nyx_surface_touched: <exact route, DTO, process seam, or adapter>
+nyx_implementation_state: CURRENTLY_IMPLEMENTED|CONTRACT_ONLY|PLANNED|MISSING
+nyx_source_files_checked:
+  - <current Nyx source paths>
+nyx_target_repository: Forge_OS_V1|Nyx_Server
+nyx_forbidden_substitute_confirmed: true
+```
+
+This applies to every `FORGEOS-V1-NYX-*`, every `FORGEOS-V1-AGENT-*`, every
+`NYX-GATE-*`, `crates/forge-nyx-client`, Nyx service supervision, and any UI or
+record derived from Nyx. Missing fields mean the packet is incomplete and source
+edits stop.
+
+The wiring cheat sheet is a mandatory integration map, not a substitute for
+current Nyx source. Contract changes require the current Nyx repository and a
+Nyx-owned patch first.
 
 ## 1. Non-authority
 
@@ -813,6 +841,20 @@ required_nyx_skills:
   - API-SYS-047
 minimum_nyx_state: BANKED
 minimum_nyx_proof: PROOF_SYSTEM
+required_reading:
+  - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
+nyx_wiring_review: REQUIRED_BEFORE_SOURCE_EDITS
+nyx_surface_touched: canonical health and capability discovery plus Forge client adapter
+nyx_implementation_state: MISSING_CANONICAL_SHARED_CONTRACT
+nyx_source_files_checked:
+  - Nyx_Server/crates/nyx_server/src/main.rs
+  - Nyx_Server/crates/nyx_server/src/http/mod.rs
+  - Nyx_Server/crates/nyx_server/src/http/nyx_diag.rs
+  - Nyx_Server/crates/nyx_protocol/src/openai.rs
+  - Nyx_Server/crates/nyx_protocol/src/phase1.rs
+nyx_target_repository: Nyx_Server_FIRST_THEN_Forge_OS_V1_ADAPTER
+nyx_forbidden_substitute_confirmed: true
 closure_posture: CLIENT_IMPLEMENTATION_ALLOWED_FIXTURE_ONLY_CLOSURE_FORBIDDEN_UNTIL_REAL_NYX_GATE_PASSES
 originating_path_or_probe: >
   Exercise the current Forge client fixtures, then probe a real Nyx_Server process
@@ -831,6 +873,7 @@ allowed_paths:
   - crates/forge-nyx-client/tests/nyx_health.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
+  - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md

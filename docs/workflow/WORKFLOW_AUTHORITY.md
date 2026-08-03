@@ -7,6 +7,7 @@ Canonical V1 worksheet: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 Fresh-session header: `docs/ForgeOS_header.md`
 Current program mode: `SLICE`
 Current release target: `FORGEOS_V1_FIRST_ARMOR`
+Nyx wiring cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
 Nyx cross-repo contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 
 ---
@@ -38,6 +39,35 @@ The workflow is not a flat roadmap, phase ladder, checklist queue, or permission
 for a model to pick whichever task looks convenient.
 
 ---
+
+## 0.1 Mandatory Nyx wiring preflight
+
+Every slice is Nyx-facing when any of the following is true:
+
+```text
+its skill ID begins FORGEOS-V1-NYX- or FORGEOS-V1-AGENT-
+it carries a NYX-GATE-* marker
+it touches crates/forge-nyx-client
+it configures or supervises the nyx_server process
+it consumes a Nyx endpoint, DTO, header, error, run, tool, policy, checkpoint,
+context, memory, model, runtime, or capability claim
+it presents Nyx-derived state in Forge World
+```
+
+Before source edits, the patching model must read:
+
+```text
+docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
+```
+
+and report the exact preflight receipt defined by the wiring cheat sheet. It
+must inspect the current Nyx source files that own the surface. If the current
+Nyx repository is absent, the model may not invent or alter a Nyx public
+contract, claim real compatibility, or close a Nyx-gated Forge skill.
+
+Failure to perform this preflight is a wrong-route stop, not permission to build
+a local substitute.
 
 ## 1. Authority order
 
@@ -92,6 +122,8 @@ RETURN_PATH=CLOSE_ONLY_FORGEOS-V1-NYX-100_THEN_UNLOCK_NYX-101_AGENT-100_AND_SESS
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
+NYX_WIRING_CHEAT_SHEET_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
+NYX_WIRING_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 ```
 
 Persistent project registry and workspace restoration are closed. `FORGEOS-V1-NYX-100`

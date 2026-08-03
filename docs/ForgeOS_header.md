@@ -11,6 +11,7 @@ V1 skill tree: `docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md`
 V1 execution router: `docs/versions/V1/V1_EXECUTION_ROUTER.md`
 V1 closure experiment: `docs/versions/V1/V1_CLOSURE_EXPERIMENT.md`
 V1 status mirror: `docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md`
+Nyx wiring cheat sheet: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
 Nyx cross-repo closure contract: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 Nyx cross-repo machine map: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json`
 Active release target: `FORGEOS_V1_FIRST_ARMOR`
@@ -336,6 +337,8 @@ CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
 ARCHIVE_FILENAME_AND_HASH_POLICY=ORIENTATION_ONLY_NOT_A_WORKFLOW_GATE
 ACTIVE_NYX_ROLE=AI_MODEL_HOST_AND_BOUNDED_AGENT_RUNTIME
+NYX_WIRING_CHEAT_SHEET_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
+NYX_WIRING_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 NYX_SOURCE_IN_FORGEOS_ARCHIVE=NO_UNLESS_EXPLICITLY_VENDOR_LOCKED
 REPOSITORY_SWITCH_NOTICE=REQUIRED
 PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
@@ -363,6 +366,11 @@ V4 earns the full spatial developer operating system.
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
 `FORGEOS-V1-NYX-100` is the only active source skill.
+
+Any Nyx-facing slice must first read and report the mandatory preflight from
+`docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`. A missing wiring
+receipt stops source edits. The model must inspect the current Nyx source for the
+exact route, DTO, process seam, and implementation state before changing ForgeOS.
 
 This slice may establish only the ForgeOS-side Nyx client/adapter and the shared
 Nyx-owned health and capability contract. The existing private binary fixture is not
