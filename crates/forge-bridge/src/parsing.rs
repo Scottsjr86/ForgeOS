@@ -227,7 +227,6 @@ impl RustSyntaxSnapshot {
 
 /// Real Rust parser state for one source document.
 pub struct RustSyntaxParser {
-    parser: Parser,
     tree: Tree,
     snapshot: RustSyntaxSnapshot,
 }
@@ -236,11 +235,7 @@ impl RustSyntaxParser {
     /// Creates a parser and performs the first full parse.
     pub fn parse(source: &[u8]) -> Result<Self, RustParseError> {
         validate_utf8(source)?;
-        let mut parser = Parser::new();
-        let language: tree_sitter::Language = tree_sitter_rust::LANGUAGE.into();
-        parser
-            .set_language(&language)
-            .map_err(|error| RustParseError::Language(error.to_string()))?;
+        let mut parser = configured_parser()?;
         let tree = parser
             .parse(source, None)
             .ok_or(RustParseError::Cancelled)?;
@@ -258,11 +253,7 @@ impl RustSyntaxParser {
             ParseMode::Initial,
             vec![full_range],
         );
-        Ok(Self {
-            parser,
-            tree,
-            snapshot,
-        })
+        Ok(Self { tree, snapshot })
     }
 
     pub fn snapshot(&self) -> &RustSyntaxSnapshot {
@@ -274,11 +265,11 @@ impl RustSyntaxParser {
     /// The currently committed tree is not mutated unless the replacement parse
     /// succeeds. A stale or mismatched old source therefore cannot poison parser
     /// state.
-    pub fn update(
-        &mut self,
+    pub fn prepare_update(
+        &self,
         old_source: &[u8],
         new_source: &[u8],
-    ) -> Result<&RustSyntaxSnapshot, RustParseError> {
+    ) -> Result<Self, RustParseError> {
         validate_utf8(old_source)?;
         validate_utf8(new_source)?;
         let expected_hash = self.snapshot.source_hash();
@@ -298,8 +289,8 @@ impl RustSyntaxParser {
         let edit = incremental_edit(old_source, new_source);
         let mut edited_tree = self.tree.clone();
         edited_tree.edit(&edit);
-        let new_tree = self
-            .parser
+        let mut parser = configured_parser()?;
+        let new_tree = parser
             .parse(new_source, Some(&edited_tree))
             .ok_or(RustParseError::Cancelled)?;
         let changed_ranges = edited_tree
@@ -313,10 +304,29 @@ impl RustSyntaxParser {
             ParseMode::Incremental,
             changed_ranges,
         );
-        self.tree = new_tree;
-        self.snapshot = snapshot;
+        Ok(Self {
+            tree: new_tree,
+            snapshot,
+        })
+    }
+
+    pub fn update(
+        &mut self,
+        old_source: &[u8],
+        new_source: &[u8],
+    ) -> Result<&RustSyntaxSnapshot, RustParseError> {
+        *self = self.prepare_update(old_source, new_source)?;
         Ok(&self.snapshot)
     }
+}
+
+fn configured_parser() -> Result<Parser, RustParseError> {
+    let mut parser = Parser::new();
+    let language: tree_sitter::Language = tree_sitter_rust::LANGUAGE.into();
+    parser
+        .set_language(&language)
+        .map_err(|error| RustParseError::Language(error.to_string()))?;
+    Ok(parser)
 }
 
 /// Exact reason Rust parsing could not produce a current snapshot.

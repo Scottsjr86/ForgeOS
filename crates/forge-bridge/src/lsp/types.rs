@@ -84,7 +84,7 @@ impl LspDocument {
 }
 
 /// One LSP source position.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct LspPosition {
     line: u32,
     character: u32,
@@ -105,7 +105,7 @@ impl LspPosition {
 }
 
 /// One LSP source range.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct LspRange {
     start: LspPosition,
     end: LspPosition,
@@ -203,6 +203,7 @@ pub struct RustAnalyzerCapabilities {
     pub(super) hover: bool,
     pub(super) definition: bool,
     pub(super) completion: bool,
+    pub(super) workspace_symbol: bool,
 }
 
 impl RustAnalyzerCapabilities {
@@ -231,6 +232,10 @@ impl RustAnalyzerCapabilities {
 
     pub const fn completion(self) -> bool {
         self.completion
+    }
+
+    pub const fn workspace_symbol(self) -> bool {
+        self.workspace_symbol
     }
 }
 
@@ -388,6 +393,8 @@ pub enum LspError {
     InvalidLanguageId,
     InvalidMethod,
     InvalidDocumentUri,
+    ResultOutsideWorkspace(String),
+    InvalidSymbolQuery,
     DocumentPositionOverflow,
     DocumentAlreadyOpen,
     DocumentNotOpen,
@@ -461,6 +468,15 @@ impl fmt::Display for LspError {
             Self::InvalidLanguageId => formatter.write_str("invalid LSP language ID"),
             Self::InvalidMethod => formatter.write_str("invalid JSON-RPC method"),
             Self::InvalidDocumentUri => formatter.write_str("invalid LSP document URI"),
+            Self::ResultOutsideWorkspace(uri) => {
+                write!(
+                    formatter,
+                    "LSP result targets a path outside the workspace: {uri}"
+                )
+            }
+            Self::InvalidSymbolQuery => {
+                formatter.write_str("workspace symbol query contains a forbidden NUL byte")
+            }
             Self::DocumentPositionOverflow => {
                 formatter.write_str("LSP document position exceeds the V1 integer limit")
             }

@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200]
 AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-EDITOR-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-EDITOR-200
+ACTIVE_SKILLS=[FORGEOS-V1-EDITOR-201]
+ACTIVE_BATON_OWNER=FORGEOS-V1-EDITOR-201
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=FILE_AND_EDITOR
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_MULTI_BUFFER_ATOMIC_SAVE_CONFLICT_AND_DISCARD_COMPOSITION
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_EXACT_GENERATION_RUST_SYNTAX_DIAGNOSTICS_DEFINITION_COMPLETION_AND_SYMBOL_INTEGRATION
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -145,18 +145,19 @@ CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 
 All Tier-0 foundations, all three structural guards, project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
-Rust Analyzer adapter, native PTY support, immutable registered-command policy,
-deterministic session lifecycle, native Git inspection and mutation, stable
-all-or-nothing patch application, persistent project registry/workspace restoration,
-Nyx public health/version discovery, source-backed Forge World projection, and the
-workspace recovery primitive and repository browsing/search are closed.
-`FORGEOS-V1-EDITOR-200` is the only active source skill. Dedicated session bootstrap,
-managed Nyx lifecycle, managed terminal sessions, integrated Git inspection, Nyx
-checkpoint transport, and remote-agent records remain available but inactive. The
-active skill may only compose editor-owned buffer state with project-owned exact file
-revisions and atomic writes. It may not add language intelligence, terminal or command
-execution, Git behavior, Nyx behavior, rendered editor UI, autosave, or background
-indexing.
+Rust Analyzer process/JSON-RPC foundation, native PTY support, immutable
+registered-command policy, deterministic session lifecycle, native Git inspection
+and mutation, stable patch application, persistent project registry/workspace
+restoration, Nyx public health/version discovery, source-backed Forge World
+projection, recovery, repository browsing/search, and multi-buffer atomic save are
+closed. `FORGEOS-V1-EDITOR-201` is the only active source skill. Dedicated session
+bootstrap, managed Nyx lifecycle, managed terminal sessions, integrated Git
+inspection, Nyx checkpoint transport, and remote-agent records remain available but
+inactive. The active skill may only bind Tree-sitter and native Rust Analyzer results
+to exact editor/project generations, decode definition/completion/workspace-symbol
+responses, reject stale or out-of-workspace results, and expose explicit degraded
+language state. It may not mutate files, execute commands, inspect Git, call Nyx,
+render editor UI, or synthesize language results.
 
 ## 3. Current-source intake law
 
@@ -828,105 +829,113 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Multi-buffer editing and atomic save are active.
+Rust syntax and language-intelligence integration are active.
 
 ```yaml
-skill_id: FORGEOS-V1-EDITOR-200
+skill_id: FORGEOS-V1-EDITOR-201
 state: ACTIVE
 lane: FILE_AND_EDITOR
-owning_subsystem: forge-editor state plus forge-app composition over forge-project file authority
+owning_subsystem: forge-editor generation state over forge-bridge Tree-sitter and Rust Analyzer adapters
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_41.tar sha256 3c4e4d22a11a82558cde12c1b88ab7985d5b515eb0b9c6510b3af1d1b98ab67b
+source_revision: Forge_OS_V1_base_42.tar sha256 8f80a90b5b0ae876a6d7c346621502d0de72163d5402613fc88ee24e75c6535f
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-EDITOR-100
-  - FORGEOS-V1-FILE-200
+  - FORGEOS-V1-EDITOR-200
+  - FORGEOS-V1-PARSER-100
+  - FORGEOS-V1-LSP-100
 originating_path_or_probe: >
-  Open two repository files, edit both independently, atomically save one while the
-  other remains dirty, create and save one new file, force one external-change
-  conflict, reject a stale discard confirmation, and explicitly discard/reopen the
-  current external bytes.
+  Open a Rust buffer, retain current Tree-sitter syntax, receive one deliberate native
+  Rust Analyzer diagnostic, navigate one definition, request basic completion, search
+  one workspace symbol, reject stale and out-of-workspace results, then prove syntax
+  and editing remain usable when Rust Analyzer cannot start.
 first_blocker: >
-  ForgeOS has an editor buffer state machine and a project-owned atomic file adapter,
-  but no product composition route retains exact file object preconditions per buffer,
-  maps save outcomes back to the matching generation, detects external replacement, or
-  requires generation-bound confirmation before discard and reopen.
-active_slice: FORGEOS-V1-EDITOR-200-SLICE-001
+  ForgeOS has versioned editor buffers, incremental Tree-sitter state, and an initialized
+  Rust Analyzer document adapter, but no atomic generation binding across those states,
+  no typed definition/completion/workspace-symbol result contracts, and no explicit
+  degraded-language route that preserves current syntax after server failure.
+active_slice: FORGEOS-V1-EDITOR-201-SLICE-001
 allowed_paths:
-  - crates/forge-editor/src/buffers.rs
-  - crates/forge-editor/tests/buffer_state.rs
-  - crates/forge-app/src/composition/mod.rs
-  - crates/forge-app/src/composition/editor_workspace.rs
-  - crates/forge-app/tests/editor_workspace.rs
+  - crates/forge-bridge/src/parsing.rs
+  - crates/forge-bridge/src/lsp/client.rs
+  - crates/forge-bridge/src/lsp/features.rs
+  - crates/forge-bridge/src/lsp/mod.rs
+  - crates/forge-bridge/src/lsp/types.rs
+  - crates/forge-editor/src/intelligence.rs
+  - crates/forge-editor/src/language.rs
+  - crates/forge-editor/src/lib.rs
+  - crates/forge-editor/src/parsing.rs
+  - crates/forge-editor/tests/language_server.rs
+  - crates/forge-editor/tests/parser_state.rs
+  - crates/forge-editor/tests/rust_features.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-FILE-200/**
   - docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/**
+  - docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/**
 forbidden_paths_and_behavior:
-  - editor-owned filesystem access or project-owned buffer state
-  - save without the exact file object, content hash, length, and editor generation
-  - silent overwrite after external change or stale discard confirmation
-  - truncating, partially writing, or normalizing unrelated bytes
-  - autosave, background indexing, language navigation, terminal, Git, Nyx, or World UI
+  - synthetic diagnostics, definitions, completion items, or symbols
+  - accepting results from another project, repository, path, document version, or workspace
+  - language-server ownership of editor bytes, dirty state, file writes, or project truth
+  - parser failure or language-server failure making plain buffer editing unavailable
+  - terminal, command, Git, Nyx, Forge World UI, formatting, refactoring, or indexing behavior
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
-  - forge_editor::buffers::DiscardConfirmation
-  - forge_editor::buffers::BufferRegistry::remove_discarding
-  - forge_app::composition::editor_workspace::EditorWorkspace
-  - forge_app::composition::editor_workspace::EditorSaveResult
-  - forge_app::composition::editor_workspace::EditorWorkspaceError
+  - forge_bridge::lsp::RustAnalyzerClient
+  - forge_bridge::lsp::DefinitionResult
+  - forge_bridge::lsp::CompletionResult
+  - forge_bridge::lsp::WorkspaceSymbolResult
+  - forge_editor::intelligence::RustBufferIntelligence
+  - forge_editor::intelligence::RustIntelligenceStatus
+  - forge_editor::parsing::PendingBufferParse
 required_commands:
   - python3 scripts/run_ci.py
+  - cargo test --locked -p forge-editor --test rust_features real_rust_analyzer_proves_diagnostics_definition_completion_and_symbols -- --ignored --nocapture
 regression_commands: []
 validation_execution_policy: >
-  Canonical CI is behavior-only and runs through scripts/run_ci.py. Documentation,
-  Git state, and formatting are forbidden CI gates. When Rust is unavailable in the
-  assistant environment, prepare and apply-check the patch and set
-  OPERATOR_VALIDATION_PENDING without blocking source implementation.
+  Canonical CI is behavior-only and runs through scripts/run_ci.py. The ignored real
+  Rust Analyzer witness must also run on the operator host. Documentation, Git state,
+  and formatting are forbidden CI gates. When Rust is unavailable in the assistant
+  environment, prepare and apply-check the patch and set OPERATOR_VALIDATION_PENDING.
 pass_edge: >
-  Multiple buffers retain independent bytes and dirty state; exact file revision
-  preconditions drive atomic create and replace; a successful save updates only the
-  matching buffer generation; external changes become explicit conflicts and preserve
-  external bytes; destructive close is blocked without confirmation; stale discard
-  confirmation fails; explicit discard/reopen loads current disk bytes; unedited files
-  remain unchanged; all structural guards and behavior tests pass.
+  Tree-sitter and Rust Analyzer target the exact same editor generation; diagnostics,
+  definition, completion, and workspace-symbol results come from the native server;
+  stale, cross-project, and out-of-workspace results fail closed; server failure leaves
+  current syntax and editing usable with explicit degraded status; later resync targets
+  the current buffer; CI and the real Rust Analyzer witness both pass.
 block_edge: >
-  A save bypasses project file authority, loses the exact object precondition, marks a
-  newer edit clean, overwrites external bytes, accepts stale discard confirmation,
-  mutates an unrelated file or buffer, exceeds source-size policy, regresses a
-  structural guard, or CI fails.
+  Any language result is synthesized, accepted for the wrong generation or workspace,
+  parser and LSP state advance ambiguously, server failure blocks editing, a new effectful
+  authority appears, source-size policy is exceeded, a structural guard regresses, CI
+  fails, or the real Rust Analyzer witness fails.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and returns the exact CI command summary.
-  The buffer_state and editor_workspace suites must pass with no structural guard
-  regression.
+  The user runs python3 scripts/run_ci.py and the ignored real Rust Analyzer witness,
+  then returns both exact results. The deliberate error, definition, completion, symbol,
+  stale-result, boundary, and degraded-server paths must pass.
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-EDITOR-200. Unlock and reevaluate
-  FORGEOS-V1-EDITOR-201 plus the existing available frontier; do not activate a Nyx
-  owned gate without its separate cross-repository proof.
+  After both operator commands pass, close only FORGEOS-V1-EDITOR-201 and reevaluate the
+  existing available frontier. CODE-300 remains locked until PROJECT-300 closes.
 parallel_compatibility: NONE_IN_FILE_AND_EDITOR_LANE
 ```
 
 This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
-`FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`,
-`FORGEOS-V1-NYX-101`, and `FORGEOS-V1-AGENT-100` remain available but inactive.
+`FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`, `FORGEOS-V1-NYX-101`, and
+`FORGEOS-V1-AGENT-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for multi-buffer editing
+## 17. Direct unlock handling for Rust intelligence
 
-`FORGEOS-V1-EDITOR-200` may close only after behavior-only CI proves independent
-multi-buffer dirty state, atomic save through project file authority, exact revision
-conflict detection, new-file creation, clean close, generation-bound destructive
-discard, explicit reopen, and preservation of unedited repository bytes.
+`FORGEOS-V1-EDITOR-201` may close only after behavior-only CI and the real Rust
+Analyzer witness prove current syntax, deliberate native diagnostics, definition
+navigation, basic completion, workspace symbol search, stale-result rejection,
+out-of-workspace rejection, and explicit degraded behavior when the server is down.
 
-Closing `FORGEOS-V1-EDITOR-200` directly unlocks `FORGEOS-V1-EDITOR-201`.
-`FORGEOS-V1-CODE-300` remains locked until its other direct prerequisites close.
-Reevaluate only those direct dependents and the current available frontier after
-closure.
+Closing `FORGEOS-V1-EDITOR-201` does not directly unlock another Tier-2 skill.
+`FORGEOS-V1-CODE-300` remains locked until `FORGEOS-V1-PROJECT-300` also closes.
+Reevaluate the existing available frontier after closure.
 
 ## 18. Final closure routing
 

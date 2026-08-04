@@ -875,8 +875,8 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-app` composition over `forge-project` file authority
 - **Prerequisites:** `FORGEOS-V1-EDITOR-100`, `FORGEOS-V1-FILE-200`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-EDITOR-200-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 65 suites, 303 tests passed, 0 failed, and all three structural guards green.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/USER_GUIDE_SOURCE.md`
@@ -893,7 +893,11 @@ never closes the node.
 - **Owner:** `forge-editor`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-EDITOR-200`, `FORGEOS-V1-PARSER-100`,
   `FORGEOS-V1-LSP-100`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-EDITOR-201-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/USER_GUIDE_SOURCE.md`
 - **Must be true:** Tree-sitter and Rust Analyzer provide syntax, diagnostics,
   definition navigation, symbol search, and basic completion for the active project.
 - **Must not be true:** ForgeOS may not synthesize diagnostics or silently show stale
@@ -1563,7 +1567,7 @@ deterministic session lifecycle, read-only Git inspection, typed Git mutation an
 linked-worktree control, stable all-or-nothing patch application, persistent project
 registry/workspace restoration, Nyx public health discovery, Forge World source
 projection, crash recovery primitives, and repository browsing/search are closed.
-Multi-buffer editing and atomic save are active.
+Rust syntax and language-intelligence integration are active.
 
 Current frontier:
 
@@ -1595,10 +1599,11 @@ CLOSED
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-RECOVERY-100
   FORGEOS-V1-FILE-200
+  FORGEOS-V1-EDITOR-200
 
-ACTIVE_SKILL=FORGEOS-V1-EDITOR-200
-ACTIVE_BLOCKER=FORGEOS_HAS_BUFFER_STATE_AND_ATOMIC_FILE_WRITES_BUT_NO_PRODUCT_ADAPTER_THAT_BINDS_EXACT_FILE_REVISIONS_TO_MULTI_BUFFER_SAVE_CONFLICT_DISCARD_AND_REOPEN
-ACTIVE_SLICE=FORGEOS-V1-EDITOR-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-EDITOR-201
+ACTIVE_BLOCKER=FORGEOS_HAS_VERSIONED_BUFFER_PARSER_AND_RUST_ANALYZER_DOCUMENT_PRIMITIVES_BUT_NO_ATOMIC_GENERATION_BINDING_OR_TYPED_DEFINITION_COMPLETION_AND_WORKSPACE_SYMBOL_RESULTS
+ACTIVE_SLICE=FORGEOS-V1-EDITOR-201-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
@@ -1612,7 +1617,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-EDITOR-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-EDITOR-201` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

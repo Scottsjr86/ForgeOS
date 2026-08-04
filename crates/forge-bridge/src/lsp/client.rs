@@ -1,3 +1,7 @@
+use super::features::{
+    location_sort_key, CompletionItem, CompletionResult, DefinitionResult, LspLocation,
+    WorkspaceSymbol, WorkspaceSymbolResult,
+};
 use super::protocol::LspConnection;
 use super::types::{
     DocumentVersion, LspDiagnostic, LspDocument, LspError, LspPosition, LspProtocolError, LspRange,
@@ -213,6 +217,101 @@ impl RustAnalyzerClient {
         )
     }
 
+    pub fn request_definition(
+        &mut self,
+        document: &LspDocument,
+        position: LspPosition,
+    ) -> Result<DefinitionResult, LspError> {
+        if !self.capabilities.definition() {
+            return Err(LspError::UnsupportedCapability("textDocument/definition"));
+        }
+        self.validate_current_document(document)?;
+        let uri = document_uri(self.config.workspace_root(), document.relative_path())?;
+        let result = self.connection.request(
+            "textDocument/definition",
+            text_document_position_params(&uri, position),
+            self.config.request_timeout(),
+        )?;
+        let mut locations = parse_definition_locations(self.config.workspace_root(), &result)?;
+        locations.sort_by(|left, right| location_sort_key(left).cmp(&location_sort_key(right)));
+        locations.dedup();
+        Ok(DefinitionResult {
+            project_id: document.project_id(),
+            repository_id: document.repository_id(),
+            source_path: document.relative_path().clone(),
+            source_version: document.version(),
+            locations,
+        })
+    }
+
+    pub fn request_completion(
+        &mut self,
+        document: &LspDocument,
+        position: LspPosition,
+    ) -> Result<CompletionResult, LspError> {
+        if !self.capabilities.completion() {
+            return Err(LspError::UnsupportedCapability("textDocument/completion"));
+        }
+        self.validate_current_document(document)?;
+        let uri = document_uri(self.config.workspace_root(), document.relative_path())?;
+        let result = self.connection.request(
+            "textDocument/completion",
+            text_document_position_params(&uri, position),
+            self.config.request_timeout(),
+        )?;
+        let (is_incomplete, values) = completion_values(&result)?;
+        let mut items = values
+            .iter()
+            .map(parse_completion_item)
+            .collect::<Result<Vec<_>, _>>()?;
+        items.sort_by(|left, right| completion_sort_key(left).cmp(&completion_sort_key(right)));
+        Ok(CompletionResult {
+            project_id: document.project_id(),
+            repository_id: document.repository_id(),
+            source_path: document.relative_path().clone(),
+            source_version: document.version(),
+            is_incomplete,
+            items,
+        })
+    }
+
+    pub fn request_workspace_symbols(
+        &mut self,
+        query: impl Into<String>,
+    ) -> Result<WorkspaceSymbolResult, LspError> {
+        if !self.capabilities.workspace_symbol() {
+            return Err(LspError::UnsupportedCapability("workspace/symbol"));
+        }
+        let query = query.into();
+        if query.as_bytes().contains(&0) {
+            return Err(LspError::InvalidSymbolQuery);
+        }
+        let result = self.connection.request(
+            "workspace/symbol",
+            json!({"query": &query}),
+            self.config.request_timeout(),
+        )?;
+        let values = match &result {
+            Value::Null => &[][..],
+            Value::Array(values) => values.as_slice(),
+            _ => return Err(LspError::Protocol(LspProtocolError::InvalidMessageShape)),
+        };
+        let mut symbols = values
+            .iter()
+            .map(|value| parse_workspace_symbol(self.config.workspace_root(), value))
+            .collect::<Result<Vec<_>, _>>()?;
+        symbols.sort_by(|left, right| {
+            workspace_symbol_sort_key(left).cmp(&workspace_symbol_sort_key(right))
+        });
+        Ok(WorkspaceSymbolResult {
+            project_id: self.config.project_id(),
+            repository_id: self.config.repository_id(),
+            client_generation: self.generation,
+            query,
+            symbols,
+        })
+    }
+
     pub fn restart(&mut self, process_id: ProcessId) -> Result<(), LspError> {
         if process_id == self.config.process_id() {
             return Err(LspError::ProcessIdentityReused(process_id));
@@ -290,9 +389,15 @@ fn initialize(
             "capabilities": {
                 "textDocument": {
                     "publishDiagnostics": {"versionSupport": true},
-                    "synchronization": {"didSave": false, "dynamicRegistration": false}
+                    "synchronization": {"didSave": false, "dynamicRegistration": false},
+                    "definition": {"dynamicRegistration": false, "linkSupport": true},
+                    "completion": {"dynamicRegistration": false}
                 },
-                "workspace": {"configuration": true, "workspaceFolders": true}
+                "workspace": {
+                    "configuration": true,
+                    "workspaceFolders": true,
+                    "symbol": {"dynamicRegistration": false}
+                }
             },
             "workspaceFolders": [{"uri": root_uri, "name": "ForgeOS project"}],
         }),
@@ -328,6 +433,7 @@ fn parse_capabilities(result: &Value) -> Result<RustAnalyzerCapabilities, LspErr
         completion: capabilities
             .get("completionProvider")
             .is_some_and(|value| !value.is_null() && value != &Value::Bool(false)),
+        workspace_symbol: capability_enabled(capabilities.get("workspaceSymbolProvider")),
     })
 }
 
@@ -337,6 +443,145 @@ fn capability_enabled(value: Option<&Value>) -> bool {
         Value::Null => false,
         _ => true,
     })
+}
+
+fn text_document_position_params(uri: &str, position: LspPosition) -> Value {
+    json!({
+        "textDocument": {"uri": uri},
+        "position": {"line": position.line(), "character": position.character()},
+    })
+}
+
+fn parse_definition_locations(root: &Path, value: &Value) -> Result<Vec<LspLocation>, LspError> {
+    match value {
+        Value::Null => Ok(Vec::new()),
+        Value::Array(values) => values
+            .iter()
+            .map(|value| parse_location(root, value))
+            .collect(),
+        Value::Object(_) => Ok(vec![parse_location(root, value)?]),
+        _ => Err(LspError::Protocol(LspProtocolError::InvalidMessageShape)),
+    }
+}
+
+fn parse_location(root: &Path, value: &Value) -> Result<LspLocation, LspError> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?;
+    let (uri, range) = if let Some(uri) = object.get("uri") {
+        (
+            required_str(Some(uri))?,
+            object
+                .get("range")
+                .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?,
+        )
+    } else {
+        (
+            required_str(object.get("targetUri"))?,
+            object
+                .get("targetSelectionRange")
+                .or_else(|| object.get("targetRange"))
+                .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?,
+        )
+    };
+    Ok(LspLocation::new(
+        relative_path_from_uri(root, uri)?,
+        parse_range(range)?,
+    ))
+}
+
+fn completion_values(value: &Value) -> Result<(bool, &[Value]), LspError> {
+    match value {
+        Value::Null => Ok((false, &[])),
+        Value::Array(values) => Ok((false, values)),
+        Value::Object(object) => {
+            let is_incomplete = object
+                .get("isIncomplete")
+                .and_then(Value::as_bool)
+                .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?;
+            let items = object
+                .get("items")
+                .and_then(Value::as_array)
+                .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?;
+            Ok((is_incomplete, items))
+        }
+        _ => Err(LspError::Protocol(LspProtocolError::InvalidMessageShape)),
+    }
+}
+
+fn parse_completion_item(value: &Value) -> Result<CompletionItem, LspError> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?;
+    let label = required_str(object.get("label"))?.to_owned();
+    let detail = object
+        .get("detail")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    let insert_text = object
+        .get("insertText")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    let sort_text = object
+        .get("sortText")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    let kind = object
+        .get("kind")
+        .and_then(Value::as_u64)
+        .and_then(|value| u32::try_from(value).ok());
+    Ok(CompletionItem {
+        label,
+        detail,
+        insert_text,
+        sort_text,
+        kind,
+    })
+}
+
+fn completion_sort_key(item: &CompletionItem) -> (&str, &str, &str) {
+    (
+        item.sort_text.as_deref().unwrap_or(&item.label),
+        &item.label,
+        item.insert_text.as_deref().unwrap_or(""),
+    )
+}
+
+fn parse_workspace_symbol(root: &Path, value: &Value) -> Result<WorkspaceSymbol, LspError> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?;
+    let name = required_str(object.get("name"))?.to_owned();
+    let kind = object
+        .get("kind")
+        .and_then(Value::as_u64)
+        .and_then(|value| u32::try_from(value).ok())
+        .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?;
+    let container_name = object
+        .get("containerName")
+        .and_then(Value::as_str)
+        .map(str::to_owned);
+    let location = parse_location(
+        root,
+        object
+            .get("location")
+            .ok_or_else(|| LspError::Protocol(LspProtocolError::InvalidMessageShape))?,
+    )?;
+    Ok(WorkspaceSymbol {
+        name,
+        kind,
+        container_name,
+        location,
+    })
+}
+
+fn workspace_symbol_sort_key(symbol: &WorkspaceSymbol) -> (&str, &Path, LspPosition, LspPosition) {
+    (
+        &symbol.name,
+        symbol.location.relative_path().as_path(),
+        symbol.location.range().start(),
+        symbol.location.range().end(),
+    )
 }
 
 fn parse_diagnostic(value: &Value) -> Result<LspDiagnostic, LspError> {
@@ -467,6 +712,69 @@ fn path_bytes(path: &Path) -> Result<Vec<u8>, LspError> {
     path.to_str()
         .map(|value| value.as_bytes().to_vec())
         .ok_or(LspError::InvalidDocumentUri)
+}
+
+fn relative_path_from_uri(root: &Path, uri: &str) -> Result<RepositoryRelativePath, LspError> {
+    let path = file_uri_to_path(uri)?;
+    let relative = path
+        .strip_prefix(root)
+        .map_err(|_| LspError::ResultOutsideWorkspace(uri.to_owned()))?;
+    RepositoryRelativePath::new(relative)
+        .map_err(|_| LspError::ResultOutsideWorkspace(uri.to_owned()))
+}
+
+fn file_uri_to_path(uri: &str) -> Result<std::path::PathBuf, LspError> {
+    let encoded = uri
+        .strip_prefix("file://")
+        .ok_or(LspError::InvalidDocumentUri)?;
+    if encoded.as_bytes().contains(&b'?') || encoded.as_bytes().contains(&b'#') {
+        return Err(LspError::InvalidDocumentUri);
+    }
+    let bytes = percent_decode(encoded.as_bytes())?;
+    path_buf_from_uri_bytes(bytes)
+}
+
+fn percent_decode(encoded: &[u8]) -> Result<Vec<u8>, LspError> {
+    let mut decoded = Vec::with_capacity(encoded.len());
+    let mut index = 0;
+    while index < encoded.len() {
+        if encoded[index] != b'%' {
+            decoded.push(encoded[index]);
+            index += 1;
+            continue;
+        }
+        if index + 2 >= encoded.len() {
+            return Err(LspError::InvalidDocumentUri);
+        }
+        let high = hex_value(encoded[index + 1]).ok_or(LspError::InvalidDocumentUri)?;
+        let low = hex_value(encoded[index + 2]).ok_or(LspError::InvalidDocumentUri)?;
+        decoded.push((high << 4) | low);
+        index += 3;
+    }
+    Ok(decoded)
+}
+
+fn hex_value(value: u8) -> Option<u8> {
+    match value {
+        b'0'..=b'9' => Some(value - b'0'),
+        b'a'..=b'f' => Some(value - b'a' + 10),
+        b'A'..=b'F' => Some(value - b'A' + 10),
+        _ => None,
+    }
+}
+
+#[cfg(unix)]
+fn path_buf_from_uri_bytes(bytes: Vec<u8>) -> Result<std::path::PathBuf, LspError> {
+    use std::ffi::OsString;
+    use std::os::unix::ffi::OsStringExt;
+    Ok(std::path::PathBuf::from(OsString::from_vec(bytes)))
+}
+
+#[cfg(not(unix))]
+fn path_buf_from_uri_bytes(bytes: Vec<u8>) -> Result<std::path::PathBuf, LspError> {
+    String::from_utf8(bytes)
+        .map(std::path::PathBuf::from)
+        .map_err(|_| LspError::InvalidDocumentUri)
 }
 
 #[cfg(test)]

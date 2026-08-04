@@ -4,10 +4,15 @@
 //! no layer quietly absorbs editor or process authority.
 
 mod client;
+mod features;
 mod protocol;
 mod types;
 
 pub use client::RustAnalyzerClient;
+pub use features::{
+    CompletionItem, CompletionResult, DefinitionResult, LspLocation, WorkspaceSymbol,
+    WorkspaceSymbolResult,
+};
 pub use types::{
     DocumentVersion, LspDiagnostic, LspDocument, LspError, LspPosition, LspProtocolError, LspRange,
     PublishedDiagnostics, RustAnalyzerCapabilities, RustAnalyzerConfig, TextDocumentSyncKind,

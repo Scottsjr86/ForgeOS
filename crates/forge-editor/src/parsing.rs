@@ -52,15 +52,12 @@ impl ParsedBuffer {
         Ok(self.parser.snapshot())
     }
 
-    /// Incrementally advances parser state to the current buffer bytes.
-    ///
-    /// The caller supplies the previous source because parser state never owns
-    /// source bytes. The previous bytes must match the committed parse identity.
-    pub fn update<'a>(
-        &'a mut self,
+    /// Prepares an incremental parse without mutating committed parser state.
+    pub fn prepare_update(
+        &self,
         buffer: &EditorBuffer,
         previous_source: &[u8],
-    ) -> Result<&'a RustSyntaxSnapshot, BufferParseError> {
+    ) -> Result<PendingBufferParse, BufferParseError> {
         self.validate_buffer_identity(buffer)?;
         if buffer.content_version() <= self.content_version {
             return Err(BufferParseError::NonAdvancingVersion {
@@ -68,11 +65,52 @@ impl ParsedBuffer {
                 requested: buffer.content_version(),
             });
         }
-        self.parser
-            .update(previous_source, buffer.bytes())
+        let parser = self
+            .parser
+            .prepare_update(previous_source, buffer.bytes())
             .map_err(BufferParseError::Parser)?;
-        self.content_version = buffer.content_version();
+        Ok(PendingBufferParse {
+            buffer_id: self.buffer_id,
+            document: self.document.clone(),
+            expected_content_version: self.content_version,
+            next_content_version: buffer.content_version(),
+            parser,
+        })
+    }
+
+    /// Commits one already prepared syntax generation.
+    pub fn commit_update(
+        &mut self,
+        pending: PendingBufferParse,
+    ) -> Result<&RustSyntaxSnapshot, BufferParseError> {
+        self.validate_pending(&pending)?;
+        self.content_version = pending.next_content_version;
+        self.parser = pending.parser;
         Ok(self.parser.snapshot())
+    }
+
+    /// Incrementally advances parser state to the current buffer bytes.
+    pub fn update<'a>(
+        &'a mut self,
+        buffer: &EditorBuffer,
+        previous_source: &[u8],
+    ) -> Result<&'a RustSyntaxSnapshot, BufferParseError> {
+        let pending = self.prepare_update(buffer, previous_source)?;
+        self.commit_update(pending)
+    }
+
+    pub(crate) fn validate_pending(
+        &self,
+        pending: &PendingBufferParse,
+    ) -> Result<(), BufferParseError> {
+        if pending.buffer_id != self.buffer_id
+            || pending.document != self.document
+            || pending.expected_content_version != self.content_version
+            || pending.next_content_version <= self.content_version
+        {
+            return Err(BufferParseError::PendingUpdateMismatch);
+        }
+        Ok(())
     }
 
     fn validate_buffer_identity(&self, buffer: &EditorBuffer) -> Result<(), BufferParseError> {
@@ -109,6 +147,25 @@ impl ParsedBuffer {
     }
 }
 
+/// Prepared parser replacement bound to one exact editor generation transition.
+pub struct PendingBufferParse {
+    buffer_id: BufferId,
+    document: DocumentKey,
+    expected_content_version: ContentVersion,
+    next_content_version: ContentVersion,
+    parser: RustSyntaxParser,
+}
+
+impl PendingBufferParse {
+    pub const fn next_content_version(&self) -> ContentVersion {
+        self.next_content_version
+    }
+
+    pub fn snapshot(&self) -> &RustSyntaxSnapshot {
+        self.parser.snapshot()
+    }
+}
+
 /// Exact reason editor syntax state was unavailable or stale.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BufferParseError {
@@ -118,6 +175,7 @@ pub enum BufferParseError {
         actual: BufferId,
     },
     DocumentMismatch,
+    PendingUpdateMismatch,
     StaleSnapshot {
         parsed: ContentVersion,
         current: ContentVersion,
@@ -144,6 +202,9 @@ impl fmt::Display for BufferParseError {
             ),
             Self::DocumentMismatch => {
                 formatter.write_str("parser document identity does not match buffer")
+            }
+            Self::PendingUpdateMismatch => {
+                formatter.write_str("pending parser update no longer matches committed state")
             }
             Self::StaleSnapshot { parsed, current } => write!(
                 formatter,

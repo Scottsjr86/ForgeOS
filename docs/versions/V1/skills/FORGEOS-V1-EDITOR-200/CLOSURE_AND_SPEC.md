@@ -1,6 +1,6 @@
 # FORGEOS-V1-EDITOR-200 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Multi-buffer file editing and atomic save
 Active slice: `FORGEOS-V1-EDITOR-200-SLICE-001`
 Source authority: `Forge_OS_V1_base_41.tar`
@@ -60,16 +60,9 @@ while another remains dirty, external-change conflict, refresh-before-save confl
 stale discard rejection, explicit discard/reopen, missing-file creation, clean close,
 and preservation of unedited repository bytes.
 
-## Operator validation still required
+## Operator validation evidence
 
-Run the canonical behavior-only CI entrypoint:
-
-```bash
-python3 scripts/run_ci.py
-```
-
-The skill remains active until the operator returns green structural guards and Rust
-tests for this slice.
+The operator ran `python3 scripts/run_ci.py`. All three structural guards passed and Rust CI reported 65 suites, 303 passed, 0 failed, and 1 ignored. The capability is closed.
 
 ## Explicit non-claims
 

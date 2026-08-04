@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_41.tar`, the canonical V1 skill tree, accepted Forge behavior-only CI through the real Nyx public API witness, and the verified `Nyx_Server_base_13.tar` gate handoff.
-> `FORGEOS-V1-EDITOR-200` is currently active. Repository browsing/search is closed; editor work now owns multi-buffer independence, exact atomic save, external-change conflict handling, and generation-bound discard/reopen.
+> Source basis: `Forge_OS_V1_base_42.tar`, the canonical V1 skill tree, accepted Forge behavior-only CI through the real Nyx public API witness, and the verified `Nyx_Server_base_13.tar` gate handoff.
+> `FORGEOS-V1-EDITOR-201` is currently active. Multi-buffer atomic save is closed; editor work now binds Tree-sitter and real Rust Analyzer results to exact project and buffer generations.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 26 |
+| ✅ Completed / closed | 27 |
 | 🔨 Active / started | 1 |
 | 🟢 Available / ready to start | 6 |
-| 🔒 Locked by prerequisites | 34 |
+| 🔒 Locked by prerequisites | 33 |
 
-**Raw closed-node count:** 26 of 67, or 38.8%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 27 of 67, or 40.3%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -38,19 +38,19 @@
 | 5 | Final release capability | 1 | locked 1 |
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
-| 2 | Functional V1 systems | 19 | closed 2, active 1, available 4, locked 12 |
+| 2 | Functional V1 systems | 19 | closed 3, active 1, available 4, locked 11 |
 | 1 | Local mechanisms | 16 | closed 14, available 2, locked 0 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-EDITOR-200` — Multi-buffer file editing and atomic save
+### 🔨 `FORGEOS-V1-EDITOR-201` — Rust syntax and language-intelligence integration
 
 - **Tier:** 2
 - **Status:** `ACTIVE`
-- **Current position:** ForgeOS is joining editor-owned buffer generations to project-owned exact file revisions and atomic writes, including conflict, close, discard, and reopen behavior.
-- **Direct prerequisites:** `EDITOR-100` and `FILE-200` ✅
-- **Immediate unlock after closure:** `EDITOR-201`; `CODE-300` still requires its other direct prerequisites.
+- **Current position:** ForgeOS is binding Tree-sitter syntax and native Rust Analyzer diagnostics, definitions, completion, and workspace symbols to the exact active project and editor generation.
+- **Direct prerequisites:** `EDITOR-200`, `PARSER-100`, and `LSP-100` ✅
+- **Immediate unlock after closure:** no additional Tier-2 node; `CODE-300` still requires `PROJECT-300`.
 
 ## Available skills right now
 
@@ -119,8 +119,8 @@ Functional subsystems assembled from local mechanisms.
 | 🟢 AVAILABLE | `FORGEOS-V1-SESSION-200` | Dedicated ForgeOS session bootstrap | ✅ `FORGEOS-V1-SESSION-100` |
 | 🟢 AVAILABLE | `FORGEOS-V1-SESSION-201` | Managed ForgeOS and Nyx service lifecycle | ✅ `FORGEOS-V1-SESSION-100`<br>✅ `FORGEOS-V1-NYX-100` |
 | ✅ CLOSED | `FORGEOS-V1-FILE-200` | Repository file tree and search | ✅ `FORGEOS-V1-FILE-100`<br>✅ `FORGEOS-V1-PROJECT-200` |
-| 🔨 ACTIVE | `FORGEOS-V1-EDITOR-200` | Multi-buffer file editing and atomic save | ✅ `FORGEOS-V1-EDITOR-100`<br>✅ `FORGEOS-V1-FILE-200` |
-| 🔒 LOCKED | `FORGEOS-V1-EDITOR-201` | Rust syntax and language-intelligence integration | 🔨 `FORGEOS-V1-EDITOR-200`<br>✅ `FORGEOS-V1-PARSER-100`<br>✅ `FORGEOS-V1-LSP-100` |
+| ✅ CLOSED | `FORGEOS-V1-EDITOR-200` | Multi-buffer file editing and atomic save | ✅ `FORGEOS-V1-EDITOR-100`<br>✅ `FORGEOS-V1-FILE-200` |
+| 🔨 ACTIVE | `FORGEOS-V1-EDITOR-201` | Rust syntax and language-intelligence integration | ✅ `FORGEOS-V1-EDITOR-200`<br>✅ `FORGEOS-V1-PARSER-100`<br>✅ `FORGEOS-V1-LSP-100` |
 | 🟢 AVAILABLE | `FORGEOS-V1-TERMINAL-200` | Managed embedded terminal sessions | ✅ `FORGEOS-V1-TERMINAL-100`<br>✅ `FORGEOS-V1-PROJECT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-COMMAND-200` | Registered project command execution and output history | ✅ `FORGEOS-V1-COMMAND-100`<br>🔒 `FORGEOS-V1-TERMINAL-200` |
 | 🟢 AVAILABLE | `FORGEOS-V1-GIT-200` | Real Git status, branch, revision, and diff inspection | ✅ `FORGEOS-V1-GIT-100`<br>✅ `FORGEOS-V1-PROJECT-200` |

@@ -6,7 +6,9 @@
 //! only when their project, repository, path, and version still match the buffer.
 
 use crate::buffers::{BufferId, ContentVersion, DocumentKey, EditorBuffer};
-use forge_bridge::lsp::{DocumentVersion, LspDocument, PublishedDiagnostics};
+use forge_bridge::lsp::{
+    CompletionResult, DefinitionResult, DocumentVersion, LspDocument, PublishedDiagnostics,
+};
 use forge_protocol::identities::ProjectId;
 use std::fmt;
 
@@ -90,6 +92,16 @@ impl RustLanguageDocument {
         &mut self,
         update: PendingLanguageUpdate,
     ) -> Result<(), LanguageDocumentError> {
+        self.validate_pending(&update)?;
+        self.content_version = update.next_content_version;
+        self.lsp_version = update.lsp_document.version();
+        Ok(())
+    }
+
+    pub(crate) fn validate_pending(
+        &self,
+        update: &PendingLanguageUpdate,
+    ) -> Result<(), LanguageDocumentError> {
         if update.project_id != self.project_id
             || update.buffer_id != self.buffer_id
             || update.document != self.document
@@ -102,9 +114,31 @@ impl RustLanguageDocument {
         {
             return Err(LanguageDocumentError::PendingUpdateMismatch);
         }
-        self.content_version = update.next_content_version;
-        self.lsp_version = update.lsp_document.version();
         Ok(())
+    }
+
+    pub fn validate_definition(
+        &self,
+        result: &DefinitionResult,
+    ) -> Result<(), LanguageDocumentError> {
+        self.validate_feature_result(
+            result.project_id(),
+            result.repository_id(),
+            result.source_path(),
+            result.source_version(),
+        )
+    }
+
+    pub fn validate_completion(
+        &self,
+        result: &CompletionResult,
+    ) -> Result<(), LanguageDocumentError> {
+        self.validate_feature_result(
+            result.project_id(),
+            result.repository_id(),
+            result.source_path(),
+            result.source_version(),
+        )
     }
 
     /// Rejects diagnostics from another project, file, or stale generation.
@@ -124,6 +158,30 @@ impl RustLanguageDocument {
             return Err(LanguageDocumentError::StaleDiagnostics {
                 current: self.lsp_version,
                 received: diagnostics.version(),
+            });
+        }
+        Ok(())
+    }
+
+    fn validate_feature_result(
+        &self,
+        project_id: ProjectId,
+        repository_id: forge_protocol::identities::RepositoryId,
+        relative_path: &forge_protocol::paths::RepositoryRelativePath,
+        version: DocumentVersion,
+    ) -> Result<(), LanguageDocumentError> {
+        if project_id != self.project_id {
+            return Err(LanguageDocumentError::ProjectMismatch);
+        }
+        if repository_id != self.document.repository_id()
+            || relative_path != self.document.relative_path()
+        {
+            return Err(LanguageDocumentError::DocumentMismatch);
+        }
+        if version != self.lsp_version {
+            return Err(LanguageDocumentError::StaleFeatureResult {
+                current: self.lsp_version,
+                received: version,
             });
         }
         Ok(())
@@ -183,6 +241,10 @@ pub enum LanguageDocumentError {
         current: DocumentVersion,
         received: DocumentVersion,
     },
+    StaleFeatureResult {
+        current: DocumentVersion,
+        received: DocumentVersion,
+    },
 }
 
 impl fmt::Display for LanguageDocumentError {
@@ -222,6 +284,12 @@ impl fmt::Display for LanguageDocumentError {
             Self::StaleDiagnostics { current, received } => write!(
                 formatter,
                 "diagnostics generation {} does not match current generation {}",
+                received.get(),
+                current.get()
+            ),
+            Self::StaleFeatureResult { current, received } => write!(
+                formatter,
+                "language feature generation {} does not match current generation {}",
                 received.get(),
                 current.get()
             ),

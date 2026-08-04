@@ -4,5 +4,6 @@
 //! their named modules and are added only by the skills that prove them.
 
 pub mod buffers;
+pub mod intelligence;
 pub mod language;
 pub mod parsing;
