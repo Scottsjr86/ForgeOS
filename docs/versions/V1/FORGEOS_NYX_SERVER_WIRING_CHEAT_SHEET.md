@@ -95,41 +95,46 @@ llama-server, an OpenAI-compatible runtime, or a remote model provider.
 
 ### 2.1 Nyx public server transport
 
-The inspected Nyx server currently binds an Axum HTTP server to:
+The inspected Nyx server binds an Axum HTTP server to:
 
 ```text
 NYX_BIND, default 127.0.0.1:8088
 ```
 
-The public route set is HTTP/JSON under `/v1`.
+The public route set is HTTP/JSON under `/v1`. Public contract version `1.0` is
+advertised and negotiated through `x-nyx-contract-version`. Nyx_Server owns the
+canonical response schemas and deterministic incompatible-major rejection.
 
-Current Nyx does not expose a Unix-domain-socket server and does not implement
-the Forge-only `FGNYXQ` / `FGNYXR` binary frame protocol.
+Nyx_Server currently exposes TCP HTTP. It does not expose a Unix-domain-socket
+listener, though the Forge client may carry the same HTTP contract over a
+configured Unix socket if a future Nyx deployment provides one.
 
-### 2.2 Current Forge client mismatch
+### 2.2 Current Forge client integration
 
-The current Forge crate `crates/forge-nyx-client` implements:
+The current Forge crate `crates/forge-nyx-client` performs:
 
 ```text
-4-byte big-endian frame length
-  -> FGNYXQ binary handshake request
-  -> Unix socket or TCP exchange
-  -> FGNYXR binary handshake response
+GET /v1/nyx/version
+GET /v1/nyx/health
+GET /v1/nyx/capabilities
+x-nyx-contract-version: <highest supported Forge version>
 ```
 
-That implementation is fixture-proved only. It has no matching handler in the
-inspected Nyx server.
+It validates the Nyx-owned contract header, schema IDs, server and protocol
+versions, health, canonical capabilities, engine readiness, and provider
+readiness. It classifies ready, unavailable, incompatible, and unhealthy states
+without contacting a provider directly or inventing server truth.
 
 Therefore:
 
 ```text
-Forge binary fixture passes != ForgeOS and Nyx are integrated
+Forge fixture proof + real Nyx HTTP witness -> eligible for FORGEOS-V1-NYX-100 closure
 ```
 
-The preferred V1 repair is:
+The permanent V1 rule is:
 
 ```text
-Nyx owns a canonical versioned HTTP/JSON health and capability contract
+Nyx owns the canonical versioned HTTP/JSON health and capability contract
   -> Forge consumes it through forge-nyx-client
   -> Forge classifies unavailable, incompatible, unhealthy, and ready
   -> real Nyx process witness closes the seam
@@ -995,9 +1000,7 @@ permissive CORS without an authentication contract
 ### 12.3 Not currently implemented in the inspected public seam
 
 ```text
-Forge FGNYXQ/FGNYXR binary handshake server
-Nyx Unix-domain-socket public HTTP or binary server
-canonical health response with schema epoch and full capability discovery
+Nyx Unix-domain-socket public HTTP server
 streaming chat
 public session create/list/switch endpoints
 public thread create/list/switch endpoints

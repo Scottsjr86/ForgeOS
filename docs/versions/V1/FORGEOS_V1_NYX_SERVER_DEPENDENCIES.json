@@ -33,10 +33,10 @@
       ],
       "minimum_nyx_state": "BANKED",
       "minimum_proof_level": "PROOF_SYSTEM",
-      "forge_owns": "Configured Unix/TCP client transport, handshake request framing, response decoding, compatibility classification, and typed ForgeOS-side probe results.",
+      "forge_owns": "Configured TCP or Unix HTTP client transport, x-nyx-contract-version request posture, strict Nyx schema decoding, compatibility classification, and typed ForgeOS-side probe results.",
       "nyx_owns": "The real health endpoint, public contract-version posture, capability discovery, canonical schemas, and truthful readiness data.",
       "forbidden_forge_implementation": "No health server, capability registry, protocol-version authority, model call, or Nyx runtime may be implemented inside ForgeOS.",
-      "closure_witness": "A real Nyx process answers the ForgeOS probe; fixtures may prove client behavior but cannot close the skill by themselves."
+      "closure_witness": "A real Nyx process answers the ForgeOS HTTP client through /v1/nyx/version, /v1/nyx/health, and /v1/nyx/capabilities; fixtures may prove client behavior but cannot close the skill by themselves."
     },
     {
       "forge_skill_id": "FORGEOS-V1-NYX-101",
@@ -255,18 +255,18 @@
   "current_seam_findings": [
     {
       "finding_id": "FORGEOS-NYX-SEAM-001",
-      "status": "OPEN_CONTRACT_MISMATCH",
-      "forge_source": "Forge_OS_V1/crates/forge-nyx-client/src/protocol.rs",
-      "forge_behavior": "Private binary request/response magic FGNYXQ/FGNYXR over configured Unix or TCP transport.",
-      "nyx_source": "Nyx_Server/crates/nyx_server/src/http/mod.rs",
-      "nyx_behavior": "HTTP/JSON server routes including GET /v1/nyx/health; the current health response contains status, version, and boot_ts.",
-      "negative_evidence": "Nyx_Server contains no FGNYXQ or FGNYXR handler or canonical contract.",
-      "closure_effect": "FORGEOS-V1-NYX-100 cannot close from its current Forge-only fixtures or wire format.",
+      "status": "NYX_PUBLIC_API_GATE_PROVED_FORGE_ADAPTER_PENDING",
+      "forge_source": "Forge_OS_V1/crates/forge-nyx-client/src/protocol.rs and transport.rs",
+      "forge_behavior": "Strict read-only HTTP client for the Nyx-owned version, health, and capability contracts over configured TCP or Unix transport.",
+      "nyx_source": "Nyx_Server/crates/nyx_protocol/src/public_api.rs and crates/nyx_server/src/http/public_api.rs",
+      "nyx_behavior": "Canonical public contract version 1.0 at /v1/nyx/version, /v1/nyx/health, and /v1/nyx/capabilities with deterministic incompatible-major rejection.",
+      "positive_evidence": "API-FOUND-008, API-VERSION-010, API-SYS-044, and API-SYS-047 are banked at PROOF_SYSTEM; receipt hashes and the real-server witness match NYX_GATE_INPUT.json; standalone chat/dev regression passes.",
+      "closure_effect": "The Nyx side of NYX-GATE-FORGEOS-V1-NYX-100 is satisfied. ForgeOS must still pass behavior-only CI and a real Nyx process client witness before closing the Forge skill.",
       "allowed_resolution": [
-        "Preferred: ForgeOS consumes a canonical versioned Nyx HTTP/JSON health and capability-discovery contract once the required Nyx API skills are banked.",
-        "Alternative: Nyx_Server defines and implements an explicit versioned binary handshake under Nyx API authority, then ForgeOS consumes that published contract."
+        "Consume only the Nyx-owned HTTP/JSON contract and preserve typed ready, unavailable, incompatible, and unhealthy classifications.",
+        "Record the Forge-side real-process witness and close only FORGEOS-V1-NYX-100 after operator validation."
       ],
-      "forbidden_resolution": "Do not implement a handshake server, capability registry, or Nyx runtime inside ForgeOS merely to satisfy the Forge client tests."
+      "forbidden_resolution": "Do not embed Nyx server behavior, capability truth, provider truth, or model-provider access inside ForgeOS."
     }
   ]
 }

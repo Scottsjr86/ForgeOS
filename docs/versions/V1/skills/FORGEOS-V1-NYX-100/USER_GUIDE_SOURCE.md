@@ -1,48 +1,64 @@
 # FORGEOS-V1-NYX-100 User Guide Source
 
-Status: `SOURCE_PROVED_CROSS_REPO_GATE_OPEN`
+Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
 Capability: Nyx health and versioned client protocol
-Mandatory wiring review: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
-Mandatory capability ownership review: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
-Cross-repo gate authority: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
+Cross-repo gate input: `docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json`
 
 ## What the operator can do
 
-ForgeOS can probe one configured local Nyx endpoint over a Unix socket or TCP,
-negotiate an explicitly supported protocol version, and inspect the returned service
-version, health, and declared capabilities. The result distinguishes ready,
-unavailable, incompatible, and unhealthy service states.
+ForgeOS can probe one configured local Nyx endpoint through Nyx's public HTTP
+contract. It reads the published version, health, capabilities, engine readiness,
+and provider readiness, then reports one of four states:
 
-The current probe's private `FGNYXQ` / `FGNYXR` protocol is covered by Forge fixtures
-but has no matching handler in Nyx_Server's HTTP/JSON API. Treat these instructions as
-Forge client validation, not cross-repository closure, until both repositories consume
-one Nyx-owned public contract and `NYX-GATE-FORGEOS-V1-NYX-100` passes.
+```text
+Ready
+Unavailable
+Incompatible
+Unhealthy
+```
+
+Nyx_Server remains a separate, independently runnable server. ForgeOS neither
+hosts it inside the client crate nor contacts model providers around it.
 
 ## Compatibility and safety behavior
 
-- transport success alone is not compatibility;
-- Nyx must select one protocol version ForgeOS actually offered;
-- malformed or oversized response frames fail closed;
-- unavailable endpoints preserve the transport failure class;
-- unhealthy responses preserve their declared health and capabilities;
-- no model provider is contacted around Nyx;
-- probe failures do not crash or corrupt the local ForgeOS workflow.
+- `x-nyx-contract-version` carries the highest Forge-supported version;
+- compatible major versions may return Nyx's canonical published minor version;
+- incompatible majors return `Incompatible` from Nyx's versioned error envelope;
+- missing endpoints return `Unavailable` with the native transport error class;
+- missing headers, malformed JSON, wrong schemas, and contradictory readiness
+  data return `Incompatible`;
+- degraded or unavailable server health returns `Unhealthy` while retaining the
+  exact capability, engine, and provider details supplied by Nyx;
+- transport success alone never means the server is compatible or ready.
 
-## Validation command
+## Forge validation
 
 ```bash
 python3 scripts/run_ci.py
 ```
 
-## Expected failures and recovery
+## Real Nyx witness
 
-A missing endpoint reports unavailable. A responding service with an unsupported
-protocol or malformed response reports incompatible. A degraded or unhealthy service
-reports unhealthy and retains its declared metadata. Correct the endpoint or service,
-then run the same probe again.
+Start Nyx_Server from its own repository:
+
+```bash
+NYX_BIND=127.0.0.1:8088 cargo run --locked --quiet -p nyx_server --bin nyx_server
+```
+
+From ForgeOS, run:
+
+```bash
+FORGE_NYX_ADDR=127.0.0.1:8088 \
+  cargo test --locked -p forge-nyx-client --test nyx_health \
+  real_nyx_public_api_gate -- --ignored --nocapture
+```
+
+The witness passes when the real Nyx process returns a compatible versioned
+health and capability report. A degraded server remains visibly degraded.
 
 ## Current V1 limitations
 
-The health probe does not manage the Nyx process, select a local model, create a
-conversation, grant tools, resume checkpoints, or dispatch remote agents. Those
-capabilities are activated separately.
+The probe does not manage the Nyx process, select a model, create a conversation,
+grant tools, resolve checkpoints, or dispatch agents. Those capabilities are
+activated and proved separately.

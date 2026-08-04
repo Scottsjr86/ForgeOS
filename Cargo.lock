@@ -137,6 +137,7 @@ version = "0.1.0"
 dependencies = [
  "forge-core",
  "forge-protocol",
+ "serde_json",
 ]
 
 [[package]]

@@ -32,28 +32,28 @@ Nyx capability absent or unbanked
 A copied DTO, mock server, fixture, direct model call, local conversation store,
 Forge-owned checkpoint engine, or fake run record does not satisfy a Nyx gate.
 
-### 0.1 Current seam finding: the two repos do not speak the same protocol
+### 0.1 Current seam finding: Nyx public API gate is proved
 
-The current ForgeOS client implements a private binary handshake with magic bytes
-`FGNYXQ` and `FGNYXR` over Unix or TCP. The current Nyx server exposes HTTP/JSON
-routes, including `GET /v1/nyx/health`, whose response currently contains
-`status`, `version`, and `boot_ts`. Nyx contains no handler or canonical contract
-for the Forge binary magic.
+`Nyx_Server_base_13.tar` provides Nyx-owned public contract version `1.0` through
+`GET /v1/nyx/version`, `GET /v1/nyx/health`, and
+`GET /v1/nyx/capabilities`. The required Nyx skills are banked with
+`PROOF_SYSTEM`, their receipt hashes match the cross-repository handoff, and the
+real-server witness plus standalone chat/development regression both pass.
 
 Therefore:
 
 ```text
-Forge binary fixture tests pass
-  -> proves Forge request encoding, decoding, and failure classification
-  -> does not prove compatibility with Nyx_Server
-  -> FORGEOS-V1-NYX-100 may not close
+Nyx public API gate proved
+  -> ForgeOS may replace its private fixture protocol with the Nyx-owned HTTP contract
+  -> ForgeOS must validate schema IDs, contract headers, versions, health, capabilities,
+     engine readiness, and provider readiness
+  -> FORGEOS-V1-NYX-100 remains ACTIVE until Forge CI and a real Nyx client witness pass
 ```
 
-The preferred repair is for ForgeOS to consume a canonical versioned Nyx
-HTTP/JSON health and capability-discovery contract after the required Nyx API
-skills are banked. A binary handshake is also legal, but Nyx_Server must define
-and implement it under Nyx API authority before ForgeOS consumes it. Writing the
-missing server into ForgeOS is forbidden.
+The verified gate input is recorded at
+`docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json`. Nyx_Server
+remains independent and authoritative for all server truth. ForgeOS owns only its
+client adapter, classification, and independent witness path.
 
 ---
 

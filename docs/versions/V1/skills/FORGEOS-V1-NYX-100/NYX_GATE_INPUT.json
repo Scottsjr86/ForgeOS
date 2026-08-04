@@ -1,0 +1,72 @@
+{
+  "schema": "forgeos.nyx_cross_repo_gate_input.v1",
+  "contract_id": "FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT",
+  "forge_skill_id": "FORGEOS-V1-NYX-100",
+  "nyx_gate_id": "NYX-GATE-FORGEOS-V1-NYX-100",
+  "nyx_source_archive": "Nyx_Server_base_13.tar",
+  "nyx_source_archive_sha256": "800e499b0d9b7d9aa60d4c55920f9e9dc7be48f1c4a52fbd794800c8f9c3b26d",
+  "public_contract_version": "1.0",
+  "public_endpoints": {
+    "version": "/v1/nyx/version",
+    "health": "/v1/nyx/health",
+    "capabilities": "/v1/nyx/capabilities"
+  },
+  "required_request_header": "x-nyx-contract-version",
+  "banked_skills": [
+    {
+      "skill_id": "API-FOUND-008",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-FOUND-008-proof-public-api-gate-v1.json",
+      "sha256": "159dea4a57bf6292aa15e7752a685a9ceccbb0d2a46b80c85d97281c71309291"
+    },
+    {
+      "skill_id": "API-VERSION-010",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-VERSION-010-proof-public-api-gate-v1.json",
+      "sha256": "4cc30b88060acb7e64ef7410a098508d19c158c7d9dd264fc21e2cf5e8bc0b33"
+    },
+    {
+      "skill_id": "API-SYS-044",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-SYS-044-proof-public-api-gate-v1.json",
+      "sha256": "bab5365c727dd006d3f981d39c1eb037aba251aaf73b2d084774ea301fd91a24"
+    },
+    {
+      "skill_id": "API-SYS-047",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-SYS-047-proof-public-api-gate-v1.json",
+      "sha256": "4a3d699ef18d4532375e73ce73798a5a63a5d14b58f6a53ba0630d193ac14152"
+    }
+  ],
+  "real_server_witness": {
+    "command": "python3 scripts/run_public_api_gate_witness.py --out experiments/skills/api/runs/public-api-gate-v1/real_server_witness_v1.json",
+    "result": "PASS",
+    "path": "experiments/skills/api/runs/public-api-gate-v1/real_server_witness_v1.json",
+    "sha256": "757e3b06e35804be3b62b7fed51664fecc31663f10d7130873151c9b788e2ed4"
+  },
+  "nyx_ci": {
+    "command": "python3 scripts/run_ci.py professional",
+    "result": "PASS"
+  },
+  "standalone_chat_dev_result": "PASS",
+  "wiring_preflight": {
+    "canonical_owner": "Nyx_Server",
+    "forgeos_role": "read_only_http_client_and_independent_verifier",
+    "transport": "HTTP/1.1 over configured local TCP or Unix socket",
+    "inspected_nyx_paths": [
+      "crates/nyx_protocol/src/public_api.rs",
+      "crates/nyx_server/src/http/mod.rs",
+      "crates/nyx_server/src/http/public_api.rs",
+      "crates/nyx_server/src/http/routes.rs",
+      "experiments/skills/api/runs/public-api-gate-v1/real_server_witness_v1.json"
+    ]
+  },
+  "ownership_preflight": {
+    "nyx_server_remains_independent": true,
+    "forgeos_embeds_nyx_behavior": false,
+    "forgeos_contacts_model_providers_directly": false,
+    "forgeos_authors_nyx_health_or_capability_truth": false,
+    "private_fgnyx_protocol_retained": false
+  },
+  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+}

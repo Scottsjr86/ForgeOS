@@ -260,8 +260,6 @@ portable flight-recorder export and hostile external verification
 ### 4.3 Missing public seam that ForgeOS must not fabricate
 
 ```text
-Forge private FGNYXQ / FGNYXR server handler
-canonical schema-stamped Nyx capability discovery contract
 public session and thread lifecycle API sufficient for Forge product use
 exact suspended-action approval and resume contract
 complete remote heavyweight-agent workflow

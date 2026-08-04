@@ -1,21 +1,26 @@
-//! Versioned Nyx handshake contract.
+//! Client-side decoding for the Nyx-owned public HTTP contract.
 //!
-//! This module owns the ForgeOS side of the compatibility handshake with the
-//! separate `nyx_server` process. A successful transport exchange is not enough:
-//! the response must decode under this wire schema, select a protocol version
-//! ForgeOS offered, and report explicit health and capabilities.
+//! Nyx_Server owns the canonical schemas. ForgeOS validates the schema IDs and
+//! extracts only the health, compatibility, capability, engine, and provider
+//! fields needed by the local integration surface.
 
+use serde_json::{Map, Value};
+use std::collections::BTreeSet;
 use std::fmt;
 
-const REQUEST_MAGIC: [u8; 8] = *b"FGNYXQ\0\0";
-const RESPONSE_MAGIC: [u8; 8] = *b"FGNYXR\0\0";
-const WIRE_SCHEMA_VERSION: u16 = 1;
-const MAX_PROTOCOL_VERSIONS: usize = 32;
-const MAX_CAPABILITIES: usize = 256;
-const MAX_CAPABILITY_BYTES: usize = 96;
-const MAX_SERVICE_VERSION_BYTES: usize = 128;
+pub const HEADER_NYX_CONTRACT_VERSION: &str = "x-nyx-contract-version";
+pub const HEALTH_PATH: &str = "/v1/nyx/health";
+pub const VERSION_PATH: &str = "/v1/nyx/version";
+pub const CAPABILITIES_PATH: &str = "/v1/nyx/capabilities";
 
-/// One Nyx application-protocol version supported by both ForgeOS and Nyx.
+const SCHEMA_VERSION_V1: &str = "nyx.1.0";
+const SCHEMA_ID_VERSION: &str = "nyx.api_version_manifest.v1";
+const SCHEMA_ID_HEALTH: &str = "nyx.server_health.v1";
+const SCHEMA_ID_CAPABILITIES: &str = "nyx.api_capability_manifest.v1";
+const SCHEMA_ID_CAPABILITY: &str = "nyx.api_capability_descriptor.v1";
+const SCHEMA_ID_ERROR: &str = "nyx.api_error_envelope.v1";
+const INCOMPATIBLE_MAJOR_CODE: &str = "incompatible_api_major_version";
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct NyxProtocolVersion {
     major: u16,
@@ -34,6 +39,24 @@ impl NyxProtocolVersion {
     pub const fn minor(self) -> u16 {
         self.minor
     }
+
+    pub fn parse(value: &str) -> Result<Self, NyxProtocolError> {
+        let mut parts = value.trim().split('.');
+        let major = parts
+            .next()
+            .ok_or_else(|| NyxProtocolError::InvalidVersion(value.to_owned()))?
+            .parse::<u16>()
+            .map_err(|_| NyxProtocolError::InvalidVersion(value.to_owned()))?;
+        let minor = parts
+            .next()
+            .ok_or_else(|| NyxProtocolError::InvalidVersion(value.to_owned()))?
+            .parse::<u16>()
+            .map_err(|_| NyxProtocolError::InvalidVersion(value.to_owned()))?;
+        if parts.next().is_some() {
+            return Err(NyxProtocolError::InvalidVersion(value.to_owned()));
+        }
+        Ok(Self { major, minor })
+    }
 }
 
 impl fmt::Display for NyxProtocolVersion {
@@ -42,589 +65,932 @@ impl fmt::Display for NyxProtocolVersion {
     }
 }
 
-/// Canonical Nyx capability token, such as `chat` or `tools.read`.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct NyxCapability(String);
-
-impl NyxCapability {
-    pub fn new(value: impl Into<String>) -> Result<Self, NyxProtocolError> {
-        let value = value.into();
-        validate_capability(&value)?;
-        Ok(Self(value))
-    }
-
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
-impl fmt::Display for NyxCapability {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.write_str(&self.0)
-    }
-}
-
-/// Health declared by Nyx itself during the compatibility handshake.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NyxHealth {
     Healthy,
     Degraded,
-    Unhealthy,
+    Unavailable,
 }
 
 impl NyxHealth {
-    const fn code(self) -> u8 {
-        match self {
-            Self::Healthy => 1,
-            Self::Degraded => 2,
-            Self::Unhealthy => 3,
+    fn parse(value: &str) -> Result<Self, NyxProtocolError> {
+        match value {
+            "ready" => Ok(Self::Healthy),
+            "degraded" => Ok(Self::Degraded),
+            "unavailable" => Ok(Self::Unavailable),
+            other => Err(NyxProtocolError::UnsupportedHealth(other.to_owned())),
         }
-    }
-
-    fn from_code(code: u8) -> Result<Self, NyxProtocolError> {
-        match code {
-            1 => Ok(Self::Healthy),
-            2 => Ok(Self::Degraded),
-            3 => Ok(Self::Unhealthy),
-            found => Err(NyxProtocolError::UnknownHealthCode { found }),
-        }
-    }
-
-    pub const fn is_healthy(self) -> bool {
-        matches!(self, Self::Healthy)
     }
 }
 
-/// ForgeOS handshake request containing every application-protocol version it
-/// is prepared to speak.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum NyxAvailability {
+    Ready,
+    Degraded,
+    Unavailable,
+    ContractOnly,
+}
+
+impl NyxAvailability {
+    fn parse(value: &str) -> Result<Self, NyxProtocolError> {
+        match value {
+            "ready" => Ok(Self::Ready),
+            "degraded" => Ok(Self::Degraded),
+            "unavailable" => Ok(Self::Unavailable),
+            "contract_only" => Ok(Self::ContractOnly),
+            other => Err(NyxProtocolError::UnsupportedAvailability(other.to_owned())),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct NyxHandshakeRequest {
-    supported_versions: Vec<NyxProtocolVersion>,
+pub struct NyxCapability {
+    capability_id: String,
+    supported_version: NyxProtocolVersion,
+    required_engine: String,
+    availability: NyxAvailability,
+    endpoint_ids: Vec<String>,
 }
 
-impl NyxHandshakeRequest {
-    pub fn new(
-        supported_versions: impl IntoIterator<Item = NyxProtocolVersion>,
-    ) -> Result<Self, NyxProtocolError> {
-        let mut supported_versions: Vec<_> = supported_versions.into_iter().collect();
-        supported_versions.sort_unstable();
-        supported_versions.dedup();
-        validate_protocol_count(supported_versions.len())?;
-        Ok(Self { supported_versions })
+impl NyxCapability {
+    pub fn capability_id(&self) -> &str {
+        &self.capability_id
     }
 
-    pub fn supported_versions(&self) -> &[NyxProtocolVersion] {
-        &self.supported_versions
+    pub const fn supported_version(&self) -> NyxProtocolVersion {
+        self.supported_version
     }
 
-    pub fn supports(&self, version: NyxProtocolVersion) -> bool {
-        self.supported_versions.binary_search(&version).is_ok()
+    pub fn required_engine(&self) -> &str {
+        &self.required_engine
     }
 
-    pub fn encode(&self) -> Vec<u8> {
-        let mut encoder = Encoder::new();
-        encoder.bytes(&REQUEST_MAGIC);
-        encoder.u16(WIRE_SCHEMA_VERSION);
-        encoder.u16(self.supported_versions.len() as u16);
-        for version in &self.supported_versions {
-            encoder.u16(version.major());
-            encoder.u16(version.minor());
-        }
-        encoder.finish()
+    pub const fn availability(&self) -> NyxAvailability {
+        self.availability
     }
 
-    pub fn decode(bytes: &[u8]) -> Result<Self, NyxProtocolError> {
-        let mut decoder = Decoder::new(bytes);
-        if decoder.array::<8>()? != REQUEST_MAGIC {
-            return Err(NyxProtocolError::BadMagic {
-                message: NyxWireMessage::Request,
-            });
-        }
-        decode_schema(&mut decoder, NyxWireMessage::Request)?;
-        let count = usize::from(decoder.u16()?);
-        validate_protocol_count(count)?;
-        let mut supported_versions = Vec::with_capacity(count);
-        for _ in 0..count {
-            supported_versions.push(NyxProtocolVersion::new(decoder.u16()?, decoder.u16()?));
-        }
-        decoder.finish()?;
-        require_strict_order(&supported_versions)?;
-        Ok(Self { supported_versions })
+    pub fn endpoint_ids(&self) -> &[String] {
+        &self.endpoint_ids
     }
 }
 
-/// Nyx handshake response containing the selected protocol, service health,
-/// service version, and canonical capability set.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct NyxHandshakeResponse {
+pub struct NyxEngineReadiness {
+    engine: String,
+    availability: NyxAvailability,
+    live: bool,
+    ready: bool,
+    reason: String,
+}
+
+impl NyxEngineReadiness {
+    pub fn engine(&self) -> &str {
+        &self.engine
+    }
+
+    pub const fn availability(&self) -> NyxAvailability {
+        self.availability
+    }
+
+    pub const fn live(&self) -> bool {
+        self.live
+    }
+
+    pub const fn ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn reason(&self) -> &str {
+        &self.reason
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NyxProviderReadiness {
+    provider_id: String,
+    kind: String,
+    configured: bool,
+    availability: NyxAvailability,
+    ready: bool,
+    probe_posture: String,
+    reason: String,
+}
+
+impl NyxProviderReadiness {
+    pub fn provider_id(&self) -> &str {
+        &self.provider_id
+    }
+
+    pub fn kind(&self) -> &str {
+        &self.kind
+    }
+
+    pub const fn configured(&self) -> bool {
+        self.configured
+    }
+
+    pub const fn availability(&self) -> NyxAvailability {
+        self.availability
+    }
+
+    pub const fn ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn probe_posture(&self) -> &str {
+        &self.probe_posture
+    }
+
+    pub fn reason(&self) -> &str {
+        &self.reason
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NyxServiceReport {
     selected_protocol: NyxProtocolVersion,
-    service_version: String,
+    server_version: String,
+    protocol_schema_version: String,
     health: NyxHealth,
+    live: bool,
+    control_plane_ready: bool,
+    model_requests_ready: bool,
+    engine_ready_count: u32,
+    engine_total_count: u32,
+    provider_ready_count: u32,
+    provider_total_count: u32,
     capabilities: Vec<NyxCapability>,
+    engines: Vec<NyxEngineReadiness>,
+    providers: Vec<NyxProviderReadiness>,
 }
 
-impl NyxHandshakeResponse {
-    pub fn new(
-        selected_protocol: NyxProtocolVersion,
-        service_version: impl Into<String>,
-        health: NyxHealth,
-        capabilities: impl IntoIterator<Item = NyxCapability>,
-    ) -> Result<Self, NyxProtocolError> {
-        let service_version = service_version.into();
-        validate_service_version(&service_version)?;
-        let mut capabilities: Vec<_> = capabilities.into_iter().collect();
-        capabilities.sort_unstable();
-        if capabilities.len() > MAX_CAPABILITIES {
-            return Err(NyxProtocolError::TooManyCapabilities {
-                maximum: MAX_CAPABILITIES,
-                actual: capabilities.len(),
-            });
-        }
-        for pair in capabilities.windows(2) {
-            if pair[0] == pair[1] {
-                return Err(NyxProtocolError::DuplicateCapability(
-                    pair[0].as_str().to_owned(),
-                ));
-            }
-        }
-        Ok(Self {
-            selected_protocol,
-            service_version,
-            health,
-            capabilities,
-        })
-    }
-
+impl NyxServiceReport {
     pub const fn selected_protocol(&self) -> NyxProtocolVersion {
         self.selected_protocol
     }
 
-    pub fn service_version(&self) -> &str {
-        &self.service_version
+    pub fn server_version(&self) -> &str {
+        &self.server_version
+    }
+
+    pub fn protocol_schema_version(&self) -> &str {
+        &self.protocol_schema_version
     }
 
     pub const fn health(&self) -> NyxHealth {
         self.health
     }
 
+    pub const fn live(&self) -> bool {
+        self.live
+    }
+
+    pub const fn control_plane_ready(&self) -> bool {
+        self.control_plane_ready
+    }
+
+    pub const fn model_requests_ready(&self) -> bool {
+        self.model_requests_ready
+    }
+
+    pub const fn engine_ready_count(&self) -> u32 {
+        self.engine_ready_count
+    }
+
+    pub const fn engine_total_count(&self) -> u32 {
+        self.engine_total_count
+    }
+
+    pub const fn provider_ready_count(&self) -> u32 {
+        self.provider_ready_count
+    }
+
+    pub const fn provider_total_count(&self) -> u32 {
+        self.provider_total_count
+    }
+
     pub fn capabilities(&self) -> &[NyxCapability] {
         &self.capabilities
     }
 
-    pub fn encode(&self) -> Vec<u8> {
-        let mut encoder = Encoder::new();
-        encoder.bytes(&RESPONSE_MAGIC);
-        encoder.u16(WIRE_SCHEMA_VERSION);
-        encoder.u16(self.selected_protocol.major());
-        encoder.u16(self.selected_protocol.minor());
-        encoder.u8(self.health.code());
-        encoder.text(&self.service_version);
-        encoder.u16(self.capabilities.len() as u16);
-        for capability in &self.capabilities {
-            encoder.text(capability.as_str());
-        }
-        encoder.finish()
+    pub fn engines(&self) -> &[NyxEngineReadiness] {
+        &self.engines
     }
 
-    pub fn decode(bytes: &[u8]) -> Result<Self, NyxProtocolError> {
-        let mut decoder = Decoder::new(bytes);
-        if decoder.array::<8>()? != RESPONSE_MAGIC {
-            return Err(NyxProtocolError::BadMagic {
-                message: NyxWireMessage::Response,
-            });
-        }
-        decode_schema(&mut decoder, NyxWireMessage::Response)?;
-        let selected_protocol = NyxProtocolVersion::new(decoder.u16()?, decoder.u16()?);
-        let health = NyxHealth::from_code(decoder.u8()?)?;
-        let service_version = decoder.text(MAX_SERVICE_VERSION_BYTES)?;
-        validate_service_version(&service_version)?;
-        let count = usize::from(decoder.u16()?);
-        if count > MAX_CAPABILITIES {
-            return Err(NyxProtocolError::TooManyCapabilities {
-                maximum: MAX_CAPABILITIES,
-                actual: count,
-            });
-        }
-        let mut capabilities = Vec::with_capacity(count);
-        for _ in 0..count {
-            capabilities.push(NyxCapability::new(decoder.text(MAX_CAPABILITY_BYTES)?)?);
-        }
-        decoder.finish()?;
-        require_strict_capability_order(&capabilities)?;
-        Ok(Self {
-            selected_protocol,
-            service_version,
-            health,
-            capabilities,
-        })
+    pub fn providers(&self) -> &[NyxProviderReadiness] {
+        &self.providers
+    }
+
+    pub const fn is_ready(&self) -> bool {
+        matches!(self.health, NyxHealth::Healthy)
+            && self.live
+            && self.control_plane_ready
+            && self.model_requests_ready
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum NyxWireMessage {
-    Request,
-    Response,
-}
-
-impl NyxWireMessage {
-    const fn label(self) -> &'static str {
-        match self {
-            Self::Request => "request",
-            Self::Response => "response",
-        }
-    }
-}
-
-/// Structural or canonical violation in the Nyx handshake contract.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NyxProtocolError {
-    BadMagic {
-        message: NyxWireMessage,
+    InvalidJson(String),
+    InvalidVersion(String),
+    MissingField {
+        context: &'static str,
+        field: &'static str,
     },
-    UnsupportedWireSchema {
-        message: NyxWireMessage,
-        found: u16,
-        supported: u16,
+    InvalidField {
+        context: &'static str,
+        field: &'static str,
+        detail: String,
     },
-    EmptyProtocolSet,
-    TooManyProtocolVersions {
-        maximum: usize,
-        actual: usize,
+    UnsupportedSchema {
+        context: &'static str,
+        expected: &'static str,
+        found: String,
     },
-    NonCanonicalProtocolOrder,
-    EmptyServiceVersion,
-    ServiceVersionTooLong {
-        maximum: usize,
-        actual: usize,
+    UnsupportedHealth(String),
+    UnsupportedAvailability(String),
+    DuplicateIdentifier {
+        collection: &'static str,
+        identifier: String,
     },
-    InvalidServiceVersion,
-    EmptyCapability,
-    CapabilityTooLong {
-        maximum: usize,
-        actual: usize,
-    },
-    InvalidCapability(String),
-    DuplicateCapability(String),
-    NonCanonicalCapabilityOrder,
-    TooManyCapabilities {
-        maximum: usize,
-        actual: usize,
-    },
-    UnknownHealthCode {
-        found: u8,
-    },
-    UnexpectedEnd,
-    InvalidUtf8,
-    FieldTooLong {
-        maximum: usize,
-        actual: usize,
-    },
-    TrailingBytes {
-        remaining: usize,
+    InconsistentContract {
+        context: &'static str,
+        field: &'static str,
+        expected: String,
+        found: String,
     },
 }
 
 impl fmt::Display for NyxProtocolError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::BadMagic { message } => {
-                write!(formatter, "bad Nyx {} magic", message.label())
+            Self::InvalidJson(detail) => write!(formatter, "invalid Nyx JSON: {detail}"),
+            Self::InvalidVersion(value) => {
+                write!(formatter, "invalid Nyx contract version '{value}'")
             }
-            Self::UnsupportedWireSchema {
-                message,
-                found,
-                supported,
+            Self::MissingField { context, field } => {
+                write!(formatter, "Nyx {context} is missing field '{field}'")
+            }
+            Self::InvalidField {
+                context,
+                field,
+                detail,
             } => write!(
                 formatter,
-                "unsupported Nyx {} wire schema {found}; supported schema is {supported}",
-                message.label()
+                "Nyx {context} field '{field}' is invalid: {detail}"
             ),
-            Self::EmptyProtocolSet => formatter.write_str("Nyx protocol set is empty"),
-            Self::TooManyProtocolVersions { maximum, actual } => write!(
+            Self::UnsupportedSchema {
+                context,
+                expected,
+                found,
+            } => write!(
                 formatter,
-                "Nyx protocol set contains {actual} versions; maximum is {maximum}"
+                "Nyx {context} uses schema '{found}', expected '{expected}'"
             ),
-            Self::NonCanonicalProtocolOrder => {
-                formatter.write_str("Nyx protocol versions are not strictly ordered")
+            Self::UnsupportedHealth(value) => {
+                write!(formatter, "unsupported Nyx health status '{value}'")
             }
-            Self::EmptyServiceVersion => formatter.write_str("Nyx service version is empty"),
-            Self::ServiceVersionTooLong { maximum, actual } => write!(
+            Self::UnsupportedAvailability(value) => {
+                write!(formatter, "unsupported Nyx availability '{value}'")
+            }
+            Self::DuplicateIdentifier {
+                collection,
+                identifier,
+            } => write!(
                 formatter,
-                "Nyx service version length {actual} exceeds maximum {maximum}"
+                "duplicate Nyx {collection} identifier '{identifier}'"
             ),
-            Self::InvalidServiceVersion => {
-                formatter.write_str("Nyx service version contains invalid bytes")
-            }
-            Self::EmptyCapability => formatter.write_str("Nyx capability is empty"),
-            Self::CapabilityTooLong { maximum, actual } => write!(
+            Self::InconsistentContract {
+                context,
+                field,
+                expected,
+                found,
+            } => write!(
                 formatter,
-                "Nyx capability length {actual} exceeds maximum {maximum}"
+                "Nyx {context} field '{field}' is '{found}', expected '{expected}'"
             ),
-            Self::InvalidCapability(value) => write!(formatter, "invalid Nyx capability {value:?}"),
-            Self::DuplicateCapability(value) => {
-                write!(formatter, "duplicate Nyx capability {value:?}")
-            }
-            Self::NonCanonicalCapabilityOrder => {
-                formatter.write_str("Nyx capabilities are not strictly ordered")
-            }
-            Self::TooManyCapabilities { maximum, actual } => write!(
-                formatter,
-                "Nyx response contains {actual} capabilities; maximum is {maximum}"
-            ),
-            Self::UnknownHealthCode { found } => {
-                write!(formatter, "unknown Nyx health code {found}")
-            }
-            Self::UnexpectedEnd => formatter.write_str("Nyx message ended unexpectedly"),
-            Self::InvalidUtf8 => formatter.write_str("Nyx text field is not UTF-8"),
-            Self::FieldTooLong { maximum, actual } => write!(
-                formatter,
-                "Nyx text field length {actual} exceeds maximum {maximum}"
-            ),
-            Self::TrailingBytes { remaining } => {
-                write!(formatter, "Nyx message has {remaining} trailing bytes")
-            }
         }
     }
 }
 
 impl std::error::Error for NyxProtocolError {}
 
-fn validate_protocol_count(count: usize) -> Result<(), NyxProtocolError> {
-    if count == 0 {
-        return Err(NyxProtocolError::EmptyProtocolSet);
-    }
-    if count > MAX_PROTOCOL_VERSIONS {
-        return Err(NyxProtocolError::TooManyProtocolVersions {
-            maximum: MAX_PROTOCOL_VERSIONS,
-            actual: count,
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct VersionDocument {
+    pub server_version: String,
+    pub protocol_schema_version: String,
+    pub public_contract_version: NyxProtocolVersion,
+    pub compatible_major_versions: Vec<u16>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct HealthDocument {
+    pub status: NyxHealth,
+    pub live: bool,
+    pub control_plane_ready: bool,
+    pub model_requests_ready: bool,
+    pub server_version: String,
+    pub protocol_schema_version: String,
+    pub public_contract_version: NyxProtocolVersion,
+    pub engine_ready_count: u32,
+    pub engine_total_count: u32,
+    pub provider_ready_count: u32,
+    pub provider_total_count: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct CapabilityDocument {
+    pub server_version: String,
+    pub protocol_schema_version: String,
+    pub public_contract_version: NyxProtocolVersion,
+    pub capabilities: Vec<NyxCapability>,
+    pub engines: Vec<NyxEngineReadiness>,
+    pub providers: Vec<NyxProviderReadiness>,
+}
+
+pub(crate) fn decode_version(body: &[u8]) -> Result<VersionDocument, NyxProtocolError> {
+    let object = decode_object(body, "version response")?;
+    validate_schema(&object, "version response", SCHEMA_ID_VERSION)?;
+    let public_contract_version =
+        version_field(&object, "version response", "public_contract_version")?;
+    let supported_contract_versions =
+        version_array_field(&object, "version response", "supported_contract_versions")?;
+    if !supported_contract_versions.contains(&public_contract_version) {
+        return Err(NyxProtocolError::InvalidField {
+            context: "version response",
+            field: "supported_contract_versions",
+            detail: "does not contain public_contract_version".to_owned(),
         });
     }
-    Ok(())
-}
-
-fn require_strict_order(versions: &[NyxProtocolVersion]) -> Result<(), NyxProtocolError> {
-    if versions.windows(2).any(|pair| pair[0] >= pair[1]) {
-        Err(NyxProtocolError::NonCanonicalProtocolOrder)
-    } else {
-        Ok(())
-    }
-}
-
-fn validate_service_version(value: &str) -> Result<(), NyxProtocolError> {
-    if value.is_empty() {
-        return Err(NyxProtocolError::EmptyServiceVersion);
-    }
-    if value.len() > MAX_SERVICE_VERSION_BYTES {
-        return Err(NyxProtocolError::ServiceVersionTooLong {
-            maximum: MAX_SERVICE_VERSION_BYTES,
-            actual: value.len(),
+    let compatible_major_versions =
+        u16_array_field(&object, "version response", "compatible_major_versions")?;
+    if !compatible_major_versions.contains(&public_contract_version.major()) {
+        return Err(NyxProtocolError::InvalidField {
+            context: "version response",
+            field: "compatible_major_versions",
+            detail: "does not contain the public contract major".to_owned(),
         });
     }
-    if !value.bytes().all(|byte| byte.is_ascii_graphic()) {
-        return Err(NyxProtocolError::InvalidServiceVersion);
-    }
-    Ok(())
+    Ok(VersionDocument {
+        server_version: nonempty_text_field(&object, "version response", "server_version")?,
+        protocol_schema_version: exact_text_field(
+            &object,
+            "version response",
+            "protocol_schema_version",
+            SCHEMA_VERSION_V1,
+        )?,
+        public_contract_version,
+        compatible_major_versions,
+    })
 }
 
-fn validate_capability(value: &str) -> Result<(), NyxProtocolError> {
-    if value.is_empty() {
-        return Err(NyxProtocolError::EmptyCapability);
-    }
-    if value.len() > MAX_CAPABILITY_BYTES {
-        return Err(NyxProtocolError::CapabilityTooLong {
-            maximum: MAX_CAPABILITY_BYTES,
-            actual: value.len(),
+pub(crate) fn decode_health(body: &[u8]) -> Result<HealthDocument, NyxProtocolError> {
+    let object = decode_object(body, "health response")?;
+    validate_schema(&object, "health response", SCHEMA_ID_HEALTH)?;
+    Ok(HealthDocument {
+        status: NyxHealth::parse(text_field(&object, "health response", "status")?)?,
+        live: bool_field(&object, "health response", "live")?,
+        control_plane_ready: bool_field(&object, "health response", "control_plane_ready")?,
+        model_requests_ready: bool_field(&object, "health response", "model_requests_ready")?,
+        server_version: nonempty_text_field(&object, "health response", "server_version")?,
+        protocol_schema_version: exact_text_field(
+            &object,
+            "health response",
+            "protocol_schema_version",
+            SCHEMA_VERSION_V1,
+        )?,
+        public_contract_version: version_field(
+            &object,
+            "health response",
+            "public_contract_version",
+        )?,
+        engine_ready_count: u32_field(&object, "health response", "engine_ready_count")?,
+        engine_total_count: u32_field(&object, "health response", "engine_total_count")?,
+        provider_ready_count: u32_field(&object, "health response", "provider_ready_count")?,
+        provider_total_count: u32_field(&object, "health response", "provider_total_count")?,
+    })
+}
+
+pub(crate) fn decode_capabilities(body: &[u8]) -> Result<CapabilityDocument, NyxProtocolError> {
+    let object = decode_object(body, "capability response")?;
+    validate_schema(&object, "capability response", SCHEMA_ID_CAPABILITIES)?;
+    let mut capabilities = parse_capabilities(&object)?;
+    let mut engines = parse_engines(&object)?;
+    let mut providers = parse_providers(&object)?;
+    capabilities.sort_by(|left, right| left.capability_id.cmp(&right.capability_id));
+    engines.sort_by(|left, right| left.engine.cmp(&right.engine));
+    providers.sort_by(|left, right| left.provider_id.cmp(&right.provider_id));
+    Ok(CapabilityDocument {
+        server_version: nonempty_text_field(&object, "capability response", "server_version")?,
+        protocol_schema_version: exact_text_field(
+            &object,
+            "capability response",
+            "protocol_schema_version",
+            SCHEMA_VERSION_V1,
+        )?,
+        public_contract_version: version_field(
+            &object,
+            "capability response",
+            "public_contract_version",
+        )?,
+        capabilities,
+        engines,
+        providers,
+    })
+}
+
+pub(crate) fn decode_incompatible_versions(
+    body: &[u8],
+) -> Result<Vec<NyxProtocolVersion>, NyxProtocolError> {
+    let object = decode_object(body, "error response")?;
+    validate_schema(&object, "error response", SCHEMA_ID_ERROR)?;
+    let error = object_field(&object, "error response", "error")?;
+    let code = text_field(error, "error response", "code")?;
+    if code != INCOMPATIBLE_MAJOR_CODE {
+        return Err(NyxProtocolError::InvalidField {
+            context: "error response",
+            field: "code",
+            detail: format!("expected '{INCOMPATIBLE_MAJOR_CODE}', found '{code}'"),
         });
     }
-    let valid = value.bytes().all(|byte| {
-        byte.is_ascii_lowercase() || byte.is_ascii_digit() || matches!(byte, b'.' | b'-' | b'_')
-    });
-    if !valid {
-        return Err(NyxProtocolError::InvalidCapability(value.to_owned()));
-    }
-    Ok(())
+    version_array_field(error, "error response", "supported_contract_versions")
 }
 
-fn require_strict_capability_order(capabilities: &[NyxCapability]) -> Result<(), NyxProtocolError> {
-    if capabilities.windows(2).any(|pair| pair[0] >= pair[1]) {
-        Err(NyxProtocolError::NonCanonicalCapabilityOrder)
-    } else {
-        Ok(())
-    }
-}
-
-fn decode_schema(
-    decoder: &mut Decoder<'_>,
-    message: NyxWireMessage,
-) -> Result<(), NyxProtocolError> {
-    let found = decoder.u16()?;
-    if found != WIRE_SCHEMA_VERSION {
-        return Err(NyxProtocolError::UnsupportedWireSchema {
-            message,
-            found,
-            supported: WIRE_SCHEMA_VERSION,
+pub(crate) fn assemble_report(
+    version: VersionDocument,
+    health: HealthDocument,
+    capabilities: CapabilityDocument,
+) -> Result<NyxServiceReport, NyxProtocolError> {
+    if health.engine_ready_count > health.engine_total_count {
+        return Err(NyxProtocolError::InvalidField {
+            context: "health response",
+            field: "engine_ready_count",
+            detail: "ready count exceeds total count".to_owned(),
         });
     }
-    Ok(())
+    if health.provider_ready_count > health.provider_total_count {
+        return Err(NyxProtocolError::InvalidField {
+            context: "health response",
+            field: "provider_ready_count",
+            detail: "ready count exceeds total count".to_owned(),
+        });
+    }
+    if usize::try_from(health.engine_total_count).ok() != Some(capabilities.engines.len()) {
+        return Err(NyxProtocolError::InvalidField {
+            context: "capability response",
+            field: "engines",
+            detail: "engine inventory length does not match health total".to_owned(),
+        });
+    }
+    if usize::try_from(health.provider_total_count).ok() != Some(capabilities.providers.len()) {
+        return Err(NyxProtocolError::InvalidField {
+            context: "capability response",
+            field: "providers",
+            detail: "provider inventory length does not match health total".to_owned(),
+        });
+    }
+    let ready_engines = capabilities
+        .engines
+        .iter()
+        .filter(|item| item.ready)
+        .count();
+    if usize::try_from(health.engine_ready_count).ok() != Some(ready_engines) {
+        return Err(NyxProtocolError::InvalidField {
+            context: "capability response",
+            field: "engines",
+            detail: "ready engine count does not match health summary".to_owned(),
+        });
+    }
+    let ready_providers = capabilities
+        .providers
+        .iter()
+        .filter(|item| item.ready)
+        .count();
+    if usize::try_from(health.provider_ready_count).ok() != Some(ready_providers) {
+        return Err(NyxProtocolError::InvalidField {
+            context: "capability response",
+            field: "providers",
+            detail: "ready provider count does not match health summary".to_owned(),
+        });
+    }
+    if capabilities
+        .capabilities
+        .iter()
+        .any(|item| item.supported_version.major() != version.public_contract_version.major())
+    {
+        return Err(NyxProtocolError::InvalidField {
+            context: "capability response",
+            field: "capabilities",
+            detail: "capability version has an incompatible major".to_owned(),
+        });
+    }
+    require_equal(
+        "health response",
+        "server_version",
+        &version.server_version,
+        &health.server_version,
+    )?;
+    require_equal(
+        "capability response",
+        "server_version",
+        &version.server_version,
+        &capabilities.server_version,
+    )?;
+    require_equal(
+        "health response",
+        "protocol_schema_version",
+        &version.protocol_schema_version,
+        &health.protocol_schema_version,
+    )?;
+    require_equal(
+        "capability response",
+        "protocol_schema_version",
+        &version.protocol_schema_version,
+        &capabilities.protocol_schema_version,
+    )?;
+    require_equal(
+        "health response",
+        "public_contract_version",
+        &version.public_contract_version.to_string(),
+        &health.public_contract_version.to_string(),
+    )?;
+    require_equal(
+        "capability response",
+        "public_contract_version",
+        &version.public_contract_version.to_string(),
+        &capabilities.public_contract_version.to_string(),
+    )?;
+    Ok(NyxServiceReport {
+        selected_protocol: version.public_contract_version,
+        server_version: version.server_version,
+        protocol_schema_version: version.protocol_schema_version,
+        health: health.status,
+        live: health.live,
+        control_plane_ready: health.control_plane_ready,
+        model_requests_ready: health.model_requests_ready,
+        engine_ready_count: health.engine_ready_count,
+        engine_total_count: health.engine_total_count,
+        provider_ready_count: health.provider_ready_count,
+        provider_total_count: health.provider_total_count,
+        capabilities: capabilities.capabilities,
+        engines: capabilities.engines,
+        providers: capabilities.providers,
+    })
 }
 
-struct Encoder {
-    bytes: Vec<u8>,
-}
-
-impl Encoder {
-    fn new() -> Self {
-        Self { bytes: Vec::new() }
-    }
-
-    fn u8(&mut self, value: u8) {
-        self.bytes.push(value);
-    }
-
-    fn u16(&mut self, value: u16) {
-        self.bytes.extend_from_slice(&value.to_be_bytes());
-    }
-
-    fn bytes(&mut self, value: &[u8]) {
-        self.bytes.extend_from_slice(value);
-    }
-
-    fn text(&mut self, value: &str) {
-        self.u16(value.len() as u16);
-        self.bytes(value.as_bytes());
-    }
-
-    fn finish(self) -> Vec<u8> {
-        self.bytes
-    }
-}
-
-struct Decoder<'a> {
-    bytes: &'a [u8],
-    cursor: usize,
-}
-
-impl<'a> Decoder<'a> {
-    fn new(bytes: &'a [u8]) -> Self {
-        Self { bytes, cursor: 0 }
-    }
-
-    fn array<const N: usize>(&mut self) -> Result<[u8; N], NyxProtocolError> {
-        let end = self
-            .cursor
-            .checked_add(N)
-            .ok_or(NyxProtocolError::UnexpectedEnd)?;
-        let slice = self
-            .bytes
-            .get(self.cursor..end)
-            .ok_or(NyxProtocolError::UnexpectedEnd)?;
-        self.cursor = end;
-        let mut output = [0_u8; N];
-        output.copy_from_slice(slice);
-        Ok(output)
-    }
-
-    fn u8(&mut self) -> Result<u8, NyxProtocolError> {
-        Ok(self.array::<1>()?[0])
-    }
-
-    fn u16(&mut self) -> Result<u16, NyxProtocolError> {
-        Ok(u16::from_be_bytes(self.array()?))
-    }
-
-    fn text(&mut self, maximum: usize) -> Result<String, NyxProtocolError> {
-        let length = usize::from(self.u16()?);
-        if length > maximum {
-            return Err(NyxProtocolError::FieldTooLong {
-                maximum,
-                actual: length,
+fn parse_capabilities(root: &Map<String, Value>) -> Result<Vec<NyxCapability>, NyxProtocolError> {
+    let values = array_field(root, "capability response", "capabilities")?;
+    let mut seen = BTreeSet::new();
+    let mut result = Vec::with_capacity(values.len());
+    for value in values {
+        let object = value
+            .as_object()
+            .ok_or_else(|| NyxProtocolError::InvalidField {
+                context: "capability response",
+                field: "capabilities",
+                detail: "entry is not an object".to_owned(),
+            })?;
+        validate_schema(object, "capability descriptor", SCHEMA_ID_CAPABILITY)?;
+        let capability_id = nonempty_text_field(object, "capability descriptor", "capability_id")?;
+        if !seen.insert(capability_id.clone()) {
+            return Err(NyxProtocolError::DuplicateIdentifier {
+                collection: "capability",
+                identifier: capability_id,
             });
         }
-        let end = self
-            .cursor
-            .checked_add(length)
-            .ok_or(NyxProtocolError::UnexpectedEnd)?;
-        let slice = self
-            .bytes
-            .get(self.cursor..end)
-            .ok_or(NyxProtocolError::UnexpectedEnd)?;
-        self.cursor = end;
-        std::str::from_utf8(slice)
-            .map(str::to_owned)
-            .map_err(|_| NyxProtocolError::InvalidUtf8)
+        result.push(NyxCapability {
+            capability_id,
+            supported_version: version_field(object, "capability descriptor", "supported_version")?,
+            required_engine: nonempty_text_field(
+                object,
+                "capability descriptor",
+                "required_engine",
+            )?,
+            availability: NyxAvailability::parse(text_field(
+                object,
+                "capability descriptor",
+                "availability",
+            )?)?,
+            endpoint_ids: string_array_field(object, "capability descriptor", "endpoint_ids")?,
+        });
     }
-
-    fn finish(self) -> Result<(), NyxProtocolError> {
-        let remaining = self.bytes.len().saturating_sub(self.cursor);
-        if remaining == 0 {
-            Ok(())
-        } else {
-            Err(NyxProtocolError::TrailingBytes { remaining })
-        }
-    }
+    Ok(result)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn version(major: u16, minor: u16) -> NyxProtocolVersion {
-        NyxProtocolVersion::new(major, minor)
+fn parse_engines(root: &Map<String, Value>) -> Result<Vec<NyxEngineReadiness>, NyxProtocolError> {
+    let values = array_field(root, "capability response", "engines")?;
+    let mut seen = BTreeSet::new();
+    let mut result = Vec::with_capacity(values.len());
+    for value in values {
+        let object = value
+            .as_object()
+            .ok_or_else(|| NyxProtocolError::InvalidField {
+                context: "capability response",
+                field: "engines",
+                detail: "entry is not an object".to_owned(),
+            })?;
+        let engine = nonempty_text_field(object, "engine readiness", "engine")?;
+        if !seen.insert(engine.clone()) {
+            return Err(NyxProtocolError::DuplicateIdentifier {
+                collection: "engine",
+                identifier: engine,
+            });
+        }
+        result.push(NyxEngineReadiness {
+            engine,
+            availability: NyxAvailability::parse(text_field(
+                object,
+                "engine readiness",
+                "availability",
+            )?)?,
+            live: bool_field(object, "engine readiness", "live")?,
+            ready: bool_field(object, "engine readiness", "ready")?,
+            reason: text_field(object, "engine readiness", "reason")?.to_owned(),
+        });
     }
+    Ok(result)
+}
 
-    fn capability(value: &str) -> NyxCapability {
-        NyxCapability::new(value).unwrap()
+fn parse_providers(
+    root: &Map<String, Value>,
+) -> Result<Vec<NyxProviderReadiness>, NyxProtocolError> {
+    let values = array_field(root, "capability response", "providers")?;
+    let mut seen = BTreeSet::new();
+    let mut result = Vec::with_capacity(values.len());
+    for value in values {
+        let object = value
+            .as_object()
+            .ok_or_else(|| NyxProtocolError::InvalidField {
+                context: "capability response",
+                field: "providers",
+                detail: "entry is not an object".to_owned(),
+            })?;
+        let provider_id = nonempty_text_field(object, "provider readiness", "provider_id")?;
+        if !seen.insert(provider_id.clone()) {
+            return Err(NyxProtocolError::DuplicateIdentifier {
+                collection: "provider",
+                identifier: provider_id,
+            });
+        }
+        result.push(NyxProviderReadiness {
+            provider_id,
+            kind: nonempty_text_field(object, "provider readiness", "kind")?,
+            configured: bool_field(object, "provider readiness", "configured")?,
+            availability: NyxAvailability::parse(text_field(
+                object,
+                "provider readiness",
+                "availability",
+            )?)?,
+            ready: bool_field(object, "provider readiness", "ready")?,
+            probe_posture: text_field(object, "provider readiness", "probe_posture")?.to_owned(),
+            reason: text_field(object, "provider readiness", "reason")?.to_owned(),
+        });
     }
+    Ok(result)
+}
 
-    #[test]
-    fn request_round_trip_is_sorted_and_canonical() {
-        let request =
-            NyxHandshakeRequest::new([version(1, 1), version(1, 0), version(1, 1)]).unwrap();
-        assert_eq!(
-            request.supported_versions(),
-            &[version(1, 0), version(1, 1)]
-        );
-        assert_eq!(
-            NyxHandshakeRequest::decode(&request.encode()).unwrap(),
-            request
-        );
-    }
+fn decode_object(
+    body: &[u8],
+    context: &'static str,
+) -> Result<Map<String, Value>, NyxProtocolError> {
+    let value: Value = serde_json::from_slice(body)
+        .map_err(|error| NyxProtocolError::InvalidJson(error.to_string()))?;
+    value
+        .as_object()
+        .cloned()
+        .ok_or_else(|| NyxProtocolError::InvalidField {
+            context,
+            field: "body",
+            detail: "top-level JSON value is not an object".to_owned(),
+        })
+}
 
-    #[test]
-    fn response_round_trip_retains_health_and_capabilities() {
-        let response = NyxHandshakeResponse::new(
-            version(1, 1),
-            "nyx-0.1.0",
-            NyxHealth::Degraded,
-            [capability("tools.read"), capability("chat")],
-        )
-        .unwrap();
-        assert_eq!(
-            response
-                .capabilities()
-                .iter()
-                .map(NyxCapability::as_str)
-                .collect::<Vec<_>>(),
-            vec!["chat", "tools.read"]
-        );
-        assert_eq!(
-            NyxHandshakeResponse::decode(&response.encode()).unwrap(),
-            response
-        );
+fn validate_schema(
+    object: &Map<String, Value>,
+    context: &'static str,
+    schema_id: &'static str,
+) -> Result<(), NyxProtocolError> {
+    exact_text_field(object, context, "schema_version", SCHEMA_VERSION_V1)?;
+    let found = text_field(object, context, "schema_id")?;
+    if found != schema_id {
+        return Err(NyxProtocolError::UnsupportedSchema {
+            context,
+            expected: schema_id,
+            found: found.to_owned(),
+        });
     }
+    Ok(())
+}
 
-    #[test]
-    fn duplicate_capabilities_are_rejected() {
-        let error = NyxHandshakeResponse::new(
-            version(1, 0),
-            "nyx-0.1.0",
-            NyxHealth::Healthy,
-            [capability("chat"), capability("chat")],
-        )
-        .unwrap_err();
-        assert_eq!(
-            error,
-            NyxProtocolError::DuplicateCapability("chat".to_owned())
+fn object_field<'a>(
+    object: &'a Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<&'a Map<String, Value>, NyxProtocolError> {
+    object
+        .get(field)
+        .ok_or(NyxProtocolError::MissingField { context, field })?
+        .as_object()
+        .ok_or_else(|| NyxProtocolError::InvalidField {
+            context,
+            field,
+            detail: "expected object".to_owned(),
+        })
+}
+
+fn array_field<'a>(
+    object: &'a Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<&'a [Value], NyxProtocolError> {
+    object
+        .get(field)
+        .ok_or(NyxProtocolError::MissingField { context, field })?
+        .as_array()
+        .map(|values| values.as_slice())
+        .ok_or_else(|| NyxProtocolError::InvalidField {
+            context,
+            field,
+            detail: "expected array".to_owned(),
+        })
+}
+
+fn text_field<'a>(
+    object: &'a Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<&'a str, NyxProtocolError> {
+    object
+        .get(field)
+        .ok_or(NyxProtocolError::MissingField { context, field })?
+        .as_str()
+        .ok_or_else(|| NyxProtocolError::InvalidField {
+            context,
+            field,
+            detail: "expected string".to_owned(),
+        })
+}
+
+fn nonempty_text_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<String, NyxProtocolError> {
+    let value = text_field(object, context, field)?.trim();
+    if value.is_empty() {
+        return Err(NyxProtocolError::InvalidField {
+            context,
+            field,
+            detail: "must not be empty".to_owned(),
+        });
+    }
+    Ok(value.to_owned())
+}
+
+fn exact_text_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+    expected: &'static str,
+) -> Result<String, NyxProtocolError> {
+    let found = text_field(object, context, field)?;
+    if found != expected {
+        return Err(NyxProtocolError::InconsistentContract {
+            context,
+            field,
+            expected: expected.to_owned(),
+            found: found.to_owned(),
+        });
+    }
+    Ok(found.to_owned())
+}
+
+fn bool_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<bool, NyxProtocolError> {
+    object
+        .get(field)
+        .ok_or(NyxProtocolError::MissingField { context, field })?
+        .as_bool()
+        .ok_or_else(|| NyxProtocolError::InvalidField {
+            context,
+            field,
+            detail: "expected boolean".to_owned(),
+        })
+}
+
+fn u32_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<u32, NyxProtocolError> {
+    let value = object
+        .get(field)
+        .ok_or(NyxProtocolError::MissingField { context, field })?
+        .as_u64()
+        .ok_or_else(|| NyxProtocolError::InvalidField {
+            context,
+            field,
+            detail: "expected unsigned integer".to_owned(),
+        })?;
+    u32::try_from(value).map_err(|_| NyxProtocolError::InvalidField {
+        context,
+        field,
+        detail: "value exceeds u32".to_owned(),
+    })
+}
+
+fn version_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<NyxProtocolVersion, NyxProtocolError> {
+    NyxProtocolVersion::parse(text_field(object, context, field)?)
+}
+
+fn string_array_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<Vec<String>, NyxProtocolError> {
+    array_field(object, context, field)?
+        .iter()
+        .map(|value| {
+            value
+                .as_str()
+                .map(ToOwned::to_owned)
+                .ok_or_else(|| NyxProtocolError::InvalidField {
+                    context,
+                    field,
+                    detail: "array contains non-string value".to_owned(),
+                })
+        })
+        .collect()
+}
+
+fn version_array_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<Vec<NyxProtocolVersion>, NyxProtocolError> {
+    let mut versions = Vec::new();
+    for value in array_field(object, context, field)? {
+        let text = value
+            .as_str()
+            .ok_or_else(|| NyxProtocolError::InvalidField {
+                context,
+                field,
+                detail: "array contains non-string value".to_owned(),
+            })?;
+        versions.push(NyxProtocolVersion::parse(text)?);
+    }
+    versions.sort_unstable();
+    versions.dedup();
+    Ok(versions)
+}
+
+fn u16_array_field(
+    object: &Map<String, Value>,
+    context: &'static str,
+    field: &'static str,
+) -> Result<Vec<u16>, NyxProtocolError> {
+    let mut values = Vec::new();
+    for value in array_field(object, context, field)? {
+        let number = value
+            .as_u64()
+            .ok_or_else(|| NyxProtocolError::InvalidField {
+                context,
+                field,
+                detail: "array contains non-integer value".to_owned(),
+            })?;
+        values.push(
+            u16::try_from(number).map_err(|_| NyxProtocolError::InvalidField {
+                context,
+                field,
+                detail: "array value exceeds u16".to_owned(),
+            })?,
         );
     }
+    values.sort_unstable();
+    values.dedup();
+    Ok(values)
+}
+
+fn require_equal(
+    context: &'static str,
+    field: &'static str,
+    expected: &str,
+    found: &str,
+) -> Result<(), NyxProtocolError> {
+    if expected != found {
+        return Err(NyxProtocolError::InconsistentContract {
+            context,
+            field,
+            expected: expected.to_owned(),
+            found: found.to_owned(),
+        });
+    }
+    Ok(())
 }

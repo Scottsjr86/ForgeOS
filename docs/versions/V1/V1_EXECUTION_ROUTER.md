@@ -136,7 +136,7 @@ ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=NYX_LOCAL_AI
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=RESOLVE_NYX_OWNED_PUBLIC_HEALTH_AND_CAPABILITY_CONTRACT_THEN_ADAPT_FORGE_CLIENT_WITHOUT_EMBEDDING_NYX
+NEXT_ACTION=RUN_FORGE_CI_AND_REAL_NYX_PUBLIC_API_CLIENT_WITNESS
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -150,12 +150,11 @@ deterministic session lifecycle, native Git inspection and mutation, stable
 all-or-nothing patch application and persistent project registry/workspace restoration
 are closed. `FORGEOS-V1-NYX-100` is the only active source skill. Dedicated session
 bootstrap, repository file browsing, managed terminal sessions, integrated Git
-inspection, Forge World, and recovery remain available but inactive. ForgeOS has a
-local Unix/TCP client and private `FGNYXQ` / `FGNYXR` fixture coverage, but Nyx_Server
-exposes HTTP/JSON and no matching handler. The active skill remains cross-repository
-incomplete and may own only the ForgeOS client/adapter side. It may not embed a server,
-select models, create conversations, grant tools, manage services, contact providers,
-edit `nyx_server`, or present UI state.
+inspection, Forge World, and recovery remain available but inactive. Nyx_Server has
+banked and system-proved its canonical public version, health, and capability contract.
+ForgeOS now owns only the strict HTTP client adaptation and independent real-process
+witness. It may not embed a server, select models, create conversations, grant tools,
+manage services, contact providers, edit `nyx_server`, or present UI state.
 
 ## 3. Current-source intake law
 
@@ -835,7 +834,7 @@ state: ACTIVE
 lane: NYX_LOCAL_AI
 owning_subsystem: forge-nyx-client
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_33.tar sha256 5ddd6d4c79a5faf209e835d5fb2374af0a50adabffe2c41b005f41dfedb62833
+source_revision: Forge_OS_V1_base_37.tar sha256 874665eba0d1a040d7884c06ec266aefbbdb9864bc47c4d91e6d43f733e1bda3
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
   - FORGEOS-V1-CONTRACT-000
@@ -849,32 +848,40 @@ required_nyx_skills:
   - API-SYS-047
 minimum_nyx_state: BANKED
 minimum_nyx_proof: PROOF_SYSTEM
+nyx_gate_input: docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json
 required_reading:
   - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+  - docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md
   - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
-nyx_wiring_review: REQUIRED_BEFORE_SOURCE_EDITS
-nyx_surface_touched: canonical health and capability discovery plus Forge client adapter
-nyx_implementation_state: MISSING_CANONICAL_SHARED_CONTRACT
+nyx_wiring_review: COMPLETE_FOR_SLICE_002
+nyx_ownership_review: COMPLETE_FOR_SLICE_002
+nyx_surface_touched: Nyx-owned public version, health, and capability discovery through the Forge client adapter
+nyx_implementation_state: PUBLIC_API_GATE_BANKED_PROOF_SYSTEM
 nyx_source_files_checked:
-  - Nyx_Server/crates/nyx_server/src/main.rs
+  - Nyx_Server/crates/nyx_protocol/src/public_api.rs
   - Nyx_Server/crates/nyx_server/src/http/mod.rs
-  - Nyx_Server/crates/nyx_server/src/http/nyx_diag.rs
-  - Nyx_Server/crates/nyx_protocol/src/openai.rs
-  - Nyx_Server/crates/nyx_protocol/src/phase1.rs
-nyx_target_repository: Nyx_Server_FIRST_THEN_Forge_OS_V1_ADAPTER
+  - Nyx_Server/crates/nyx_server/src/http/public_api.rs
+  - Nyx_Server/crates/nyx_server/src/http/routes.rs
+  - Nyx_Server/experiments/skills/api/runs/public-api-gate-v1/real_server_witness_v1.json
+  - Nyx_Server/docs/workflow/skill_trees/receipts/API-FOUND-008-proof-public-api-gate-v1.json
+  - Nyx_Server/docs/workflow/skill_trees/receipts/API-VERSION-010-proof-public-api-gate-v1.json
+  - Nyx_Server/docs/workflow/skill_trees/receipts/API-SYS-044-proof-public-api-gate-v1.json
+  - Nyx_Server/docs/workflow/skill_trees/receipts/API-SYS-047-proof-public-api-gate-v1.json
+nyx_target_repository: Forge_OS_V1
 nyx_forbidden_substitute_confirmed: true
-closure_posture: CLIENT_IMPLEMENTATION_ALLOWED_FIXTURE_ONLY_CLOSURE_FORBIDDEN_UNTIL_REAL_NYX_GATE_PASSES
+closure_posture: NYX_GATE_PROVED_FORGE_ADAPTER_OPERATOR_VALIDATION_PENDING
 originating_path_or_probe: >
-  Exercise the current Forge client fixtures, then probe a real Nyx_Server process
-  through one Nyx-owned public contract. The current FGNYXQ/FGNYXR binary fixture is
-  not implemented by Nyx_Server and cannot serve as the real integration witness.
+  Run the Forge HTTP client fixture matrix, start Nyx_Server independently from its
+  own repository, and execute the ignored real_nyx_public_api_gate test against that
+  process. Accept a compatible truthful degraded response as Unhealthy, never Ready.
 first_blocker: >
-  ForgeOS now has a configured Unix/TCP probe and a private FGNYXQ/FGNYXR binary
-  handshake with fixture coverage, but Nyx_Server exposes HTTP/JSON and has no matching
-  handler or canonical contract. The client implementation is locally proved only; the
-  cross-repository compatibility seam is still open.
-active_slice: FORGEOS-V1-NYX-100-SLICE-001
+  The Nyx-owned public API gate is banked and its receipts and real-server witness are
+  verified. The Forge HTTP adapter patch still requires behavior-only CI and a real
+  Nyx process client witness before FORGEOS-V1-NYX-100 may close.
+active_slice: FORGEOS-V1-NYX-100-SLICE-002
 allowed_paths:
+  - Cargo.lock
+  - crates/forge-nyx-client/Cargo.toml
   - crates/forge-nyx-client/src/protocol.rs
   - crates/forge-nyx-client/src/transport.rs
   - crates/forge-nyx-client/src/lib.rs
@@ -882,21 +889,27 @@ allowed_paths:
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
+  - docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md
+  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
+  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
   - docs/versions/V1/skills/FORGEOS-V1-NYX-100/**
 forbidden_paths_and_behavior:
   - nyx_server source, model-provider calls, model selection, conversation state, tool permissions, checkpoints, agent dispatch, service lifecycle, project state, Git behavior, or UI state
-  - treating socket or HTTP success as compatibility, accepting an unoffered protocol, hiding malformed responses, or converting unavailable or unhealthy state into ready
+  - treating HTTP success as compatibility, accepting an incompatible major, hiding malformed responses, or converting unavailable or unhealthy state into ready
+  - authoring Nyx health, capability, engine, or provider truth inside ForgeOS
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
   - forge_nyx_client::protocol::NyxProtocolVersion
-  - forge_nyx_client::protocol::NyxCapability
   - forge_nyx_client::protocol::NyxHealth
-  - forge_nyx_client::protocol::NyxHandshakeRequest
-  - forge_nyx_client::protocol::NyxHandshakeResponse
+  - forge_nyx_client::protocol::NyxAvailability
+  - forge_nyx_client::protocol::NyxCapability
+  - forge_nyx_client::protocol::NyxEngineReadiness
+  - forge_nyx_client::protocol::NyxProviderReadiness
+  - forge_nyx_client::protocol::NyxServiceReport
   - forge_nyx_client::protocol::NyxProtocolError
   - forge_nyx_client::transport::NyxTransportEndpoint
   - forge_nyx_client::transport::NyxClientConfig
@@ -907,6 +920,8 @@ public_contracts_touched:
   - forge_nyx_client::transport::probe_nyx
 required_commands:
   - python3 scripts/run_ci.py
+  - NYX_BIND=127.0.0.1:8088 cargo run --locked --quiet -p nyx_server --bin nyx_server
+  - FORGE_NYX_ADDR=127.0.0.1:8088 cargo test --locked -p forge-nyx-client --test nyx_health real_nyx_public_api_gate -- --ignored --nocapture
 regression_commands: []
 validation_execution_policy: >
   Canonical CI is behavior-only and runs through scripts/run_ci.py. Documentation,
@@ -915,29 +930,27 @@ validation_execution_policy: >
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
   ForgeOS and a real Nyx_Server process consume the same Nyx-owned versioned public
-  contract; compatible healthy Nyx returns exact service version, health, and canonical
-  capabilities; missing endpoints classify unavailable; incompatible contract versions
-  and malformed responses classify incompatible; degraded or unhealthy responses retain
-  their declared health and capabilities while classifying unhealthy; no outcome panics
-  or bypasses Nyx; behavior-only CI and all structural guards remain green.
+  HTTP contract; compatible healthy Nyx returns exact service version, health,
+  capabilities, engines, and providers; missing endpoints classify unavailable;
+  incompatible versions and malformed responses classify incompatible; degraded or
+  unavailable responses retain their declared truth while classifying unhealthy; no
+  outcome panics or bypasses Nyx; behavior-only CI and all structural guards remain green.
 block_edge: >
-  ForgeOS tests only its private FGNYXQ/FGNYXR fixture with no Nyx_Server counterpart,
-  transport success alone becomes compatibility, an unoffered protocol is accepted,
-  malformed response bytes become ready, unavailable or unhealthy state is hidden,
-  capabilities are lost or nondeterministic, direct provider access appears, source-size
-  warnings occur, structural guards regress, or behavior-only CI fails.
+  Transport success alone becomes compatibility, an incompatible major is accepted,
+  contract headers or schema IDs are ignored, malformed responses become ready,
+  unavailable or unhealthy state is hidden, readiness inventories contradict summary
+  counts without rejection, capabilities become nondeterministic, direct provider
+  access appears, source-size warnings occur, structural guards regress, or CI fails.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py for the Forge client matrix and then probes a
-  real Nyx_Server process through the same canonical contract, observing compatible
-  health/version/capabilities plus unavailable, incompatible, malformed, and unhealthy
-  classifications without a crash or direct provider bypass.
+  The user runs python3 scripts/run_ci.py in ForgeOS, starts Nyx_Server independently
+  from its own repository at 127.0.0.1:8088, and runs the ignored
+  real_nyx_public_api_gate Forge test with FORGE_NYX_ADDR set. The returned report must
+  preserve exact version, health, capabilities, engine readiness, and provider readiness.
 return_path: >
-  If the Nyx gate is missing, hand off the exact Nyx skill IDs to Nyx_Server and keep
-  FORGEOS-V1-NYX-100 active or source-proved. After the Nyx gate and real-process witness
-  pass, close only FORGEOS-V1-NYX-100; then mark FORGEOS-V1-NYX-101,
-  FORGEOS-V1-AGENT-100, and FORGEOS-V1-SESSION-201 available because their remaining
-  direct prerequisites are closed; reevaluate only those direct unlocks and the
-  current available frontier.
+  After Forge CI and the real-process client witness pass, close only
+  FORGEOS-V1-NYX-100; then mark FORGEOS-V1-NYX-101, FORGEOS-V1-AGENT-100, and
+  FORGEOS-V1-SESSION-201 available because their remaining direct prerequisites are
+  closed; reevaluate only those direct unlocks and the current available frontier.
 parallel_compatibility: NONE_IN_NYX_LOCAL_AI_LANE
 ```
 

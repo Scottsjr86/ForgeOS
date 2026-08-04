@@ -1,32 +1,61 @@
 # FORGEOS-V1-NYX-100 Closure and Specification
 
-Status: `SOURCE_PROVED_CROSS_REPO_GATE_OPEN`
+Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
 Capability: Nyx health and versioned client protocol
+Active slice: `FORGEOS-V1-NYX-100-SLICE-002`
 Mandatory wiring review: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
 Mandatory capability ownership review: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Cross-repo gate authority: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
-Forge client source proved: `2026-08-03`
-Source authority: `Forge_OS_V1_base_33.tar`
-Source archive SHA-256: `5ddd6d4c79a5faf209e835d5fb2374af0a50adabffe2c41b005f41dfedb62833`
-Git revision: unavailable because the supplied source archive contains no `.git` metadata
+Verified Nyx gate input: `docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json`
+Forge source authority: `Forge_OS_V1_base_37.tar`
+Forge source archive SHA-256: `874665eba0d1a040d7884c06ec266aefbbdb9864bc47c4d91e6d43f733e1bda3`
+Nyx source authority inspected: `Nyx_Server_base_13.tar`
+Nyx source archive SHA-256: `800e499b0d9b7d9aa60d4c55920f9e9dc7be48f1c4a52fbd794800c8f9c3b26d`
+Git revision: unavailable because the supplied source archives contain no `.git` metadata
 
 ## Capability statement
 
-ForgeOS now probes one explicitly configured local Unix-socket or TCP Nyx endpoint,
-sends deterministic framed handshake bytes, negotiates only an offered protocol
-version, decodes the declared service version, health, and canonical capability set,
-and classifies the result as ready, unavailable, incompatible, or unhealthy. A
-responding socket is never treated as compatibility by itself, malformed bytes fail
-closed without a panic, and ForgeOS does not bypass Nyx to contact model providers.
+ForgeOS probes one explicitly configured local TCP or Unix endpoint through the
+Nyx-owned public HTTP contract. It requests `/v1/nyx/version`,
+`/v1/nyx/health`, and `/v1/nyx/capabilities`, sends the highest supported
+`x-nyx-contract-version`, validates the returned contract header and canonical
+schema IDs, and produces a typed ready, unavailable, incompatible, or unhealthy
+result.
 
-## Public contract
+Nyx_Server remains authoritative for server version, protocol version, health,
+capabilities, engine readiness, and provider readiness. ForgeOS performs no
+provider call, server-side capability calculation, permission decision, model
+selection, conversation mutation, or service lifecycle operation in this skill.
+
+## Nyx cross-repository evidence
+
+The following Nyx skills are verified `BANKED` at `PROOF_SYSTEM`:
+
+```text
+API-FOUND-008
+API-VERSION-010
+API-SYS-044
+API-SYS-047
+```
+
+The exact receipt hashes, Nyx CI result, public contract version, endpoint paths,
+real-server witness hash, and standalone chat/development regression result are
+recorded in `NYX_GATE_INPUT.json`.
+
+This satisfies the Nyx-owned side of `NYX-GATE-FORGEOS-V1-NYX-100`. ForgeOS
+closure still requires behavior-only CI and the real Nyx client witness after
+this adapter patch is applied.
+
+## Public ForgeOS contract
 
 ```text
 forge_nyx_client::protocol::NyxProtocolVersion
-forge_nyx_client::protocol::NyxCapability
 forge_nyx_client::protocol::NyxHealth
-forge_nyx_client::protocol::NyxHandshakeRequest
-forge_nyx_client::protocol::NyxHandshakeResponse
+forge_nyx_client::protocol::NyxAvailability
+forge_nyx_client::protocol::NyxCapability
+forge_nyx_client::protocol::NyxEngineReadiness
+forge_nyx_client::protocol::NyxProviderReadiness
+forge_nyx_client::protocol::NyxServiceReport
 forge_nyx_client::protocol::NyxProtocolError
 forge_nyx_client::transport::NyxTransportEndpoint
 forge_nyx_client::transport::NyxClientConfig
@@ -37,37 +66,23 @@ forge_nyx_client::transport::NyxIncompatibility
 forge_nyx_client::transport::probe_nyx
 ```
 
-## Accepted operator evidence
+## Intended behavior
 
-The operator ran the canonical behavior-only CI entrypoint and returned:
-
-```text
-FORGE_SEAM_DIRECTION_SUMMARY status=PASS packages=12 routes=42 forbidden=0 policy=exact-reviewed-subsystem-reachability-v1
-FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0 policy=exact-reviewed-production-graph-v1
-FORGE_SOURCE_SIZE_SUMMARY status=PASS modules=107 pass=107 warn=0 fail=0 warnings_denied=true
-CARGO_TEST_SUMMARY status=PASS suites=58 passed=274 failed=0 ignored=0 measured=0 filtered_out=0
-CI RESULT: PASS
-```
-
-This proves the Forge client and fixture matrix only. It does not close the capability:
-`NYX-GATE-FORGEOS-V1-NYX-100` still requires `API-FOUND-008`, `API-VERSION-010`,
-`API-SYS-044`, and `API-SYS-047` at `BANKED` or `RELEASE_EARNED` with at least
-`PROOF_SYSTEM`, plus a real Nyx process consuming the same Nyx-owned public contract.
-CI remains limited to behavioral tests, golden locks, and structural guards.
-
-## Proved behavior
-
-- request and response frames use deterministic versioned bytes;
-- offered protocol versions are canonical, ordered, and duplicate-free;
-- healthy compatible fixtures return exact service version and capabilities;
-- missing Unix and TCP endpoints classify unavailable with typed transport reasons;
-- an endpoint selecting an unoffered protocol classifies incompatible;
-- malformed response bytes classify incompatible without crashing;
-- degraded and unhealthy fixtures retain health and capabilities while classifying
-  unhealthy;
-- oversized frames and incomplete I/O fail closed;
-- no provider call, model selection, conversation, permission, or service-lifecycle
-  behavior is hidden behind the probe.
+- compatible major versions may negotiate to Nyx's canonical published minor;
+- incompatible majors are decoded from Nyx's canonical `426 Upgrade Required`
+  error envelope;
+- missing endpoints preserve typed transport failures;
+- HTTP success without the Nyx contract header is incompatible;
+- header/body contract disagreement is incompatible;
+- malformed HTTP, JSON, schema IDs, versions, or readiness payloads fail closed;
+- healthy and fully ready Nyx returns `Ready`;
+- degraded or unavailable Nyx retains its declared capabilities and readiness
+  details while returning `Unhealthy`;
+- capability, engine, and provider identifiers are duplicate-rejected and
+  projected in deterministic order;
+- health summary counts must match the detailed readiness inventories;
+- the same HTTP contract may travel over configured TCP or Unix transport, but
+  the current Nyx_Server deployment exposes TCP HTTP at `NYX_BIND`.
 
 ## Regression locks
 
@@ -76,11 +91,40 @@ crates/forge-nyx-client/tests/nyx_health.rs
 python3 scripts/run_ci.py
 ```
 
+The test matrix covers healthy compatibility, unavailable transport,
+incompatible-major rejection, malformed responses, degraded readiness, schema
+mismatch, contract-header mismatch, and Unix HTTP transport. One ignored test is
+the explicit real Nyx process witness.
+
+## Operator validation still required
+
+Run Forge behavior-only CI:
+
+```bash
+python3 scripts/run_ci.py
+```
+
+Start the verified Nyx_Server independently, using its own repository:
+
+```bash
+NYX_BIND=127.0.0.1:8088 cargo run --locked --quiet -p nyx_server --bin nyx_server
+```
+
+Then run the Forge client against that real process:
+
+```bash
+FORGE_NYX_ADDR=127.0.0.1:8088 \
+  cargo test --locked -p forge-nyx-client --test nyx_health \
+  real_nyx_public_api_gate -- --ignored --nocapture
+```
+
+A compatible but truthfully degraded Nyx response is a valid integration witness
+for this health-discovery skill. It remains classified `Unhealthy`; ForgeOS must
+not repaint it green.
+
 ## Explicit non-claims
 
-The private `FGNYXQ` / `FGNYXR` fixture protocol is not implemented by the current
-Nyx_Server HTTP/JSON API and is not a real-server closure witness.
-
-This source proof does not grant tools, persist permission checkpoints, select models,
-create conversations, manage the Nyx process, dispatch remote agents, or present Nyx
-state through Forge World. Those remain separate skills.
+This skill does not manage the Nyx process, select models, create conversations,
+grant tools, persist permission checkpoints, resume suspended actions, dispatch
+remote agents, or present Nyx state through Forge World. Those remain separate,
+Nyx-gated capabilities.

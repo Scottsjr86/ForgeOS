@@ -1265,7 +1265,7 @@ never closes the node.
 - **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-100` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 - **Required Nyx evidence before Forge closure:** `API-FOUND-008`, `API-VERSION-010`, `API-SYS-044`, `API-SYS-047`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** No health server, capability registry, protocol-version authority, model call, or Nyx runtime may be implemented inside ForgeOS.
-- **Current seam finding:** ForgeOS currently encodes a private `FGNYXQ` / `FGNYXR` binary handshake, while Nyx_Server currently exposes HTTP/JSON and has no matching handler. Forge fixtures cannot close this skill until both repositories consume one Nyx-owned public contract.
+- **Current seam finding:** Nyx_Server now owns and system-proves public contract version `1.0` at `/v1/nyx/version`, `/v1/nyx/health`, and `/v1/nyx/capabilities`. ForgeOS must consume those routes through its strict HTTP adapter and complete operator CI plus a real-process witness before closure.
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
 - **Current state:** `ACTIVE`
@@ -1580,8 +1580,8 @@ CLOSED
   FORGEOS-V1-PROJECT-200
 
 ACTIVE_SKILL=FORGEOS-V1-NYX-100
-ACTIVE_BLOCKER=FORGE_CLIENT_PRIVATE_FGNYX_BINARY_HANDSHAKE_HAS_NO_MATCHING_NYX_SERVER_HANDLER_OR_CANONICAL_NYX_PUBLIC_CONTRACT
-ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-001
+ACTIVE_BLOCKER=FORGE_HTTP_ADAPTER_REQUIRES_OPERATOR_CI_AND_REAL_NYX_PROCESS_WITNESS
+ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-002
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
