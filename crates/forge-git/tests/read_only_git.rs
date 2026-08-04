@@ -8,6 +8,7 @@ use forge_git::worktree::GitWorktreeState;
 use forge_protocol::identities::{RepositoryId, IDENTITY_BYTES};
 use std::ffi::OsString;
 use std::fs;
+use std::io::Write;
 use std::os::unix::ffi::{OsStrExt, OsStringExt};
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
@@ -112,6 +113,17 @@ fn git_ok(root: &Path, arguments: &[&str]) -> Output {
         String::from_utf8_lossy(&output.stderr)
     );
     output
+}
+
+fn publish_executable(path: &Path, bytes: &[u8]) {
+    let staging = path.with_extension("stage");
+    {
+        let mut file = fs::File::create(&staging).unwrap();
+        file.write_all(bytes).unwrap();
+        file.sync_all().unwrap();
+    }
+    fs::set_permissions(&staging, fs::Permissions::from_mode(0o755)).unwrap();
+    fs::rename(staging, path).unwrap();
 }
 
 #[test]
@@ -372,14 +384,10 @@ fn non_utf8_status_paths_are_preserved_without_replacement() {
 fn malformed_machine_output_is_a_typed_parse_failure() {
     let repository = TempRepository::committed("malformed");
     let program = repository.root.join("fake-git.py");
-    fs::write(
+    publish_executable(
         &program,
         b"#!/usr/bin/env python3\nimport os,sys\nif 'HOME' in os.environ or 'GIT_DIR' in os.environ or 'GIT_WORK_TREE' in os.environ:\n sys.exit(70)\nif 'rev-parse' in sys.argv:\n os.write(1,b'true\\n\\n')\nelse:\n os.write(1,b'# branch.oid broken\\x00# branch.head main\\x00')\n",
-    )
-    .unwrap();
-    let mut permissions = fs::metadata(&program).unwrap().permissions();
-    permissions.set_mode(0o755);
-    fs::set_permissions(&program, permissions).unwrap();
+    );
 
     let inspector =
         GitRepositoryInspector::with_program(repository_id(5), &repository.root, &program).unwrap();

@@ -2,6 +2,7 @@
 //!
 //! Subsystem wiring will be added only by the capabilities that own it.
 
+pub mod command_workspace;
 pub mod editor_workspace;
 pub mod terminal_workspace;
 

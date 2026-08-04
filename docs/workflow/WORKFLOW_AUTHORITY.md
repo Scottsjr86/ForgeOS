@@ -110,18 +110,18 @@ The bounded authority migration is complete and source execution is active:
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS-V1-TERMINAL-200
+BATON_OWNER=FORGEOS-V1-COMMAND-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_SKILLS=[FORGEOS-V1-TERMINAL-200]
+ACTIVE_SKILLS=[FORGEOS-V1-COMMAND-200]
 AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200]
 ACTIVE_LANE=TERMINAL_AND_COMMAND
-ACTIVE_QUESTION=Can ForgeOS manage multiple real PTYs with exact project/repository identity, safe project working directories, renderable raw output, independent input/resize/exit, and fail-closed binding checks?
-FIRST_BLOCKER=FORGEOS_HAS_REAL_NATIVE_PTY_PRIMITIVES_BUT_NO_PROJECT_BOUND_MULTI_TERMINAL_REGISTRY_RENDERABLE_TRANSCRIPT_OR_BINDING_CHECKED_PRODUCT_COMPOSITION
-ACTIVE_SLICE=FORGEOS-V1-TERMINAL-200-SLICE-001
-SOURCE_IMPLEMENTATION_ALLOWED=YES_MANAGED_TERMINAL_COMPOSITION_ONLY
-CURRENT_RESULT=RUST_LANGUAGE_INTELLIGENCE_CLOSED_MANAGED_TERMINALS_ACTIVE
-RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-TERMINAL-200_IF_GREEN
+ACTIVE_QUESTION=Can ForgeOS execute only immutable registered project commands with exact launch policy, truthful output and exit state, cancellation, and history bound to one project revision?
+FIRST_BLOCKER=FORGEOS_CAN_PREPARE_IMMUTABLE_COMMAND_LAUNCH_PAYLOADS_AND_MANAGE_REAL_PTYS_BUT_HAS_NO_PROJECT_BOUND_REGISTERED_COMMAND_RUNNER_OR_EXACT_REVISION_BOUND_OUTPUT_HISTORY
+ACTIVE_SLICE=FORGEOS-V1-COMMAND-200-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES_REGISTERED_COMMAND_EXECUTION_AND_HISTORY_ONLY
+CURRENT_RESULT=MANAGED_TERMINALS_CLOSED_REGISTERED_COMMAND_EXECUTION_ACTIVE
+RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-COMMAND-200_IF_GREEN
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
@@ -132,14 +132,15 @@ NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 
 Persistent project registry/workspace restoration, Nyx health/versioned public
 client protocol, Forge World projection/input routing, recovery, repository
-browsing/search, multi-buffer atomic save, and Rust language intelligence are closed.
-`FORGEOS-V1-TERMINAL-200` is the only active source skill. Dedicated session
-bootstrap, managed Nyx lifecycle, integrated Git inspection, Nyx checkpoint
-transport, and remote-agent records remain available but inactive. The active skill
-owns only project-bound multi-PTY management, exact raw transcript projection, and
-binding-checked input, resize, exit, termination, and removal. It may not execute
-registered commands, persist command history, mutate project files, inspect Git,
-call Nyx, or render the later Forge World terminal widget.
+browsing/search, multi-buffer atomic save, Rust language intelligence, and managed
+project-bound terminal sessions are closed. `FORGEOS-V1-COMMAND-200` is the only
+active source skill. Dedicated session bootstrap, managed Nyx lifecycle, integrated
+Git inspection, Nyx checkpoint transport, and remote-agent records remain available
+but inactive. The active skill may execute only immutable registered commands through
+the real process adapter, with validated repository scope, exact declared environment,
+process identity, output, exit, timeout/cancellation, and project/revision-bound
+history. It may not accept arbitrary shell strings, mutate command definitions, call
+Nyx, inspect Git, or render later Forge World UI.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source

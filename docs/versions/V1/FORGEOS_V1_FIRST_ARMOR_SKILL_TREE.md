@@ -913,8 +913,8 @@ never closes the node.
 
 - **Owner:** `forge-terminal`, `forge-app` composition over `forge-project` boundaries
 - **Prerequisites:** `FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-PROJECT-200`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-TERMINAL-200-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closed by operator evidence:** behavior-only CI passed with 317 tests and all structural guards green.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-TERMINAL-200/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-TERMINAL-200/USER_GUIDE_SOURCE.md`
@@ -931,7 +931,11 @@ never closes the node.
 
 - **Owner:** `forge-terminal`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-COMMAND-100`, `FORGEOS-V1-TERMINAL-200`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-COMMAND-200-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-COMMAND-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-COMMAND-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** Declared format, build, test, and custom commands run with exact
   argv, working directory, environment policy, process identity, output, exit state,
   and cancellation.
@@ -1606,10 +1610,12 @@ CLOSED
   FORGEOS-V1-RECOVERY-100
   FORGEOS-V1-FILE-200
   FORGEOS-V1-EDITOR-200
+  FORGEOS-V1-EDITOR-201
+  FORGEOS-V1-TERMINAL-200
 
-ACTIVE_SKILL=FORGEOS-V1-TERMINAL-200
-ACTIVE_BLOCKER=FORGEOS_HAS_REAL_NATIVE_PTY_PRIMITIVES_BUT_NO_PROJECT_BOUND_MULTI_TERMINAL_REGISTRY_RENDERABLE_TRANSCRIPT_OR_BINDING_CHECKED_PRODUCT_COMPOSITION
-ACTIVE_SLICE=FORGEOS-V1-TERMINAL-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-COMMAND-200
+ACTIVE_BLOCKER=FORGEOS_CAN_PREPARE_IMMUTABLE_COMMAND_LAUNCH_PAYLOADS_AND_MANAGE_REAL_PTYS_BUT_HAS_NO_PROJECT_BOUND_REGISTERED_COMMAND_RUNNER_OR_EXACT_REVISION_BOUND_OUTPUT_HISTORY
+ACTIVE_SLICE=FORGEOS-V1-COMMAND-200-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
@@ -1622,7 +1628,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-TERMINAL-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-COMMAND-200` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

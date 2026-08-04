@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200]
 AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-TERMINAL-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-TERMINAL-200
+ACTIVE_SKILLS=[FORGEOS-V1-COMMAND-200]
+ACTIVE_BATON_OWNER=FORGEOS-V1-COMMAND-200
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=TERMINAL_AND_COMMAND
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_PROJECT_BOUND_MULTI_TERMINAL_MANAGEMENT
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_REGISTERED_COMMAND_EXECUTION_AND_HISTORY
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -149,15 +149,16 @@ Rust Analyzer process/JSON-RPC foundation, native PTY support, immutable
 registered-command policy, deterministic session lifecycle, native Git inspection
 and mutation, stable patch application, persistent project registry/workspace
 restoration, Nyx public health/version discovery, source-backed Forge World
-projection, recovery, repository browsing/search, multi-buffer atomic save, and Rust
-language intelligence are closed. `FORGEOS-V1-TERMINAL-200` is the only active
-source skill. Dedicated session bootstrap, managed Nyx lifecycle, integrated Git
-inspection, Nyx checkpoint transport, and remote-agent records remain available but
-inactive. The active skill may only bind real PTYs to exact project/repository
-identity, resolve allowed working directories through project boundaries, preserve
-raw output for rendering, and expose binding-checked input, resize, exit,
-termination, and removal. It may not execute registered commands, persist command
-history, mutate files, inspect Git, call Nyx, or render later Forge World UI.
+projection, recovery, repository browsing/search, multi-buffer atomic save, Rust
+language intelligence, and managed project-bound terminals are closed.
+`FORGEOS-V1-COMMAND-200` is the only active source skill. Dedicated session
+bootstrap, managed Nyx lifecycle, integrated Git inspection, Nyx checkpoint
+transport, and remote-agent records remain available but inactive. The active skill
+may only execute immutable registered commands through real managed processes,
+validate working directory and declared environment policy, preserve exact output
+and terminal outcome, and bind history to exact project/repository/revision/process
+identity. It may not accept arbitrary shell text, mutate registered definitions,
+inspect Git, call Nyx, or render later Forge World UI.
 
 ## 3. Current-source intake law
 
@@ -829,101 +830,83 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Managed embedded terminal sessions are active.
+Registered project command execution and output history are active.
 
 ```yaml
-skill_id: FORGEOS-V1-TERMINAL-200
+skill_id: FORGEOS-V1-COMMAND-200
 state: ACTIVE
 lane: TERMINAL_AND_COMMAND
 owning_subsystem: forge-terminal with forge-app composition over forge-project boundaries
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_43.tar
+source_revision: Forge_OS_V1_base_44.tar
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-TERMINAL-100
-  - FORGEOS-V1-PROJECT-200
+  - FORGEOS-V1-COMMAND-100
+  - FORGEOS-V1-TERMINAL-200
 originating_path_or_probe: >
-  Create two real PTYs for validated projects, preserve separate output and process
-  identity, exercise raw input and resize-sensitive output, reject a forged project
-  handle and an undeclared or symlinked working directory, terminate one session,
-  and prove the other remains isolated.
+  Configure passing, failing, long-running, and cancelled immutable registered
+  commands; run them in validated project directories with exact argv and declared
+  environment; inspect process identity, output, exit state, and project/revision-
+  bound history; reject stale definitions, duplicate process IDs, foreign
+  repositories, arbitrary shell strings, and paths outside declared roots.
 first_blocker: >
-  ForgeOS has real native PTY spawn, byte I/O, resize, exit, termination, and stable
-  terminal identity, but no project-bound multi-terminal registry, renderable raw
-  transcript, binding-checked operation route, or composition through the registered
-  project repository boundary.
-active_slice: FORGEOS-V1-TERMINAL-200-SLICE-001
+  ForgeOS can prepare immutable shell-free command launch payloads and manage real
+  project-bound PTYs, but it has no product runner that joins those contracts or
+  records exact command output and terminal state against one project revision.
+active_slice: FORGEOS-V1-COMMAND-200-SLICE-001
 allowed_paths:
+  - crates/forge-bridge/src/processes.rs
   - crates/forge-terminal/src/lib.rs
-  - crates/forge-terminal/src/managed.rs
-  - crates/forge-terminal/tests/managed_terminals.rs
+  - crates/forge-terminal/src/execution.rs
+  - crates/forge-terminal/tests/command_execution.rs
   - crates/forge-app/src/composition/mod.rs
-  - crates/forge-app/src/composition/terminal_workspace.rs
-  - crates/forge-app/tests/terminal_workspace.rs
+  - crates/forge-app/src/composition/command_workspace.rs
+  - crates/forge-app/tests/command_workspace.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/**
   - docs/versions/V1/skills/FORGEOS-V1-TERMINAL-200/**
-forbidden_paths_and_behavior:
-  - fake terminal output, scripted log substitutes, or shared process identity
-  - working directories outside manifest-declared roots or project boundaries
-  - operations accepted under a forged project or repository binding
-  - registered-command execution, command history, Git, Nyx, or Forge World UI behavior
-  - terminal ownership of canonical project paths or repository truth
-  - documentation, Git-state, formatting, or Markdown CI gates
-  - V2, V3, or V4 source and documents
-public_contracts_touched:
-  - forge_terminal::managed::ManagedTerminalHandle
-  - forge_terminal::managed::ManagedTerminalRegistry
-  - forge_terminal::managed::ManagedTerminalView
-  - forge_app::composition::terminal_workspace::ProjectTerminalWorkspace
-  - forge_app::composition::terminal_workspace::TerminalWorkingDirectory
-required_commands:
+  - docs/versions/V1/skills/FORGEOS-V1-COMMAND-200/**
+forbidden_paths:
+  - crates/forge-nyx-client/**
+  - crates/forge-git/**
+  - crates/forge-world/**
+  - nyx_server source
+must_pass:
+  - exact executable and argv are launched without shell interpolation
+  - working directories remain inside the registered project boundary
+  - parent environment is cleared and only declared variables enter the child
+  - passing, failing, timeout, and cancellation outcomes remain distinct
+  - stdout and stderr remain exact separate byte streams
+  - history binds project, repository, revision, command definition, and process IDs
+  - stale definitions, duplicate process IDs, and foreign repositories fail closed
   - python3 scripts/run_ci.py
-regression_commands: []
-validation_execution_policy: >
-  Canonical CI is behavior-only and runs through scripts/run_ci.py. Documentation,
-  Git state, and formatting are forbidden CI gates. When Rust is unavailable in the
-  assistant environment, prepare and apply-check the patch and set
-  OPERATOR_VALIDATION_PENDING.
-pass_edge: >
-  Multiple real PTYs remain independently addressable; each is bound to exact project,
-  repository, and terminal identity; raw output is sequence-preserved for rendering;
-  input, resize, exit, termination, and removal use the native PTY; unsafe working
-  directories and forged bindings fail closed; closing one terminal leaves others
-  untouched; and CI passes.
-block_edge: >
-  A terminal becomes a fake log view, identities cross, raw output is invented or
-  reordered, unsafe paths reach spawn, one close affects another session, registered
-  commands or project authority leak into this slice, source-size policy is exceeded,
-  a structural guard regresses, or CI fails.
-user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and returns the exact summary. The tests
-  exercise concurrent sessions, project binding, input, resize, transcript rendering,
-  boundary rejection, forged-handle rejection, termination, and exited-only removal.
+must_not_claim:
+  - arbitrary shell command approval
+  - durable command-history persistence across reboot
+  - Forge World command UI
+  - version-bound verification receipts
+  - Nyx command approval or checkpoint resume
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-TERMINAL-200, make
-  FORGEOS-V1-COMMAND-200 available, and reevaluate the active frontier.
-parallel_compatibility: NONE_IN_TERMINAL_AND_COMMAND_LANE
+  After operator CI passes, close only FORGEOS-V1-COMMAND-200 and reevaluate the
+  frontier. VERIFY-200 remains locked until GIT-200 also closes; NYX-202 remains
+  locked behind its Nyx-owned gates.
 ```
 
-This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
-`FORGEOS-V1-GIT-200`, `FORGEOS-V1-NYX-101`, and `FORGEOS-V1-AGENT-100` remain
-available but inactive.
+## 17. Direct unlock handling for registered commands
 
----
+`FORGEOS-V1-COMMAND-200` may close only after behavior-only CI proves passing,
+failing, timeout, and cancelled registered commands; exact output and exit state;
+validated project directory and environment policy; stale-definition rejection; and
+project/revision-bound history.
 
-## 17. Direct unlock handling for managed terminals
-
-`FORGEOS-V1-TERMINAL-200` may close only after behavior-only CI proves multiple
-project-bound real PTYs, exact raw output, binding-checked operations, safe working
-directories, isolation, and clean termination/removal.
-
-Closing `FORGEOS-V1-TERMINAL-200` makes `FORGEOS-V1-COMMAND-200` available.
-Reevaluate only that direct unlock and the existing available frontier.
+Closing `FORGEOS-V1-COMMAND-200` does not by itself unlock a new standalone node.
+It satisfies one prerequisite of `FORGEOS-V1-VERIFY-200`, `FORGEOS-V1-NYX-202`,
+and `FORGEOS-V1-TERMINAL-300`; each remains locked until its other prerequisites
+close. The router must therefore reevaluate the entire available frontier rather
+than advance by adjacency.
 
 ## 18. Final closure routing
 

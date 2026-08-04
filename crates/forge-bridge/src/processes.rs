@@ -12,11 +12,59 @@ use forge_protocol::processes::{
     ProcessOutcome, ProcessOutput, ProcessOutputChunk, ProcessSpawnRequest, ProcessStream,
 };
 use std::io::{self, Read};
+use std::path::{Path, PathBuf};
 use std::process::{Child, Command, ExitStatus, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{mpsc, Arc};
 use std::thread;
 use std::time::{Duration, Instant};
+
+/// Operating-system launch context kept separate from canonical process identity.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProcessExecutionContext {
+    working_directory: PathBuf,
+    clear_environment: bool,
+    environment: Vec<(String, String)>,
+}
+
+impl ProcessExecutionContext {
+    /// Creates a shell-free launch context with deterministic environment ordering.
+    pub fn new(working_directory: impl Into<PathBuf>) -> Self {
+        Self {
+            working_directory: working_directory.into(),
+            clear_environment: true,
+            environment: Vec::new(),
+        }
+    }
+
+    /// Adds the exact sorted environment supplied to the child.
+    pub fn with_environment<I, K, V>(mut self, environment: I) -> Self
+    where
+        I: IntoIterator<Item = (K, V)>,
+        K: Into<String>,
+        V: Into<String>,
+    {
+        self.environment = environment
+            .into_iter()
+            .map(|(name, value)| (name.into(), value.into()))
+            .collect();
+        self.environment
+            .sort_by(|left, right| left.0.as_bytes().cmp(right.0.as_bytes()));
+        self
+    }
+
+    pub fn working_directory(&self) -> &Path {
+        &self.working_directory
+    }
+
+    pub const fn clears_parent_environment(&self) -> bool {
+        self.clear_environment
+    }
+
+    pub fn environment(&self) -> &[(String, String)] {
+        &self.environment
+    }
+}
 
 /// Thread-safe cancellation signal shared with one managed execution.
 #[derive(Debug, Clone, Default)]
@@ -97,6 +145,16 @@ impl ProcessRunner {
         self.run_with_output(request, cancellation, |_| {})
     }
 
+    /// Runs one process with an explicit working directory and environment.
+    pub fn run_configured(
+        &self,
+        request: ProcessSpawnRequest,
+        context: &ProcessExecutionContext,
+        cancellation: &CancellationToken,
+    ) -> ProcessExecution {
+        self.run_configured_with_output(request, context, cancellation, |_| {})
+    }
+
     /// Runs one process while observing ordered chunks from each native output channel.
     ///
     /// Sequence numbers are monotonic within each channel. Relative arrival order
@@ -104,6 +162,33 @@ impl ProcessRunner {
     pub fn run_with_output<F>(
         &self,
         request: ProcessSpawnRequest,
+        cancellation: &CancellationToken,
+        observe: F,
+    ) -> ProcessExecution
+    where
+        F: FnMut(&ProcessOutputChunk),
+    {
+        self.run_internal(request, None, cancellation, observe)
+    }
+
+    /// Runs one process with an explicit launch context while observing output.
+    pub fn run_configured_with_output<F>(
+        &self,
+        request: ProcessSpawnRequest,
+        context: &ProcessExecutionContext,
+        cancellation: &CancellationToken,
+        observe: F,
+    ) -> ProcessExecution
+    where
+        F: FnMut(&ProcessOutputChunk),
+    {
+        self.run_internal(request, Some(context), cancellation, observe)
+    }
+
+    fn run_internal<F>(
+        &self,
+        request: ProcessSpawnRequest,
+        context: Option<&ProcessExecutionContext>,
         cancellation: &CancellationToken,
         mut observe: F,
     ) -> ProcessExecution
@@ -118,6 +203,13 @@ impl ProcessRunner {
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped());
+        if let Some(context) = context {
+            command.current_dir(context.working_directory());
+            if context.clears_parent_environment() {
+                command.env_clear();
+            }
+            command.envs(context.environment().iter().cloned());
+        }
         configure_process_group(&mut command);
 
         let mut child = match command.spawn() {
