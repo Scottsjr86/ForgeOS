@@ -4,6 +4,7 @@
 //! primitives remain separate contracts with fixed native command surfaces.
 
 pub mod diff;
+pub mod inspection;
 pub mod mutation;
 mod patch_format;
 pub mod patches;

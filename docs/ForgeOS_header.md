@@ -318,24 +318,25 @@ all-or-nothing patch application, persistent project registry/workspace restorat
 Nyx health/versioned public-client protocol, source-backed Forge World projection
 with typed input routing, workspace snapshot/crash-journal recovery, repository file
 tree/exact text search, multi-buffer atomic editing, Rust syntax/language intelligence,
-and managed project-bound terminal sessions are closed. Registered project command
-execution and exact output history are the active V1 capability:
+managed project-bound terminal sessions, and registered project command execution
+with exact output history are closed. Consistency-checked project-bound native Git
+inspection is the active V1 capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-COMMAND-200
-ACTIVE_V1_CONTRIBUTION=REGISTERED_PROJECT_COMMAND_EXECUTION_AND_OUTPUT_HISTORY
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-COMMAND-200
-QUESTION=Can ForgeOS execute only immutable registered project commands with exact argv, validated working directory, cleared declared environment, stable process identity, cancellation, truthful output and exit state, and history bound to the correct project and revision?
-CURRENT_RESULT=MANAGED_TERMINALS_CLOSED_REGISTERED_COMMAND_EXECUTION_ACTIVE
-BATON_OWNER=FORGEOS-V1-COMMAND-200
-ACTIVE_LANE=TERMINAL_AND_COMMAND
-ACTIVE_SLICE=FORGEOS-V1-COMMAND-200-SLICE-001
-FIRST_BLOCKER=FORGEOS_CAN_PREPARE_IMMUTABLE_COMMAND_LAUNCH_PAYLOADS_AND_MANAGE_REAL_PTYS_BUT_HAS_NO_PROJECT_BOUND_REGISTERED_COMMAND_RUNNER_OR_EXACT_REVISION_BOUND_OUTPUT_HISTORY
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-GIT-200
+ACTIVE_V1_CONTRIBUTION=CONSISTENCY_CHECKED_PROJECT_BOUND_NATIVE_GIT_INSPECTION
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-GIT-200
+QUESTION=Can ForgeOS read one consistency-checked native Git view from the registered project repository while preserving branch, revision, staged, unstaged, untracked, rename, delete, conflict, and exact worktree/staged diff meaning without mutation?
+CURRENT_RESULT=REGISTERED_COMMAND_EXECUTION_CLOSED_PROJECT_BOUND_GIT_INSPECTION_ACTIVE
+BATON_OWNER=FORGEOS-V1-GIT-200
+ACTIVE_LANE=GIT_AND_PATCHES
+ACTIVE_SLICE=FORGEOS-V1-GIT-200-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_NATIVE_READ_ONLY_GIT_PRIMITIVES_BUT_NO_PROJECT_BOUND_CONSISTENCY_CHECKED_SNAPSHOT_JOINING_STATUS_BRANCH_REVISION_AND_BOTH_DIFF_SCOPES
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -353,8 +354,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-COMMAND-200
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-COMMAND-200-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-GIT-200
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-GIT-200-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -370,7 +371,7 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-COMMAND-200` is the only active source skill.
+`FORGEOS-V1-GIT-200` is the only active source skill.
 
 Any Nyx-facing slice must first read and report the mandatory preflight from
 `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and
@@ -380,12 +381,11 @@ the canonical owner, inspect the current Nyx source for the exact route, DTO,
 process seam, and implementation state, and prove the Forge patch contains no
 substitute Nyx implementation.
 
-This slice may establish only project-bound management of multiple real native
-PTYs, exact raw-output projection, and binding-checked input, resize, exit,
-termination, and removal. Working directories must resolve through the existing
-project boundary and remain inside manifest-declared roots. It may not execute
-registered project commands, persist command history, mutate project files, inspect
-Git, call Nyx, or render the later Forge World terminal widget.
+This slice may establish only a consistency-checked read-only native Git snapshot
+bound to the registered project repository, including exact branch, revision, status,
+worktree diff, and staged diff meaning. It may not mutate Git state, cache a stale
+clean result, operate on an unregistered repository, call Nyx, or render the later
+Forge World source-control surface.
 
 ## 7. Program modes
 

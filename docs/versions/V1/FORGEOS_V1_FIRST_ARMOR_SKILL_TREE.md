@@ -931,8 +931,8 @@ never closes the node.
 
 - **Owner:** `forge-terminal`, `forge-core`
 - **Prerequisites:** `FORGEOS-V1-COMMAND-100`, `FORGEOS-V1-TERMINAL-200`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-COMMAND-200-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 70 suites, 326 tests passed, 0 failed, 2 ignored, and all three structural guards green.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-COMMAND-200/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-COMMAND-200/USER_GUIDE_SOURCE.md`
@@ -950,7 +950,11 @@ never closes the node.
 
 - **Owner:** `forge-git`
 - **Prerequisites:** `FORGEOS-V1-GIT-100`, `FORGEOS-V1-PROJECT-200`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-GIT-200-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-GIT-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-GIT-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** Git state is read from the registered repository and represented
   without losing staged, unstaged, untracked, rename, delete, or conflict meaning.
 - **Must not be true:** ForgeOS may not infer clean state from an empty cached diff or
@@ -1612,15 +1616,15 @@ CLOSED
   FORGEOS-V1-EDITOR-200
   FORGEOS-V1-EDITOR-201
   FORGEOS-V1-TERMINAL-200
+  FORGEOS-V1-COMMAND-200
 
-ACTIVE_SKILL=FORGEOS-V1-COMMAND-200
-ACTIVE_BLOCKER=FORGEOS_CAN_PREPARE_IMMUTABLE_COMMAND_LAUNCH_PAYLOADS_AND_MANAGE_REAL_PTYS_BUT_HAS_NO_PROJECT_BOUND_REGISTERED_COMMAND_RUNNER_OR_EXACT_REVISION_BOUND_OUTPUT_HISTORY
-ACTIVE_SLICE=FORGEOS-V1-COMMAND-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-GIT-200
+ACTIVE_BLOCKER=FORGEOS_HAS_NATIVE_READ_ONLY_GIT_PRIMITIVES_BUT_NO_PROJECT_BOUND_CONSISTENCY_CHECKED_SNAPSHOT_JOINING_STATUS_BRANCH_REVISION_AND_BOTH_DIFF_SCOPES
+ACTIVE_SLICE=FORGEOS-V1-GIT-200-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
-  FORGEOS-V1-GIT-200
   FORGEOS-V1-NYX-101
   FORGEOS-V1-AGENT-100
 
@@ -1628,7 +1632,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-COMMAND-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-GIT-200` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

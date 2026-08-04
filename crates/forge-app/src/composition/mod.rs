@@ -4,6 +4,7 @@
 
 pub mod command_workspace;
 pub mod editor_workspace;
+pub mod git_workspace;
 pub mod terminal_workspace;
 
 /// Enters the ForgeOS composition root.

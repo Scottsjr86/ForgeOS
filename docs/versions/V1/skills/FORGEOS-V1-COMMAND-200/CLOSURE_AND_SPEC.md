@@ -1,9 +1,9 @@
 # FORGEOS-V1-COMMAND-200 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Registered project command execution and exact output history
 Active slice: `FORGEOS-V1-COMMAND-200-SLICE-001`
-Source authority: `Forge_OS_V1_base_44.tar`
+Source authority: `Forge_OS_V1_base_46.tar`
 
 ## Capability statement
 
@@ -49,15 +49,17 @@ crates/forge-app/tests/command_workspace.rs
 python3 scripts/run_ci.py
 ```
 
-## Operator validation still required
+## Closure evidence
 
-Run the canonical behavior-only CI entrypoint:
+Operator behavior-only CI passed:
 
-```bash
-python3 scripts/run_ci.py
+```text
+CARGO_TEST_SUMMARY status=PASS suites=70 passed=326 failed=0 ignored=2 measured=0 filtered_out=0
+CI RESULT: PASS
 ```
 
-The skill remains active until that command passes on the operator host.
+All three structural guards also passed with zero forbidden seams, zero core-purity
+violations, and 132 source modules under the enforced size limit.
 
 ## Explicit non-claims
 
