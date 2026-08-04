@@ -893,8 +893,10 @@ never closes the node.
 - **Owner:** `forge-editor`, `forge-bridge`
 - **Prerequisites:** `FORGEOS-V1-EDITOR-200`, `FORGEOS-V1-PARSER-100`,
   `FORGEOS-V1-LSP-100`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-EDITOR-201-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 66 suites, 308 tests passed, 0 failed,
+  and all three structural guards green. The ignored real Rust Analyzer witness also
+  passed against the operator's installed `rust-analyzer` binary.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/USER_GUIDE_SOURCE.md`
@@ -909,9 +911,13 @@ never closes the node.
 
 ## `FORGEOS-V1-TERMINAL-200` — Managed embedded terminal sessions
 
-- **Owner:** `forge-terminal`
+- **Owner:** `forge-terminal`, `forge-app` composition over `forge-project` boundaries
 - **Prerequisites:** `FORGEOS-V1-TERMINAL-100`, `FORGEOS-V1-PROJECT-200`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-TERMINAL-200-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-TERMINAL-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-TERMINAL-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** ForgeOS creates, renders, resizes, writes to, reads from, and closes
   multiple real PTYs associated with the correct project.
 - **Must not be true:** A terminal may not become a fake log view or share process
@@ -1601,14 +1607,13 @@ CLOSED
   FORGEOS-V1-FILE-200
   FORGEOS-V1-EDITOR-200
 
-ACTIVE_SKILL=FORGEOS-V1-EDITOR-201
-ACTIVE_BLOCKER=FORGEOS_HAS_VERSIONED_BUFFER_PARSER_AND_RUST_ANALYZER_DOCUMENT_PRIMITIVES_BUT_NO_ATOMIC_GENERATION_BINDING_OR_TYPED_DEFINITION_COMPLETION_AND_WORKSPACE_SYMBOL_RESULTS
-ACTIVE_SLICE=FORGEOS-V1-EDITOR-201-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-TERMINAL-200
+ACTIVE_BLOCKER=FORGEOS_HAS_REAL_NATIVE_PTY_PRIMITIVES_BUT_NO_PROJECT_BOUND_MULTI_TERMINAL_REGISTRY_RENDERABLE_TRANSCRIPT_OR_BINDING_CHECKED_PRODUCT_COMPOSITION
+ACTIVE_SLICE=FORGEOS-V1-TERMINAL-200-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
-  FORGEOS-V1-TERMINAL-200
   FORGEOS-V1-GIT-200
   FORGEOS-V1-NYX-101
   FORGEOS-V1-AGENT-100
@@ -1617,7 +1622,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-EDITOR-201` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-TERMINAL-200` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

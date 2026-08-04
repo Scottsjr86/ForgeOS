@@ -316,24 +316,26 @@ support, immutable registered-command policy, deterministic session lifecycle,
 read-only native Git inspection, typed Git mutation/worktree control, stable
 all-or-nothing patch application, persistent project registry/workspace restoration,
 Nyx health/versioned public-client protocol, source-backed Forge World projection
-with typed input routing, workspace snapshot/crash-journal recovery, repository file tree/exact text search, and multi-buffer atomic editing are closed.
-Rust syntax and language-intelligence integration is the active V1 capability:
+with typed input routing, workspace snapshot/crash-journal recovery, repository file
+tree/exact text search, multi-buffer atomic editing, and Rust syntax/language
+intelligence are closed. Managed project-bound terminal sessions are the active V1
+capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-EDITOR-201
-ACTIVE_V1_CONTRIBUTION=RUST_SYNTAX_AND_LANGUAGE_INTELLIGENCE_INTEGRATION
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-EDITOR-201
-QUESTION=Can ForgeOS bind Tree-sitter syntax and real Rust Analyzer diagnostics, definitions, completion, and workspace symbols to the exact active project and editor generation while keeping editing usable when Rust Analyzer is unavailable?
-CURRENT_RESULT=MULTI_BUFFER_ATOMIC_SAVE_CLOSED_RUST_INTELLIGENCE_INTEGRATION_ACTIVE
-BATON_OWNER=FORGEOS-V1-EDITOR-201
-ACTIVE_LANE=FILE_AND_EDITOR
-ACTIVE_SLICE=FORGEOS-V1-EDITOR-201-SLICE-001
-FIRST_BLOCKER=FORGEOS_HAS_VERSIONED_BUFFER_PARSER_AND_RUST_ANALYZER_DOCUMENT_PRIMITIVES_BUT_NO_ATOMIC_GENERATION_BINDING_OR_TYPED_DEFINITION_COMPLETION_AND_WORKSPACE_SYMBOL_RESULTS
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-TERMINAL-200
+ACTIVE_V1_CONTRIBUTION=MANAGED_PROJECT_BOUND_TERMINAL_SESSIONS
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-TERMINAL-200
+QUESTION=Can ForgeOS create and manage multiple real PTYs bound to the correct project and repository, preserve exact output for rendering, reject forged bindings and unsafe working directories, and close one terminal without affecting another?
+CURRENT_RESULT=RUST_LANGUAGE_INTELLIGENCE_CLOSED_MANAGED_TERMINALS_ACTIVE
+BATON_OWNER=FORGEOS-V1-TERMINAL-200
+ACTIVE_LANE=TERMINAL_AND_COMMAND
+ACTIVE_SLICE=FORGEOS-V1-TERMINAL-200-SLICE-001
+FIRST_BLOCKER=FORGEOS_HAS_REAL_NATIVE_PTY_PRIMITIVES_BUT_NO_PROJECT_BOUND_MULTI_TERMINAL_REGISTRY_RENDERABLE_TRANSCRIPT_OR_BINDING_CHECKED_PRODUCT_COMPOSITION
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -351,8 +353,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-EDITOR-201
-NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-EDITOR-201-SLICE-001
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-TERMINAL-200
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-TERMINAL-200-SLICE-001
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -368,7 +370,7 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-EDITOR-201` is the only active source skill.
+`FORGEOS-V1-TERMINAL-200` is the only active source skill.
 
 Any Nyx-facing slice must first read and report the mandatory preflight from
 `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and
@@ -378,12 +380,12 @@ the canonical owner, inspect the current Nyx source for the exact route, DTO,
 process seam, and implementation state, and prove the Forge patch contains no
 substitute Nyx implementation.
 
-This slice may establish only exact-generation integration between editor-owned
-buffer state, Tree-sitter syntax, and native Rust Analyzer diagnostics, definition,
-completion, and workspace-symbol results. It may expose explicit degraded language
-state and later resynchronization. It may not synthesize language results, mutate
-project files, execute terminal or project commands, inspect Git, call Nyx, render
-editor UI, add refactoring behavior, or introduce background indexing policy.
+This slice may establish only project-bound management of multiple real native
+PTYs, exact raw-output projection, and binding-checked input, resize, exit,
+termination, and removal. Working directories must resolve through the existing
+project boundary and remain inside manifest-declared roots. It may not execute
+registered project commands, persist command history, mutate project files, inspect
+Git, call Nyx, or render the later Forge World terminal widget.
 
 ## 7. Program modes
 

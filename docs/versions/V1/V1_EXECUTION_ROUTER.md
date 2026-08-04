@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-EDITOR-201]
-ACTIVE_BATON_OWNER=FORGEOS-V1-EDITOR-201
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+ACTIVE_SKILLS=[FORGEOS-V1-TERMINAL-200]
+ACTIVE_BATON_OWNER=FORGEOS-V1-TERMINAL-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=FILE_AND_EDITOR
+ACTIVE_LANE=TERMINAL_AND_COMMAND
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_EXACT_GENERATION_RUST_SYNTAX_DIAGNOSTICS_DEFINITION_COMPLETION_AND_SYMBOL_INTEGRATION
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_PROJECT_BOUND_MULTI_TERMINAL_MANAGEMENT
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -149,15 +149,15 @@ Rust Analyzer process/JSON-RPC foundation, native PTY support, immutable
 registered-command policy, deterministic session lifecycle, native Git inspection
 and mutation, stable patch application, persistent project registry/workspace
 restoration, Nyx public health/version discovery, source-backed Forge World
-projection, recovery, repository browsing/search, and multi-buffer atomic save are
-closed. `FORGEOS-V1-EDITOR-201` is the only active source skill. Dedicated session
-bootstrap, managed Nyx lifecycle, managed terminal sessions, integrated Git
+projection, recovery, repository browsing/search, multi-buffer atomic save, and Rust
+language intelligence are closed. `FORGEOS-V1-TERMINAL-200` is the only active
+source skill. Dedicated session bootstrap, managed Nyx lifecycle, integrated Git
 inspection, Nyx checkpoint transport, and remote-agent records remain available but
-inactive. The active skill may only bind Tree-sitter and native Rust Analyzer results
-to exact editor/project generations, decode definition/completion/workspace-symbol
-responses, reject stale or out-of-workspace results, and expose explicit degraded
-language state. It may not mutate files, execute commands, inspect Git, call Nyx,
-render editor UI, or synthesize language results.
+inactive. The active skill may only bind real PTYs to exact project/repository
+identity, resolve allowed working directories through project boundaries, preserve
+raw output for rendering, and expose binding-checked input, resize, exit,
+termination, and removal. It may not execute registered commands, persist command
+history, mutate files, inspect Git, call Nyx, or render later Forge World UI.
 
 ## 3. Current-source intake law
 
@@ -829,113 +829,101 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Rust syntax and language-intelligence integration are active.
+Managed embedded terminal sessions are active.
 
 ```yaml
-skill_id: FORGEOS-V1-EDITOR-201
+skill_id: FORGEOS-V1-TERMINAL-200
 state: ACTIVE
-lane: FILE_AND_EDITOR
-owning_subsystem: forge-editor generation state over forge-bridge Tree-sitter and Rust Analyzer adapters
+lane: TERMINAL_AND_COMMAND
+owning_subsystem: forge-terminal with forge-app composition over forge-project boundaries
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_42.tar sha256 8f80a90b5b0ae876a6d7c346621502d0de72163d5402613fc88ee24e75c6535f
+source_revision: Forge_OS_V1_base_43.tar
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-EDITOR-200
-  - FORGEOS-V1-PARSER-100
-  - FORGEOS-V1-LSP-100
+  - FORGEOS-V1-TERMINAL-100
+  - FORGEOS-V1-PROJECT-200
 originating_path_or_probe: >
-  Open a Rust buffer, retain current Tree-sitter syntax, receive one deliberate native
-  Rust Analyzer diagnostic, navigate one definition, request basic completion, search
-  one workspace symbol, reject stale and out-of-workspace results, then prove syntax
-  and editing remain usable when Rust Analyzer cannot start.
+  Create two real PTYs for validated projects, preserve separate output and process
+  identity, exercise raw input and resize-sensitive output, reject a forged project
+  handle and an undeclared or symlinked working directory, terminate one session,
+  and prove the other remains isolated.
 first_blocker: >
-  ForgeOS has versioned editor buffers, incremental Tree-sitter state, and an initialized
-  Rust Analyzer document adapter, but no atomic generation binding across those states,
-  no typed definition/completion/workspace-symbol result contracts, and no explicit
-  degraded-language route that preserves current syntax after server failure.
-active_slice: FORGEOS-V1-EDITOR-201-SLICE-001
+  ForgeOS has real native PTY spawn, byte I/O, resize, exit, termination, and stable
+  terminal identity, but no project-bound multi-terminal registry, renderable raw
+  transcript, binding-checked operation route, or composition through the registered
+  project repository boundary.
+active_slice: FORGEOS-V1-TERMINAL-200-SLICE-001
 allowed_paths:
-  - crates/forge-bridge/src/parsing.rs
-  - crates/forge-bridge/src/lsp/client.rs
-  - crates/forge-bridge/src/lsp/features.rs
-  - crates/forge-bridge/src/lsp/mod.rs
-  - crates/forge-bridge/src/lsp/types.rs
-  - crates/forge-editor/src/intelligence.rs
-  - crates/forge-editor/src/language.rs
-  - crates/forge-editor/src/lib.rs
-  - crates/forge-editor/src/parsing.rs
-  - crates/forge-editor/tests/language_server.rs
-  - crates/forge-editor/tests/parser_state.rs
-  - crates/forge-editor/tests/rust_features.rs
+  - crates/forge-terminal/src/lib.rs
+  - crates/forge-terminal/src/managed.rs
+  - crates/forge-terminal/tests/managed_terminals.rs
+  - crates/forge-app/src/composition/mod.rs
+  - crates/forge-app/src/composition/terminal_workspace.rs
+  - crates/forge-app/tests/terminal_workspace.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/**
   - docs/versions/V1/skills/FORGEOS-V1-EDITOR-201/**
+  - docs/versions/V1/skills/FORGEOS-V1-TERMINAL-200/**
 forbidden_paths_and_behavior:
-  - synthetic diagnostics, definitions, completion items, or symbols
-  - accepting results from another project, repository, path, document version, or workspace
-  - language-server ownership of editor bytes, dirty state, file writes, or project truth
-  - parser failure or language-server failure making plain buffer editing unavailable
-  - terminal, command, Git, Nyx, Forge World UI, formatting, refactoring, or indexing behavior
+  - fake terminal output, scripted log substitutes, or shared process identity
+  - working directories outside manifest-declared roots or project boundaries
+  - operations accepted under a forged project or repository binding
+  - registered-command execution, command history, Git, Nyx, or Forge World UI behavior
+  - terminal ownership of canonical project paths or repository truth
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
-  - forge_bridge::lsp::RustAnalyzerClient
-  - forge_bridge::lsp::DefinitionResult
-  - forge_bridge::lsp::CompletionResult
-  - forge_bridge::lsp::WorkspaceSymbolResult
-  - forge_editor::intelligence::RustBufferIntelligence
-  - forge_editor::intelligence::RustIntelligenceStatus
-  - forge_editor::parsing::PendingBufferParse
+  - forge_terminal::managed::ManagedTerminalHandle
+  - forge_terminal::managed::ManagedTerminalRegistry
+  - forge_terminal::managed::ManagedTerminalView
+  - forge_app::composition::terminal_workspace::ProjectTerminalWorkspace
+  - forge_app::composition::terminal_workspace::TerminalWorkingDirectory
 required_commands:
   - python3 scripts/run_ci.py
-  - cargo test --locked -p forge-editor --test rust_features real_rust_analyzer_proves_diagnostics_definition_completion_and_symbols -- --ignored --nocapture
 regression_commands: []
 validation_execution_policy: >
-  Canonical CI is behavior-only and runs through scripts/run_ci.py. The ignored real
-  Rust Analyzer witness must also run on the operator host. Documentation, Git state,
-  and formatting are forbidden CI gates. When Rust is unavailable in the assistant
-  environment, prepare and apply-check the patch and set OPERATOR_VALIDATION_PENDING.
+  Canonical CI is behavior-only and runs through scripts/run_ci.py. Documentation,
+  Git state, and formatting are forbidden CI gates. When Rust is unavailable in the
+  assistant environment, prepare and apply-check the patch and set
+  OPERATOR_VALIDATION_PENDING.
 pass_edge: >
-  Tree-sitter and Rust Analyzer target the exact same editor generation; diagnostics,
-  definition, completion, and workspace-symbol results come from the native server;
-  stale, cross-project, and out-of-workspace results fail closed; server failure leaves
-  current syntax and editing usable with explicit degraded status; later resync targets
-  the current buffer; CI and the real Rust Analyzer witness both pass.
+  Multiple real PTYs remain independently addressable; each is bound to exact project,
+  repository, and terminal identity; raw output is sequence-preserved for rendering;
+  input, resize, exit, termination, and removal use the native PTY; unsafe working
+  directories and forged bindings fail closed; closing one terminal leaves others
+  untouched; and CI passes.
 block_edge: >
-  Any language result is synthesized, accepted for the wrong generation or workspace,
-  parser and LSP state advance ambiguously, server failure blocks editing, a new effectful
-  authority appears, source-size policy is exceeded, a structural guard regresses, CI
-  fails, or the real Rust Analyzer witness fails.
+  A terminal becomes a fake log view, identities cross, raw output is invented or
+  reordered, unsafe paths reach spawn, one close affects another session, registered
+  commands or project authority leak into this slice, source-size policy is exceeded,
+  a structural guard regresses, or CI fails.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py and the ignored real Rust Analyzer witness,
-  then returns both exact results. The deliberate error, definition, completion, symbol,
-  stale-result, boundary, and degraded-server paths must pass.
+  The user runs python3 scripts/run_ci.py and returns the exact summary. The tests
+  exercise concurrent sessions, project binding, input, resize, transcript rendering,
+  boundary rejection, forged-handle rejection, termination, and exited-only removal.
 return_path: >
-  After both operator commands pass, close only FORGEOS-V1-EDITOR-201 and reevaluate the
-  existing available frontier. CODE-300 remains locked until PROJECT-300 closes.
-parallel_compatibility: NONE_IN_FILE_AND_EDITOR_LANE
+  After operator CI passes, close only FORGEOS-V1-TERMINAL-200, make
+  FORGEOS-V1-COMMAND-200 available, and reevaluate the active frontier.
+parallel_compatibility: NONE_IN_TERMINAL_AND_COMMAND_LANE
 ```
 
 This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
-`FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`, `FORGEOS-V1-NYX-101`, and
-`FORGEOS-V1-AGENT-100` remain available but inactive.
+`FORGEOS-V1-GIT-200`, `FORGEOS-V1-NYX-101`, and `FORGEOS-V1-AGENT-100` remain
+available but inactive.
 
 ---
 
-## 17. Direct unlock handling for Rust intelligence
+## 17. Direct unlock handling for managed terminals
 
-`FORGEOS-V1-EDITOR-201` may close only after behavior-only CI and the real Rust
-Analyzer witness prove current syntax, deliberate native diagnostics, definition
-navigation, basic completion, workspace symbol search, stale-result rejection,
-out-of-workspace rejection, and explicit degraded behavior when the server is down.
+`FORGEOS-V1-TERMINAL-200` may close only after behavior-only CI proves multiple
+project-bound real PTYs, exact raw output, binding-checked operations, safe working
+directories, isolation, and clean termination/removal.
 
-Closing `FORGEOS-V1-EDITOR-201` does not directly unlock another Tier-2 skill.
-`FORGEOS-V1-CODE-300` remains locked until `FORGEOS-V1-PROJECT-300` also closes.
-Reevaluate the existing available frontier after closure.
+Closing `FORGEOS-V1-TERMINAL-200` makes `FORGEOS-V1-COMMAND-200` available.
+Reevaluate only that direct unlock and the existing available frontier.
 
 ## 18. Final closure routing
 

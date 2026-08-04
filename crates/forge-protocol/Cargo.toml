@@ -3,6 +3,7 @@ name = "forge-protocol"
 description = "Shared ForgeOS messages, identities, errors, events, and seam contracts."
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish.workspace = true
 
 [lints]

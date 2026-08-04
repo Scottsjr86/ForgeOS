@@ -3,6 +3,7 @@ name = "forge-project"
 description = "ForgeOS project registration and persistence adapters."
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]

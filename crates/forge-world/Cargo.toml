@@ -3,6 +3,7 @@ name = "forge-world"
 description = "ForgeOS Bevy shell, HUD, spatial presentation, and user interaction."
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]

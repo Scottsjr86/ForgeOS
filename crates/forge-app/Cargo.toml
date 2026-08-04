@@ -3,6 +3,7 @@ name = "forge-app"
 description = "ForgeOS composition root and executable."
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]

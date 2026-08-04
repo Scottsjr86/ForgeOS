@@ -3,6 +3,7 @@ name = "forge-editor"
 description = "ForgeOS buffers, parsing, language intelligence, and editor state."
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]

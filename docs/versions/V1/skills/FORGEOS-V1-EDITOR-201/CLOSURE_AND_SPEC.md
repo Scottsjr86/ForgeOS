@@ -1,6 +1,6 @@
 # FORGEOS-V1-EDITOR-201 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Rust syntax and language-intelligence integration
 Active slice: `FORGEOS-V1-EDITOR-201-SLICE-001`
 Source authority: `Forge_OS_V1_base_42.tar`
@@ -57,26 +57,19 @@ basic completion, project symbol search, stale-result rejection, out-of-workspac
 location rejection, atomic parser/LSP update, language-server degradation, and later
 language resynchronization.
 
-## Operator validation still required
+## Closure evidence
 
-Run the canonical behavior-only CI entrypoint:
+The operator ran the canonical behavior-only CI entrypoint with 66 suites, 308 tests
+passed, 0 failed, 2 ignored, and all three structural guards green.
 
-```bash
-python3 scripts/run_ci.py
+The operator also ran the ignored real Rust Analyzer witness against:
+
+```text
+/home/devmonster/.vscode/extensions/rust-lang.rust-analyzer-0.3.2981-linux-x64/server/rust-analyzer
 ```
 
-Then run the real Rust Analyzer witness:
-
-```bash
-cargo test --locked -p forge-editor --test rust_features \
-  real_rust_analyzer_proves_diagnostics_definition_completion_and_symbols \
-  -- --ignored --nocapture
-```
-
-Set `FORGE_RUST_ANALYZER=/absolute/path/to/rust-analyzer` only when
-`rust-analyzer` is not available on `PATH`.
-
-The skill remains active until both commands pass on the operator host.
+The witness passed one real temporary Cargo workspace with native diagnostics,
+definition navigation, completion, and workspace symbol search.
 
 ## Explicit non-claims
 

@@ -3,6 +3,7 @@
 //! Subsystem wiring will be added only by the capabilities that own it.
 
 pub mod editor_workspace;
+pub mod terminal_workspace;
 
 /// Enters the ForgeOS composition root.
 ///
