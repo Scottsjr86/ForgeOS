@@ -110,18 +110,18 @@ The bounded authority migration is complete and source execution is active:
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS-V1-GIT-200
+BATON_OWNER=FORGEOS-V1-GIT-201
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_SKILLS=[FORGEOS-V1-GIT-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200]
+ACTIVE_SKILLS=[FORGEOS-V1-GIT-201]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100,FORGEOS-V1-VERIFY-200]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200]
 ACTIVE_LANE=GIT_AND_PATCHES
-ACTIVE_QUESTION=Can ForgeOS read one consistency-checked native Git view from the registered project repository while preserving branch, revision, every supported status class, and exact worktree/staged diff meaning without mutation?
-FIRST_BLOCKER=FORGEOS_HAS_NATIVE_READ_ONLY_GIT_PRIMITIVES_BUT_NO_PROJECT_BOUND_CONSISTENCY_CHECKED_SNAPSHOT_JOINING_STATUS_BRANCH_REVISION_AND_BOTH_DIFF_SCOPES
-ACTIVE_SLICE=FORGEOS-V1-GIT-200-SLICE-001
-SOURCE_IMPLEMENTATION_ALLOWED=YES_PROJECT_BOUND_READ_ONLY_GIT_INSPECTION_ONLY
-CURRENT_RESULT=REGISTERED_COMMAND_EXECUTION_CLOSED_PROJECT_BOUND_GIT_INSPECTION_ACTIVE
-RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-GIT-200_IF_GREEN
+ACTIVE_QUESTION=Can ForgeOS stage, unstage, commit, restore, create, and remove worktrees only from one exact accepted project Git snapshot while preserving every unselected file, branch, and worktree?
+FIRST_BLOCKER=FORGEOS_HAS_SAFE_NATIVE_GIT_MUTATION_PRIMITIVES_BUT_NO_PROJECT_BOUND_PRODUCT_SURFACE_BINDING_EXPLICIT_SELECTIONS_TO_ONE_ACCEPTED_INSPECTION_AND_RETURNING_A_NEW_CONSISTENT_SNAPSHOT
+ACTIVE_SLICE=FORGEOS-V1-GIT-201-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES_PROJECT_BOUND_EXPLICIT_GIT_MUTATION_ONLY
+CURRENT_RESULT=PROJECT_BOUND_GIT_INSPECTION_CLOSED_SAFE_GIT_MUTATION_ACTIVE
+RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-GIT-201_IF_GREEN
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
@@ -133,13 +133,15 @@ NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 Persistent project registry/workspace restoration, Nyx health/versioned public
 client protocol, Forge World projection/input routing, recovery, repository
 browsing/search, multi-buffer atomic save, Rust language intelligence, managed
-project-bound terminal sessions, and registered command execution are closed.
-`FORGEOS-V1-GIT-200` is the only active source skill. Dedicated session bootstrap,
-managed Nyx lifecycle, Nyx checkpoint transport, and remote-agent records remain
-available but inactive. The active skill may only read the registered repository
-through fixed native Git operations, preserve every supported status class and exact
-patch bytes, reject torn multi-command views, and remain read-only. It may not stage,
-restore, commit, create worktrees, call Nyx, or render later Forge World UI.
+project-bound terminal sessions, registered command execution, and
+consistency-checked project-bound Git inspection are closed.
+`FORGEOS-V1-GIT-201` is the only active source skill. Dedicated session bootstrap,
+managed Nyx lifecycle, Nyx checkpoint transport, remote-agent records, and
+version-bound verification remain available but inactive. The active skill may only
+bind explicit user selections from one accepted Git inspection to the existing safe
+mutation primitives and return a new consistency-checked project snapshot. It may
+not accept arbitrary pathspecs, run broad destructive operations, bypass confirmation,
+call Nyx, or render later Forge World UI.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source

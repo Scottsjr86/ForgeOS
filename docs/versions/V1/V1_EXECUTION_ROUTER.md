@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-GIT-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-GIT-200
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100,FORGEOS-V1-VERIFY-200]
+ACTIVE_SKILLS=[FORGEOS-V1-GIT-201]
+ACTIVE_BATON_OWNER=FORGEOS-V1-GIT-201
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=GIT_AND_PATCHES
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_PROJECT_BOUND_CONSISTENT_GIT_INSPECTION
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_PROJECT_BOUND_SAFE_GIT_MUTATION
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -151,13 +151,13 @@ and mutation primitives, stable patch application, persistent project registry/w
 restoration, Nyx public health/version discovery, source-backed Forge World
 projection, recovery, repository browsing/search, multi-buffer atomic save, Rust
 language intelligence, managed project-bound terminals, and registered command execution are closed.
-`FORGEOS-V1-GIT-200` is the only active source skill. Dedicated session bootstrap,
-managed Nyx lifecycle, Nyx checkpoint transport, and remote-agent records remain
-available but inactive. The active skill may only read the registered repository through fixed native Git
-operations, preserve branch, revision, every supported status class, and exact
-worktree/staged patch bytes, bind the view to the correct project, and reject torn
-multi-command captures. It may not stage, restore, commit, mutate worktrees, call
-Nyx, or render later Forge World UI.
+`FORGEOS-V1-GIT-201` is the only active source skill. Dedicated session bootstrap,
+managed Nyx lifecycle, Nyx checkpoint transport, remote-agent records, and
+version-bound verification remain available but inactive. The active skill may only
+bind explicit paths from one accepted project Git inspection to the existing safe
+mutation and linked-worktree primitives, reject stale or foreign selections, and
+return a new consistency-checked snapshot. It may not accept arbitrary pathspecs,
+run broad destructive Git operations, call Nyx, or render later Forge World UI.
 
 ## 3. Current-source intake law
 
@@ -829,43 +829,41 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Consistency-checked project-bound native Git inspection is active.
+Project-bound safe Git mutation and isolated worktree control are active.
 
 ```yaml
-skill_id: FORGEOS-V1-GIT-200
+skill_id: FORGEOS-V1-GIT-201
 state: ACTIVE
 lane: GIT_AND_PATCHES
 owning_subsystem: forge-git with forge-app composition over forge-project boundaries
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_46.tar
+source_revision: Forge_OS_V1_base_47.tar
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-GIT-100
-  - FORGEOS-V1-PROJECT-200
+  - FORGEOS-V1-GIT-101
+  - FORGEOS-V1-GIT-200
+  - FORGEOS-V1-PATCH-100
 originating_path_or_probe: >
-  Create staged, unstaged, untracked, renamed, deleted, and conflicted repository
-  states; inspect branch, revision, status, worktree diff, and staged diff from the
-  registered project; compare the result with native Git; mutate the repository
-  during capture and require the mixed view to fail closed.
+  Select exact staged, unstaged, deleted, untracked, and non-UTF8 paths from one
+  accepted project Git inspection; stage, unstage, confirmed-restore, and commit
+  them; create and remove one isolated linked worktree; then alter the repository
+  after selection and require every stale action to fail before native mutation.
 first_blocker: >
-  ForgeOS has fixed native read-only Git primitives, but no project-bound product
-  adapter and no consistency-checked snapshot joining status, branch, revision,
-  worktree diff, and staged diff without presenting a torn repository view.
-active_slice: FORGEOS-V1-GIT-200-SLICE-001
+  ForgeOS has safe native mutation and worktree primitives, but no project-bound
+  product adapter that binds explicit selections to one accepted inspection,
+  rejects stale or foreign views, and returns a new consistency-checked snapshot.
+active_slice: FORGEOS-V1-GIT-201-SLICE-001
 allowed_paths:
-  - crates/forge-git/src/lib.rs
-  - crates/forge-git/src/inspection.rs
-  - crates/forge-git/tests/consistent_inspection.rs
   - crates/forge-app/src/composition/mod.rs
-  - crates/forge-app/src/composition/git_workspace.rs
-  - crates/forge-app/tests/git_workspace.rs
+  - crates/forge-app/src/composition/git_mutation_workspace.rs
+  - crates/forge-app/tests/git_mutation_workspace.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-COMMAND-200/**
   - docs/versions/V1/skills/FORGEOS-V1-GIT-200/**
+  - docs/versions/V1/skills/FORGEOS-V1-GIT-201/**
 forbidden_paths:
   - crates/forge-git/src/mutation.rs
   - crates/forge-git/src/worktree.rs
@@ -873,37 +871,39 @@ forbidden_paths:
   - crates/forge-world/**
   - nyx_server source
 must_pass:
-  - branch and exact revision match native Git
-  - staged, unstaged, untracked, rename, delete, and conflict meaning is preserved
-  - worktree and staged diffs remain distinct with exact native patch bytes
-  - every snapshot is bound to the registered project and repository identities
-  - a repository change during multi-command capture fails closed
-  - repeated stable inspection has one deterministic SHA-256 identity
-  - inspection does not mutate HEAD, index, or worktree state
+  - every mutation is bound to the registered project and repository identities
+  - selections must exist in one accepted consistency-checked inspection snapshot
+  - stale, foreign, duplicate, empty, or inapplicable selections fail before mutation
+  - stage, unstage, and confirmed restore affect only explicit selected paths
+  - commit binds the exact selected staged patch and HEAD identity
+  - worktree creation uses one explicit branch and selected revision without force
+  - worktree removal accepts only an exact registered clean linked worktree
+  - non-UTF8 repository-relative paths reach native Git without lossy conversion
+  - every successful mutation returns a new consistency-checked project snapshot
   - python3 scripts/run_ci.py
 must_not_claim:
-  - staging, restore, commit, branch, or worktree mutation
-  - durable Git snapshot caching
+  - arbitrary shell or pathspec execution
+  - broad reset, clean, force, checkout, rebase, merge, or history rewriting
+  - durable Git operation history
   - Forge World source-control UI
   - version-bound build or test verification receipts
   - Nyx repository tools
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-GIT-200. Reevaluate its direct
-  unlocks: GIT-201 and VERIFY-200 become available; NYX-201 and WORLD-200 remain
-  locked behind their other prerequisites.
+  After operator CI passes, close only FORGEOS-V1-GIT-201. Reevaluate its direct
+  unlocks and the current frontier; no dependent skill becomes active by adjacency.
 ```
 
-## 17. Direct unlock handling for Git inspection
+## 17. Direct unlock handling for safe Git mutation
 
-`FORGEOS-V1-GIT-200` may close only after behavior-only CI proves registered-root
-binding, native branch and revision truth, every declared status class, distinct
-worktree/staged diffs, exact patch bytes, read-only behavior, stable snapshot
-identity, and deterministic rejection of repository changes during capture.
+`FORGEOS-V1-GIT-201` may close only after behavior-only CI proves exact project and
+repository binding, stale-view rejection, literal selected-path stage/unstage,
+confirmed restore, exact staged-patch commit, branch-safe linked-worktree creation,
+clean-only removal, non-UTF8 preservation, and unchanged unselected state.
 
-Closing `FORGEOS-V1-GIT-200` unlocks `FORGEOS-V1-GIT-201` because `GIT-101` and
-`PATCH-100` are already closed. It also unlocks `FORGEOS-V1-VERIFY-200` because
-`COMMAND-200` and `STATE-000` are already closed. `NYX-201` and `WORLD-200` remain
-locked behind their remaining prerequisites; no adjacent node activates itself.
+Closing `FORGEOS-V1-GIT-201` satisfies the Git-mutation prerequisite for later agent
+work and the complete Git workflow. `FORGEOS-V1-VERIFY-200` remains independently
+available. Nyx and agent skills still require their explicit Nyx-owned gates and may
+not activate from Git closure alone.
 
 ## 18. Final closure routing
 

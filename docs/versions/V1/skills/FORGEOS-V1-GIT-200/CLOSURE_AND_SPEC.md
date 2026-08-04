@@ -1,13 +1,13 @@
 # FORGEOS-V1-GIT-200 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Real Git status, branch, revision, and diff inspection
 Active slice: `FORGEOS-V1-GIT-200-SLICE-001`
-Source authority: `Forge_OS_V1_base_46.tar`
+Source authority: `Forge_OS_V1_base_47.tar`
 
 ## Capability statement
 
-ForgeOS now binds fixed native Git inspection to one registered project repository.
+ForgeOS binds fixed native Git inspection to one registered project repository.
 One accepted view contains exact branch and revision truth, typed porcelain-v2 status,
 exact worktree and staged raw-diff records, exact binary-safe patch bytes, and one
 stable SHA-256 identity. The complete surface is captured twice and rejected when
@@ -44,15 +44,17 @@ crates/forge-app/tests/git_workspace.rs
 python3 scripts/run_ci.py
 ```
 
-## Operator validation still required
+## Closure evidence
 
-Run the canonical behavior-only CI entrypoint:
+Operator behavior-only CI passed:
 
-```bash
-python3 scripts/run_ci.py
+```text
+CARGO_TEST_SUMMARY status=PASS suites=72 passed=336 failed=0 ignored=2 measured=0 filtered_out=0
+CI RESULT: PASS
 ```
 
-The skill remains active until that command passes on the operator host.
+All three structural guards passed with zero forbidden seams, zero core-purity
+violations, and 136 source modules under the enforced size limit.
 
 ## Explicit non-claims
 

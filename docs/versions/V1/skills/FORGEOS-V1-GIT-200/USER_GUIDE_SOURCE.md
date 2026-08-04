@@ -1,6 +1,6 @@
 # FORGEOS-V1-GIT-200 User Guide Source
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 
 ## What this capability does
 
@@ -22,7 +22,7 @@ repository between those passes, the mixed result is rejected rather than displa
 as current truth. A foreign repository identity, replaced root object, repository
 subdirectory, malformed Git output, or native Git failure is also explicit.
 
-## What comes later
+## What comes next
 
-Staging, restoring, committing, worktree mutation, durable verification receipts,
-and the Forge World source-control interface remain later skills.
+`FORGEOS-V1-GIT-201` binds explicit selections from this accepted view to safe
+stage, unstage, commit, confirmed restore, and isolated worktree operations.

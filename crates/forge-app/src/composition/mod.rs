@@ -4,6 +4,7 @@
 
 pub mod command_workspace;
 pub mod editor_workspace;
+pub mod git_mutation_workspace;
 pub mod git_workspace;
 pub mod terminal_workspace;
 

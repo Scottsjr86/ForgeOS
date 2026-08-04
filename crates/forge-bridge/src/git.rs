@@ -10,6 +10,8 @@ use std::fmt;
 use std::io;
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
+use std::thread;
+use std::time::Duration;
 
 #[cfg(unix)]
 use std::os::unix::process::ExitStatusExt;
@@ -361,9 +363,38 @@ impl NativeGitAdapter {
             command.env("PATH", path);
         }
 
-        let child = command.spawn().map_err(|error| {
-            NativeGitInvocationError::new(request, NativeGitFailureStage::Spawn, error)
-        })?;
+        let mut executable_busy_delays = [
+            Duration::from_millis(1),
+            Duration::from_millis(2),
+            Duration::from_millis(4),
+            Duration::from_millis(8),
+            Duration::from_millis(16),
+            Duration::from_millis(32),
+            Duration::from_millis(64),
+        ]
+        .into_iter();
+        let child = loop {
+            match command.spawn() {
+                Ok(child) => break child,
+                Err(error) if error.kind() == io::ErrorKind::ExecutableFileBusy => {
+                    let Some(delay) = executable_busy_delays.next() else {
+                        return Err(NativeGitInvocationError::new(
+                            request,
+                            NativeGitFailureStage::Spawn,
+                            error,
+                        ));
+                    };
+                    thread::sleep(delay);
+                }
+                Err(error) => {
+                    return Err(NativeGitInvocationError::new(
+                        request,
+                        NativeGitFailureStage::Spawn,
+                        error,
+                    ));
+                }
+            }
+        };
         let output = child.wait_with_output().map_err(|error| {
             NativeGitInvocationError::new(request, NativeGitFailureStage::Wait, error)
         })?;
@@ -394,4 +425,44 @@ fn native_signal(status: &ExitStatus) -> Option<i32> {
 #[cfg(not(unix))]
 fn native_signal(_status: &ExitStatus) -> Option<i32> {
     None
+}
+
+#[cfg(all(test, target_os = "linux"))]
+mod tests {
+    use super::{GitReadRequest, NativeGitAdapter};
+    use std::fs::{self, OpenOptions};
+    use std::io;
+    use std::os::unix::fs::PermissionsExt;
+    use std::process::Command;
+    use std::thread;
+    use std::time::Duration;
+
+    #[test]
+    fn executable_file_busy_is_retried_before_git_invocation_fails() {
+        let root = std::env::temp_dir().join(format!(
+            "forgeos-native-git-busy-retry-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir(&root).unwrap();
+        let program = root.join("fake-git");
+        fs::write(&program, b"#!/bin/sh\nprintf 'true\\n\\n'\n").unwrap();
+        fs::set_permissions(&program, fs::Permissions::from_mode(0o755)).unwrap();
+
+        let writer = OpenOptions::new().write(true).open(&program).unwrap();
+        let error = Command::new(&program).output().unwrap_err();
+        assert_eq!(error.kind(), io::ErrorKind::ExecutableFileBusy);
+        let release = thread::spawn(move || {
+            thread::sleep(Duration::from_millis(10));
+            drop(writer);
+        });
+
+        let output = NativeGitAdapter::with_program(&program)
+            .invoke(&root, &GitReadRequest::RepositoryRoot)
+            .unwrap();
+        release.join().unwrap();
+        assert!(output.exit().success());
+        assert_eq!(output.stdout(), b"true\n\n");
+        fs::remove_dir_all(root).unwrap();
+    }
 }
