@@ -1,6 +1,6 @@
 # FORGEOS-V1-WORLD-100 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Source-backed view projection and input action routing
 Active slice: `FORGEOS-V1-WORLD-100-SLICE-001`
 Source authority: `Forge_OS_V1_base_38.tar`
@@ -55,16 +55,11 @@ The behavioral matrix covers deterministic projection, exact non-UTF-8 path
 bytes, duplicate display names and paths, typed project actions, registered
 command routing, unknown identity rejection, rerender, and viewport resize.
 
-## Operator validation still required
+## Operator acceptance evidence
 
-Run the canonical behavior-only CI entrypoint:
-
-```bash
-python3 scripts/run_ci.py
-```
-
-The skill remains active until the operator returns green structural guards and
-Rust tests for this slice.
+The operator ran `python3 scripts/run_ci.py` against the applied slice. Structural
+guards passed with 109 of 109 source modules clean, and the Rust test run passed 279
+tests with zero failures and one intentionally ignored real-Nyx witness.
 
 ## Explicit non-claims
 

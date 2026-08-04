@@ -1,6 +1,6 @@
 # FORGEOS-V1-WORLD-100 User Guide Source
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Source-backed view projection and input action routing
 
 ## What the operator can verify

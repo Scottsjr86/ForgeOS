@@ -4,7 +4,13 @@
 //! identity, polls by process name, sleeps for readiness, or silently reorders the
 //! declared service plan.
 
+use crate::recovery::SessionRecoveryEvidence;
 use crate::services::{ServiceName, ServicePlan};
+use forge_core::recovery::{
+    InterruptedAction, InterruptedEffectState, RecordedProcess, RecoveredProcessState,
+    RecoveryActionKind,
+};
+use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
 use forge_protocol::identities::{ProcessId, SessionId};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -252,6 +258,80 @@ impl SessionSupervisor {
             Some(RuntimeState::Failed { failure }) => Some(failure),
             _ => None,
         }
+    }
+
+    /// Captures conservative crash evidence without claiming process liveness or
+    /// replaying an interrupted lifecycle action.
+    pub fn recovery_evidence(&self) -> SessionRecoveryEvidence {
+        let mut interrupted_actions = Vec::new();
+        let mut recorded_processes = Vec::new();
+
+        for (service, state) in &self.states {
+            match state {
+                RuntimeState::StartRequested { attempt } => {
+                    interrupted_actions.push(lifecycle_interruption(
+                        self.session_id,
+                        service,
+                        1,
+                        *attempt,
+                        None,
+                        InterruptedEffectState::CommitNotObserved,
+                    ));
+                }
+                RuntimeState::Running { process_id, .. }
+                | RuntimeState::Ready { process_id, .. } => {
+                    recorded_processes.push(
+                        RecordedProcess::new(
+                            service.as_str(),
+                            Some(*process_id),
+                            RecoveredProcessState::RequiresRevalidation,
+                        )
+                        .expect("validated service names satisfy recovery naming"),
+                    );
+                }
+                RuntimeState::StopRequested {
+                    attempt,
+                    process_id,
+                    ..
+                } => {
+                    interrupted_actions.push(lifecycle_interruption(
+                        self.session_id,
+                        service,
+                        2,
+                        *attempt,
+                        Some(*process_id),
+                        InterruptedEffectState::CommitUnknown,
+                    ));
+                    recorded_processes.push(
+                        RecordedProcess::new(
+                            service.as_str(),
+                            Some(*process_id),
+                            RecoveredProcessState::RequiresRevalidation,
+                        )
+                        .expect("validated service names satisfy recovery naming"),
+                    );
+                }
+                RuntimeState::Stopped => {
+                    recorded_processes.push(
+                        RecordedProcess::new(
+                            service.as_str(),
+                            None,
+                            RecoveredProcessState::ConfirmedStopped,
+                        )
+                        .expect("validated service names satisfy recovery naming"),
+                    );
+                }
+                RuntimeState::Pending { .. } | RuntimeState::Failed { .. } => {}
+            }
+        }
+
+        interrupted_actions.sort_by_key(InterruptedAction::request_identity);
+        recorded_processes.sort_by(|left, right| {
+            left.service_name()
+                .as_bytes()
+                .cmp(right.service_name().as_bytes())
+        });
+        SessionRecoveryEvidence::new(self.session_id, interrupted_actions, recorded_processes)
     }
 
     /// Emits the next exact lifecycle action, or `None` while awaiting an outcome.
@@ -743,6 +823,34 @@ impl SessionSupervisor {
             })
         }
     }
+}
+
+fn lifecycle_interruption(
+    session_id: SessionId,
+    service: &ServiceName,
+    operation: u8,
+    attempt: u16,
+    process_id: Option<ProcessId>,
+    effect_state: InterruptedEffectState,
+) -> InterruptedAction {
+    let mut bytes = Vec::with_capacity(16 + 2 + service.as_str().len() + 1 + 2 + 1 + 16);
+    bytes.extend_from_slice(session_id.as_bytes());
+    bytes.extend_from_slice(&(service.as_str().len() as u16).to_be_bytes());
+    bytes.extend_from_slice(service.as_str().as_bytes());
+    bytes.push(operation);
+    bytes.extend_from_slice(&attempt.to_be_bytes());
+    match process_id {
+        Some(process_id) => {
+            bytes.push(1);
+            bytes.extend_from_slice(process_id.as_bytes());
+        }
+        None => bytes.push(0),
+    }
+    InterruptedAction::new(
+        hash_canonical_bytes(HashDomain::ToolRequest, &bytes),
+        RecoveryActionKind::ServiceTransition,
+        effect_state,
+    )
 }
 
 /// Invalid lifecycle event or identity crossing.

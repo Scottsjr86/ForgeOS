@@ -10,5 +10,6 @@ pub mod hashing;
 pub mod missions;
 pub mod project_registry;
 pub mod projects;
+pub mod recovery;
 pub mod state;
 pub mod workspaces;

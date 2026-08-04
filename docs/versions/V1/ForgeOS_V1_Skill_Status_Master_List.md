@@ -2,20 +2,20 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_38.tar`, the canonical V1 skill tree, accepted Forge behavior-only CI through the real Nyx public API witness, and the verified `Nyx_Server_base_13.tar` gate handoff.
-> `FORGEOS-V1-WORLD-100` is currently active. Nyx health/versioned client protocol is closed; Forge World now owns only immutable projection and typed input routing.
+> Source basis: `Forge_OS_V1_base_39.tar`, the canonical V1 skill tree, accepted Forge behavior-only CI through the real Nyx public API witness, and the verified `Nyx_Server_base_13.tar` gate handoff.
+> `FORGEOS-V1-RECOVERY-100` is currently active. Forge World projection and typed input routing are closed; recovery now owns only safe snapshot, crash-residue, and explicit restore primitives.
 
 ## Snapshot
 
 | Metric | Count |
 |---|---:|
 | Total V1 skills | 67 |
-| ✅ Completed / closed | 23 |
+| ✅ Completed / closed | 24 |
 | 🔨 Active / started | 1 |
-| 🟢 Available / ready to start | 8 |
+| 🟢 Available / ready to start | 7 |
 | 🔒 Locked by prerequisites | 35 |
 
-**Raw closed-node count:** 23 of 67, or 34.3%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
+**Raw closed-node count:** 24 of 67, or 35.8%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
 
 ## Status legend
 
@@ -39,18 +39,18 @@
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
 | 2 | Functional V1 systems | 19 | closed 1, available 5, locked 13 |
-| 1 | Local mechanisms | 16 | closed 12, active 1, available 3, locked 0 |
+| 1 | Local mechanisms | 16 | closed 13, active 1, available 2, locked 0 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### 🔨 `FORGEOS-V1-WORLD-100` — Source-backed view projection and input action routing
+### 🔨 `FORGEOS-V1-RECOVERY-100` — Workspace snapshot and crash-journal primitive
 
 - **Tier:** 1
 - **Status:** `ACTIVE`
-- **Current position:** Nyx public API integration is closed. Forge World is gaining an immutable projection of canonical project registry state plus typed generation-bound user intents.
-- **Direct prerequisites:** `ARCH-001`, `CONTRACT-000`, `GUARD-001`, and `GUARD-002` ✅
-- **Immediate unlock after closure:** none by itself; `WORLD-200` still requires terminal, Git, Nyx conversation, and verification capabilities.
+- **Current position:** ForgeOS is gaining a canonical safe recovery image, non-replayable interrupted-action journal, conservative process revalidation records, and explicit atomic restore choices.
+- **Direct prerequisites:** `STATE-000`, `PROCESS-000`, and `HASH-000` ✅
+- **Immediate unlock after closure:** none by itself; `RECOVERY-200` still requires managed service lifecycle, terminal sessions, and Nyx conversation support.
 
 ## Available skills right now
 
@@ -61,7 +61,6 @@
 - 🟢 `FORGEOS-V1-GIT-200` — Real Git status, branch, revision, and diff inspection
 - 🟢 `FORGEOS-V1-NYX-101` — Permission grant, checkpoint, and immutable resume token
 - 🟢 `FORGEOS-V1-AGENT-100` — Remote-agent task and budget record
-- 🟢 `FORGEOS-V1-RECOVERY-100` — Workspace snapshot and crash-journal primitive
 
 ---
 
@@ -133,8 +132,8 @@ Functional subsystems assembled from local mechanisms.
 | 🔒 LOCKED | `FORGEOS-V1-AGENT-200` | OpenAI heavyweight task dispatch | 🔒 `FORGEOS-V1-AGENT-100`<br>🔒 `FORGEOS-V1-NYX-200`<br>🔒 `FORGEOS-V1-GIT-201` |
 | 🔒 LOCKED | `FORGEOS-V1-AGENT-201` | Returned patch intake, review, and controlled application | 🔒 `FORGEOS-V1-AGENT-200`<br>✅ `FORGEOS-V1-PATCH-100`<br>🔒 `FORGEOS-V1-GIT-201` |
 | 🔒 LOCKED | `FORGEOS-V1-VERIFY-200` | Version-bound build and test result records | 🔒 `FORGEOS-V1-COMMAND-200`<br>🔒 `FORGEOS-V1-GIT-200`<br>✅ `FORGEOS-V1-STATE-000` |
-| 🔒 LOCKED | `FORGEOS-V1-WORLD-200` | Basic Bevy shell and truthful status HUD | 🔨 `FORGEOS-V1-WORLD-100`<br>✅ `FORGEOS-V1-PROJECT-200`<br>🟢 `FORGEOS-V1-TERMINAL-200`<br>🟢 `FORGEOS-V1-GIT-200`<br>🔒 `FORGEOS-V1-NYX-200`<br>🔒 `FORGEOS-V1-VERIFY-200` |
-| 🔒 LOCKED | `FORGEOS-V1-RECOVERY-200` | Durable workspace and service recovery | 🟢 `FORGEOS-V1-RECOVERY-100`<br>✅ `FORGEOS-V1-PROJECT-200`<br>🔒 `FORGEOS-V1-SESSION-201`<br>🟢 `FORGEOS-V1-TERMINAL-200`<br>🔒 `FORGEOS-V1-NYX-200` |
+| 🔒 LOCKED | `FORGEOS-V1-WORLD-200` | Basic Bevy shell and truthful status HUD | ✅ `FORGEOS-V1-WORLD-100`<br>✅ `FORGEOS-V1-PROJECT-200`<br>🟢 `FORGEOS-V1-TERMINAL-200`<br>🟢 `FORGEOS-V1-GIT-200`<br>🔒 `FORGEOS-V1-NYX-200`<br>🔒 `FORGEOS-V1-VERIFY-200` |
+| 🔒 LOCKED | `FORGEOS-V1-RECOVERY-200` | Durable workspace and service recovery | 🔨 `FORGEOS-V1-RECOVERY-100`<br>✅ `FORGEOS-V1-PROJECT-200`<br>🔒 `FORGEOS-V1-SESSION-201`<br>🟢 `FORGEOS-V1-TERMINAL-200`<br>🔒 `FORGEOS-V1-NYX-200` |
 | 🔒 LOCKED | `FORGEOS-V1-DIST-200` | Reproducible ForgeOS session package | 🔒 `FORGEOS-V1-SESSION-200`<br>🔒 `FORGEOS-V1-SESSION-201`<br>🔒 `FORGEOS-V1-WORLD-200` |
 
 
@@ -158,8 +157,8 @@ Concrete local mechanisms and adapters that make the systems real.
 | 🟢 AVAILABLE | `FORGEOS-V1-NYX-101` | Permission grant, checkpoint, and immutable resume token | ✅ `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
 | 🟢 AVAILABLE | `FORGEOS-V1-AGENT-100` | Remote-agent task and budget record | ✅ `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
 | ✅ CLOSED | `FORGEOS-V1-PATCH-100` | Patch identity, base validation, and safe application primitive | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
-| 🔨 ACTIVE | `FORGEOS-V1-WORLD-100` | Source-backed view projection and input action routing | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-GUARD-001`<br>✅ `FORGEOS-V1-GUARD-002` |
-| 🟢 AVAILABLE | `FORGEOS-V1-RECOVERY-100` | Workspace snapshot and crash-journal primitive | ✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-HASH-000` |
+| ✅ CLOSED | `FORGEOS-V1-WORLD-100` | Source-backed view projection and input action routing | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-GUARD-001`<br>✅ `FORGEOS-V1-GUARD-002` |
+| 🔨 ACTIVE | `FORGEOS-V1-RECOVERY-100` | Workspace snapshot and crash-journal primitive | ✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-HASH-000` |
 
 
 # Tier 0 — Atomic foundations and guards
@@ -207,7 +206,8 @@ The bedrock: architecture, contracts, guards, process/path/state foundations, an
 21. ✅ `FORGEOS-V1-PATCH-100` — Patch identity, base validation, and safe application primitive
 22. ✅ `FORGEOS-V1-PROJECT-200` — Persistent project registry and workspace restoration
 23. ✅ `FORGEOS-V1-NYX-100` — Nyx health and versioned client protocol
-24. 🔨 `FORGEOS-V1-WORLD-100` — Source-backed view projection and input action routing
+24. ✅ `FORGEOS-V1-WORLD-100` — Source-backed view projection and input action routing
+25. 🔨 `FORGEOS-V1-RECOVERY-100` — Workspace snapshot and crash-journal primitive
 
 ## Reading this list correctly
 

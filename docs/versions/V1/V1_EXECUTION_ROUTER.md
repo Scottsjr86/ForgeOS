@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-WORLD-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-WORLD-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+ACTIVE_SKILLS=[FORGEOS-V1-RECOVERY-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-RECOVERY-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=FORGE_WORLD
+ACTIVE_LANE=RECOVERY
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_SOURCE_BACKED_WORLD_PROJECTION_AND_TYPED_ACTION_ROUTING
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_WORKSPACE_RECOVERY_IMAGE_CRASH_JOURNAL_AND_EXPLICIT_RESTORE_CHOICES
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -148,12 +148,13 @@ boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, native Git inspection and mutation, stable
 all-or-nothing patch application, persistent project registry/workspace restoration,
-and Nyx public health/version discovery are closed. `FORGEOS-V1-WORLD-100` is the
-only active source skill. Dedicated session bootstrap, managed Nyx lifecycle,
-repository file browsing, managed terminal sessions, integrated Git inspection,
-Nyx checkpoint transport, remote-agent records, and recovery remain available but
-inactive. The active skill may only project immutable source-owned state and emit
-typed user intents. It may not own canonical mutation or execute subsystem work.
+Nyx public health/version discovery, and source-backed Forge World projection are
+closed. `FORGEOS-V1-RECOVERY-100` is the only active source skill. Dedicated session
+bootstrap, managed Nyx lifecycle, repository file browsing, managed terminal sessions,
+integrated Git inspection, Nyx checkpoint transport, and remote-agent records remain
+available but inactive. The active skill may only define and persist conservative
+recovery evidence. It may not replay effects, claim historical processes are alive, or
+overwrite a valid current recovery image with older data.
 
 ## 3. Current-source intake law
 
@@ -825,64 +826,65 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Source-backed Forge World projection and typed input routing are active.
+Workspace snapshot and crash-journal recovery are active.
 
 ```yaml
-skill_id: FORGEOS-V1-WORLD-100
+skill_id: FORGEOS-V1-RECOVERY-100
 state: ACTIVE
-lane: FORGE_WORLD
-owning_subsystem: forge-world and forge-protocol
+lane: RECOVERY
+owning_subsystem: forge-core, forge-project, and forge-session
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_38.tar sha256 f871c859b4cb161b77094e94e695800c44770e0ff0ee19d9a74f8d82d9503be2
+source_revision: Forge_OS_V1_base_39.tar sha256 5abb16e390a109d1f35b1add7e4896ce8b9b340364ac51286ee49a58660b072e
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-ARCH-001
-  - FORGEOS-V1-CONTRACT-000
-  - FORGEOS-V1-GUARD-001
-  - FORGEOS-V1-GUARD-002
+  - FORGEOS-V1-STATE-000
+  - FORGEOS-V1-PROCESS-000
+  - FORGEOS-V1-HASH-000
 originating_path_or_probe: >
-  Build a projection from canonical ProjectRegistryState, route project and
-  registered-command actions through a read-only Forge World router, then prove
-  rerender and resize do not alter the registry bytes.
+  Persist a safe workspace recovery image, interrupt publication, corrupt the
+  current image, retain historical process evidence, and inspect the exact recovery
+  choices without replaying actions or claiming stale process liveness.
 first_blocker: >
-  forge-world contains only empty presentation and interaction namespaces. It has
-  no immutable source-backed view model, exact path-byte projection, stable command
-  rows, viewport boundary, or typed action router.
-active_slice: FORGEOS-V1-WORLD-100-SLICE-001
+  ForgeOS can retain one opaque last-safe workspace payload and generic previous
+  state bytes, but it has no canonical crash journal, no historical-process
+  revalidation record, no generation-guarded recovery publication, and no explicit
+  assessment that prevents an older image from replacing a valid current image.
+active_slice: FORGEOS-V1-RECOVERY-100-SLICE-001
 allowed_paths:
-  - crates/forge-protocol/src/intents.rs
-  - crates/forge-protocol/src/lib.rs
-  - crates/forge-world/src/presentation.rs
-  - crates/forge-world/src/interaction.rs
-  - crates/forge-world/tests/source_projection.rs
-  - crates/forge-app/tests/public_routes.rs
+  - crates/forge-core/src/lib.rs
+  - crates/forge-core/src/recovery.rs
+  - crates/forge-core/tests/workspace_recovery.rs
+  - crates/forge-project/src/lib.rs
+  - crates/forge-project/src/recovery_store.rs
+  - crates/forge-project/tests/workspace_recovery_store.rs
+  - crates/forge-session/src/lib.rs
+  - crates/forge-session/src/lifecycle.rs
+  - crates/forge-session/src/recovery.rs
+  - crates/forge-session/tests/recovery_evidence.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
-  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json
-  - docs/versions/V1/skills/FORGEOS-V1-NYX-100/**
   - docs/versions/V1/skills/FORGEOS-V1-WORLD-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-RECOVERY-100/**
 forbidden_paths_and_behavior:
-  - direct mutation of ProjectRegistryState or any other Forge Core state from forge-world
-  - command execution, terminal I/O, Git inspection or mutation, Nyx calls, service lifecycle, file browsing, or recovery behavior
-  - Bevy shell, HUD, spatial scene, animation, or later-version presentation work
-  - identity derived from display name, path text, row position, viewport, renderer timing, or window state
+  - automatic replay of interrupted file, command, Git, service, or model effects
+  - treating a historical process identity as proof that a process is still alive
+  - restoring a previous image over a valid current image
+  - wall-clock or random recovery identity
+  - terminal, Git, Nyx, file-edit, session-bootstrap, or Forge World product behavior
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
-  - forge_protocol::intents::ForgeUserIntent
-  - forge_world::presentation::DisplayPath
-  - forge_world::presentation::CommandView
-  - forge_world::presentation::ProjectView
-  - forge_world::presentation::ProjectRegistryProjection
-  - forge_world::presentation::Viewport
-  - forge_world::presentation::PresentationFrame
-  - forge_world::interaction::WorldInputAction
-  - forge_world::interaction::WorldActionRouter
-  - forge_world::interaction::WorldActionError
+  - forge_core::recovery::WorkspaceRecoveryRecord
+  - forge_core::recovery::InterruptedAction
+  - forge_core::recovery::RecordedProcess
+  - forge_session::recovery::SessionRecoveryEvidence
+  - forge_session::lifecycle::SessionSupervisor::recovery_evidence
+  - forge_project::recovery_store::WorkspaceRecoveryStore
+  - forge_project::recovery_store::RecoveryAssessment
+  - forge_project::recovery_store::RecoveryChoice
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -892,43 +894,45 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  Projection deterministically mirrors canonical project, repository, command,
-  recent-open, snapshot, and exact display-root data; duplicate display names and
-  paths cannot collide; user actions emit generation-bound typed intents; unknown
-  project and command identities fail closed; rerender and viewport resize leave
-  canonical registry bytes unchanged; all structural guards and behavior tests pass.
+  Recovery records are versioned, checksummed, and stably hashed; interrupted actions
+  remain non-replayable; active process observations reopen only as requiring
+  revalidation; atomic publication requires the exact current generation; abandoned
+  staging is visible; corrupt current data offers only an explicit valid-previous
+  restore; a valid current image cannot be replaced by an older image; all structural
+  guards and behavior tests pass.
 block_edge: >
-  Forge World owns or mutates canonical state, identity derives from display or
-  renderer state, exact path bytes are lost, unknown identities route successfully,
-  command identity is reconstructed from labels, resize changes source data,
-  source-size warnings occur, structural guards regress, or CI fails.
+  Recovery replays an effect, claims a process is alive from recorded identity,
+  silently chooses an image, accepts malformed or noncanonical bytes, permits stale or
+  skipped generations, overwrites a valid current image, hides interrupted staging,
+  exceeds source-size policy, regresses a structural guard, or CI fails.
 user_acceptance_path: >
   The user runs python3 scripts/run_ci.py and returns the exact CI command summary.
-  The source_projection behavior suite must pass with no structural guard regression.
+  The workspace_recovery, workspace_recovery_store, and recovery_evidence suites must
+  pass with no structural guard regression.
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-WORLD-100. Reevaluate its direct
-  dependent FORGEOS-V1-WORLD-200 and the existing available frontier; WORLD-200
-  remains locked until its other direct prerequisites close.
-parallel_compatibility: NONE_IN_FORGE_WORLD_LANE
+  After operator CI passes, close only FORGEOS-V1-RECOVERY-100. Reevaluate its direct
+  dependent FORGEOS-V1-RECOVERY-200 and the existing available frontier;
+  RECOVERY-200 remains locked until its other direct prerequisites close.
+parallel_compatibility: NONE_IN_RECOVERY_LANE
 ```
 
 This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
 `FORGEOS-V1-FILE-200`, `FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`,
-`FORGEOS-V1-NYX-101`, `FORGEOS-V1-AGENT-100`, and `FORGEOS-V1-RECOVERY-100`
-remain available but inactive.
+`FORGEOS-V1-NYX-101`, and `FORGEOS-V1-AGENT-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for Forge World projection
+## 17. Direct unlock handling for recovery primitive
 
-`FORGEOS-V1-WORLD-100` may close only after behavior-only CI proves the immutable
-projection and typed action-routing matrix. Source presence or rendered output alone
-is insufficient.
+`FORGEOS-V1-RECOVERY-100` may close only after behavior-only CI proves canonical
+round-trip, malformed-record rejection, generation-guarded publication, interrupted
+staging visibility, explicit previous-image recovery, valid-current protection, and
+conservative session process evidence.
 
-Closing `FORGEOS-V1-WORLD-100` does not independently unlock another node because
-`FORGEOS-V1-WORLD-200` still requires terminal, Git, Nyx conversation, and verify
-capabilities. Reevaluate only `FORGEOS-V1-WORLD-200` and the current available
-frontier after closure.
+Closing `FORGEOS-V1-RECOVERY-100` does not independently unlock another node because
+`FORGEOS-V1-RECOVERY-200` still requires session lifecycle, terminal, and Nyx
+conversation capabilities. Reevaluate only `FORGEOS-V1-RECOVERY-200` and the current
+available frontier after closure.
 
 ## 18. Final closure routing
 

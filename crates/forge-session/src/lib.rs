@@ -4,4 +4,5 @@
 //! their named modules and are added only by the skills that prove them.
 
 pub mod lifecycle;
+pub mod recovery;
 pub mod services;
