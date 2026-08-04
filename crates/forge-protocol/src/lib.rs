@@ -8,6 +8,7 @@ pub mod errors;
 pub mod events;
 pub mod hashes;
 pub mod identities;
+pub mod intents;
 pub mod patches;
 pub mod paths;
 pub mod processes;

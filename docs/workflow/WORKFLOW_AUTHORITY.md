@@ -110,18 +110,18 @@ The bounded authority migration is complete and source execution is active:
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS-V1-NYX-100
+BATON_OWNER=FORGEOS-V1-WORLD-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_SKILLS=[FORGEOS-V1-NYX-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
-ACTIVE_LANE=NYX_LOCAL_AI
-ACTIVE_QUESTION=Can ForgeOS discover Nyx through one configured local transport, negotiate an explicitly supported protocol, read declared health and capabilities, and distinguish unavailable, incompatible, unhealthy, and ready states without bypassing Nyx?
-FIRST_BLOCKER=FORGE_HTTP_ADAPTER_REQUIRES_OPERATOR_CI_AND_REAL_NYX_PROCESS_WITNESS
-ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-002
-SOURCE_IMPLEMENTATION_ALLOWED=YES_FORGE_CLIENT_ONLY_NO_NYX_SERVER_SUBSTITUTE
-CURRENT_RESULT=NYX_PUBLIC_API_GATE_PROVED_FORGE_HTTP_ADAPTER_OPERATOR_VALIDATION_PENDING
-RETURN_PATH=CLOSE_ONLY_FORGEOS-V1-NYX-100_THEN_UNLOCK_NYX-101_AGENT-100_AND_SESSION-201
+ACTIVE_SKILLS=[FORGEOS-V1-WORLD-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100,FORGEOS-V1-RECOVERY-100]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100]
+ACTIVE_LANE=FORGE_WORLD
+ACTIVE_QUESTION=Can Forge World project immutable canonical project state and emit exact typed user intents without deriving identity from display state or directly mutating Forge Core?
+FIRST_BLOCKER=FORGE_WORLD_HAS_ONLY_EMPTY_PRESENTATION_AND_INTERACTION_NAMESPACES_WITH_NO_SOURCE_BACKED_PROJECTION_OR_TYPED_ACTION_ROUTER
+ACTIVE_SLICE=FORGEOS-V1-WORLD-100-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES_PRESENTATION_AND_TYPED_INTENT_BOUNDARY_ONLY
+CURRENT_RESULT=NYX_PUBLIC_API_CLIENT_CLOSED_WORLD_PROJECTION_SLICE_ACTIVE
+RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-WORLD-100_IF_OPERATOR_EVIDENCE_PASSES
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
@@ -130,15 +130,14 @@ NYX_CAPABILITY_OWNERSHIP_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
 NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 ```
 
-Persistent project registry and workspace restoration are closed. `FORGEOS-V1-NYX-100`
-is the only active source skill. Dedicated session bootstrap, repository file browsing,
-managed terminal sessions, integrated Git inspection, Forge World, and recovery remain
-available but inactive. Nyx_Server now exposes and system-proves its canonical
-versioned HTTP/JSON version, health, and capability routes. The active skill owns only
-the ForgeOS client/adapter and independent witness path. It may not select models,
-create conversations, grant tools, manage the Nyx service process, contact model
-providers directly, edit `nyx_server`, present UI state, or duplicate Nyx-owned server
-truth inside ForgeOS.
+Persistent project registry/workspace restoration and Nyx health/versioned public
+client protocol are closed. `FORGEOS-V1-WORLD-100` is the only active source skill.
+Dedicated session bootstrap, managed Nyx lifecycle, repository file browsing, managed
+terminal sessions, integrated Git inspection, Nyx checkpoint transport, remote-agent
+records, and recovery remain available but inactive. The active skill owns only
+immutable view projection, renderer-owned viewport metadata, and typed user-intent
+routing. It may not directly mutate canonical state or execute work owned by project,
+terminal, Git, Nyx, session, or command subsystems.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source

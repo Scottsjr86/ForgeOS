@@ -1,6 +1,6 @@
 # FORGEOS-V1-NYX-100 User Guide Source
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Nyx health and versioned client protocol
 Cross-repo gate input: `docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json`
 

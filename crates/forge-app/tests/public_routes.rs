@@ -7,7 +7,7 @@ use forge_editor::{buffers, language};
 use forge_git::{repository, worktree};
 use forge_nyx_client::{protocol as nyx_protocol, transport as nyx_transport};
 use forge_project::{persistence, registry};
-use forge_protocol::{envelopes, errors, events, identities};
+use forge_protocol::{envelopes, errors, events, identities, intents};
 use forge_session::{lifecycle, services};
 use forge_terminal::{commands, pty};
 use forge_world::{interaction, presentation};

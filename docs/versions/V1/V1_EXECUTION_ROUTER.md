@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
-ACTIVE_SKILLS=[FORGEOS-V1-NYX-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-NYX-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_SKILLS=[FORGEOS-V1-WORLD-100]
+ACTIVE_BATON_OWNER=FORGEOS-V1-WORLD-100
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=NYX_LOCAL_AI
+ACTIVE_LANE=FORGE_WORLD
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=RUN_FORGE_CI_AND_REAL_NYX_PUBLIC_API_CLIENT_WITNESS
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_SOURCE_BACKED_WORLD_PROJECTION_AND_TYPED_ACTION_ROUTING
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -147,14 +147,13 @@ All Tier-0 foundations, all three structural guards, project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, native Git inspection and mutation, stable
-all-or-nothing patch application and persistent project registry/workspace restoration
-are closed. `FORGEOS-V1-NYX-100` is the only active source skill. Dedicated session
-bootstrap, repository file browsing, managed terminal sessions, integrated Git
-inspection, Forge World, and recovery remain available but inactive. Nyx_Server has
-banked and system-proved its canonical public version, health, and capability contract.
-ForgeOS now owns only the strict HTTP client adaptation and independent real-process
-witness. It may not embed a server, select models, create conversations, grant tools,
-manage services, contact providers, edit `nyx_server`, or present UI state.
+all-or-nothing patch application, persistent project registry/workspace restoration,
+and Nyx public health/version discovery are closed. `FORGEOS-V1-WORLD-100` is the
+only active source skill. Dedicated session bootstrap, managed Nyx lifecycle,
+repository file browsing, managed terminal sessions, integrated Git inspection,
+Nyx checkpoint transport, remote-agent records, and recovery remain available but
+inactive. The active skill may only project immutable source-owned state and emit
+typed user intents. It may not own canonical mutation or execute subsystem work.
 
 ## 3. Current-source intake law
 
@@ -826,102 +825,66 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Nyx health and versioned client protocol are active.
+Source-backed Forge World projection and typed input routing are active.
 
 ```yaml
-skill_id: FORGEOS-V1-NYX-100
+skill_id: FORGEOS-V1-WORLD-100
 state: ACTIVE
-lane: NYX_LOCAL_AI
-owning_subsystem: forge-nyx-client
+lane: FORGE_WORLD
+owning_subsystem: forge-world and forge-protocol
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_37.tar sha256 874665eba0d1a040d7884c06ec266aefbbdb9864bc47c4d91e6d43f733e1bda3
+source_revision: Forge_OS_V1_base_38.tar sha256 f871c859b4cb161b77094e94e695800c44770e0ff0ee19d9a74f8d82d9503be2
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
+  - FORGEOS-V1-ARCH-001
   - FORGEOS-V1-CONTRACT-000
-  - FORGEOS-V1-PROCESS-000
+  - FORGEOS-V1-GUARD-001
   - FORGEOS-V1-GUARD-002
-cross_repository_gate: NYX-GATE-FORGEOS-V1-NYX-100
-required_nyx_skills:
-  - API-FOUND-008
-  - API-VERSION-010
-  - API-SYS-044
-  - API-SYS-047
-minimum_nyx_state: BANKED
-minimum_nyx_proof: PROOF_SYSTEM
-nyx_gate_input: docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json
-required_reading:
-  - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
-  - docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md
-  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
-nyx_wiring_review: COMPLETE_FOR_SLICE_002
-nyx_ownership_review: COMPLETE_FOR_SLICE_002
-nyx_surface_touched: Nyx-owned public version, health, and capability discovery through the Forge client adapter
-nyx_implementation_state: PUBLIC_API_GATE_BANKED_PROOF_SYSTEM
-nyx_source_files_checked:
-  - Nyx_Server/crates/nyx_protocol/src/public_api.rs
-  - Nyx_Server/crates/nyx_server/src/http/mod.rs
-  - Nyx_Server/crates/nyx_server/src/http/public_api.rs
-  - Nyx_Server/crates/nyx_server/src/http/routes.rs
-  - Nyx_Server/experiments/skills/api/runs/public-api-gate-v1/real_server_witness_v1.json
-  - Nyx_Server/docs/workflow/skill_trees/receipts/API-FOUND-008-proof-public-api-gate-v1.json
-  - Nyx_Server/docs/workflow/skill_trees/receipts/API-VERSION-010-proof-public-api-gate-v1.json
-  - Nyx_Server/docs/workflow/skill_trees/receipts/API-SYS-044-proof-public-api-gate-v1.json
-  - Nyx_Server/docs/workflow/skill_trees/receipts/API-SYS-047-proof-public-api-gate-v1.json
-nyx_target_repository: Forge_OS_V1
-nyx_forbidden_substitute_confirmed: true
-closure_posture: NYX_GATE_PROVED_FORGE_ADAPTER_OPERATOR_VALIDATION_PENDING
 originating_path_or_probe: >
-  Run the Forge HTTP client fixture matrix, start Nyx_Server independently from its
-  own repository, and execute the ignored real_nyx_public_api_gate test against that
-  process. Accept a compatible truthful degraded response as Unhealthy, never Ready.
+  Build a projection from canonical ProjectRegistryState, route project and
+  registered-command actions through a read-only Forge World router, then prove
+  rerender and resize do not alter the registry bytes.
 first_blocker: >
-  The Nyx-owned public API gate is banked and its receipts and real-server witness are
-  verified. The Forge HTTP adapter patch still requires behavior-only CI and a real
-  Nyx process client witness before FORGEOS-V1-NYX-100 may close.
-active_slice: FORGEOS-V1-NYX-100-SLICE-002
+  forge-world contains only empty presentation and interaction namespaces. It has
+  no immutable source-backed view model, exact path-byte projection, stable command
+  rows, viewport boundary, or typed action router.
+active_slice: FORGEOS-V1-WORLD-100-SLICE-001
 allowed_paths:
-  - Cargo.lock
-  - crates/forge-nyx-client/Cargo.toml
-  - crates/forge-nyx-client/src/protocol.rs
-  - crates/forge-nyx-client/src/transport.rs
-  - crates/forge-nyx-client/src/lib.rs
-  - crates/forge-nyx-client/tests/nyx_health.rs
+  - crates/forge-protocol/src/intents.rs
+  - crates/forge-protocol/src/lib.rs
+  - crates/forge-world/src/presentation.rs
+  - crates/forge-world/src/interaction.rs
+  - crates/forge-world/tests/source_projection.rs
+  - crates/forge-app/tests/public_routes.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
-  - docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md
-  - docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md
-  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
-  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
+  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md
+  - docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCIES.json
   - docs/versions/V1/skills/FORGEOS-V1-NYX-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-WORLD-100/**
 forbidden_paths_and_behavior:
-  - nyx_server source, model-provider calls, model selection, conversation state, tool permissions, checkpoints, agent dispatch, service lifecycle, project state, Git behavior, or UI state
-  - treating HTTP success as compatibility, accepting an incompatible major, hiding malformed responses, or converting unavailable or unhealthy state into ready
-  - authoring Nyx health, capability, engine, or provider truth inside ForgeOS
+  - direct mutation of ProjectRegistryState or any other Forge Core state from forge-world
+  - command execution, terminal I/O, Git inspection or mutation, Nyx calls, service lifecycle, file browsing, or recovery behavior
+  - Bevy shell, HUD, spatial scene, animation, or later-version presentation work
+  - identity derived from display name, path text, row position, viewport, renderer timing, or window state
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
-  - forge_nyx_client::protocol::NyxProtocolVersion
-  - forge_nyx_client::protocol::NyxHealth
-  - forge_nyx_client::protocol::NyxAvailability
-  - forge_nyx_client::protocol::NyxCapability
-  - forge_nyx_client::protocol::NyxEngineReadiness
-  - forge_nyx_client::protocol::NyxProviderReadiness
-  - forge_nyx_client::protocol::NyxServiceReport
-  - forge_nyx_client::protocol::NyxProtocolError
-  - forge_nyx_client::transport::NyxTransportEndpoint
-  - forge_nyx_client::transport::NyxClientConfig
-  - forge_nyx_client::transport::NyxProbeOutcome
-  - forge_nyx_client::transport::NyxProbeStatus
-  - forge_nyx_client::transport::NyxUnavailableReason
-  - forge_nyx_client::transport::NyxIncompatibility
-  - forge_nyx_client::transport::probe_nyx
+  - forge_protocol::intents::ForgeUserIntent
+  - forge_world::presentation::DisplayPath
+  - forge_world::presentation::CommandView
+  - forge_world::presentation::ProjectView
+  - forge_world::presentation::ProjectRegistryProjection
+  - forge_world::presentation::Viewport
+  - forge_world::presentation::PresentationFrame
+  - forge_world::interaction::WorldInputAction
+  - forge_world::interaction::WorldActionRouter
+  - forge_world::interaction::WorldActionError
 required_commands:
   - python3 scripts/run_ci.py
-  - NYX_BIND=127.0.0.1:8088 cargo run --locked --quiet -p nyx_server --bin nyx_server
-  - FORGE_NYX_ADDR=127.0.0.1:8088 cargo test --locked -p forge-nyx-client --test nyx_health real_nyx_public_api_gate -- --ignored --nocapture
 regression_commands: []
 validation_execution_policy: >
   Canonical CI is behavior-only and runs through scripts/run_ci.py. Documentation,
@@ -929,48 +892,43 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  ForgeOS and a real Nyx_Server process consume the same Nyx-owned versioned public
-  HTTP contract; compatible healthy Nyx returns exact service version, health,
-  capabilities, engines, and providers; missing endpoints classify unavailable;
-  incompatible versions and malformed responses classify incompatible; degraded or
-  unavailable responses retain their declared truth while classifying unhealthy; no
-  outcome panics or bypasses Nyx; behavior-only CI and all structural guards remain green.
+  Projection deterministically mirrors canonical project, repository, command,
+  recent-open, snapshot, and exact display-root data; duplicate display names and
+  paths cannot collide; user actions emit generation-bound typed intents; unknown
+  project and command identities fail closed; rerender and viewport resize leave
+  canonical registry bytes unchanged; all structural guards and behavior tests pass.
 block_edge: >
-  Transport success alone becomes compatibility, an incompatible major is accepted,
-  contract headers or schema IDs are ignored, malformed responses become ready,
-  unavailable or unhealthy state is hidden, readiness inventories contradict summary
-  counts without rejection, capabilities become nondeterministic, direct provider
-  access appears, source-size warnings occur, structural guards regress, or CI fails.
+  Forge World owns or mutates canonical state, identity derives from display or
+  renderer state, exact path bytes are lost, unknown identities route successfully,
+  command identity is reconstructed from labels, resize changes source data,
+  source-size warnings occur, structural guards regress, or CI fails.
 user_acceptance_path: >
-  The user runs python3 scripts/run_ci.py in ForgeOS, starts Nyx_Server independently
-  from its own repository at 127.0.0.1:8088, and runs the ignored
-  real_nyx_public_api_gate Forge test with FORGE_NYX_ADDR set. The returned report must
-  preserve exact version, health, capabilities, engine readiness, and provider readiness.
+  The user runs python3 scripts/run_ci.py and returns the exact CI command summary.
+  The source_projection behavior suite must pass with no structural guard regression.
 return_path: >
-  After Forge CI and the real-process client witness pass, close only
-  FORGEOS-V1-NYX-100; then mark FORGEOS-V1-NYX-101, FORGEOS-V1-AGENT-100, and
-  FORGEOS-V1-SESSION-201 available because their remaining direct prerequisites are
-  closed; reevaluate only those direct unlocks and the current available frontier.
-parallel_compatibility: NONE_IN_NYX_LOCAL_AI_LANE
+  After operator CI passes, close only FORGEOS-V1-WORLD-100. Reevaluate its direct
+  dependent FORGEOS-V1-WORLD-200 and the existing available frontier; WORLD-200
+  remains locked until its other direct prerequisites close.
+parallel_compatibility: NONE_IN_FORGE_WORLD_LANE
 ```
 
-This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-FILE-200`,
-`FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`, `FORGEOS-V1-WORLD-100`, and
-`FORGEOS-V1-RECOVERY-100` remain available but inactive.
+This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
+`FORGEOS-V1-FILE-200`, `FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`,
+`FORGEOS-V1-NYX-101`, `FORGEOS-V1-AGENT-100`, and `FORGEOS-V1-RECOVERY-100`
+remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for Nyx health
+## 17. Direct unlock handling for Forge World projection
 
-`FORGEOS-V1-NYX-100` may close only after
-`NYX-GATE-FORGEOS-V1-NYX-100` passes against a real Nyx process. Passing the
-Forge client fixtures alone leaves the skill at `SOURCE_PROVED` or
-`USER_ACCEPTANCE_READY`, not `CLOSED`.
+`FORGEOS-V1-WORLD-100` may close only after behavior-only CI proves the immutable
+projection and typed action-routing matrix. Source presence or rendered output alone
+is insufficient.
 
-Closing `FORGEOS-V1-NYX-100` makes `FORGEOS-V1-NYX-101`,
-`FORGEOS-V1-AGENT-100`, and `FORGEOS-V1-SESSION-201` structurally available. It does
-not independently prove permissions, checkpoints, task records, managed service
-lifecycle, model selection, conversations, project-aware tools, or agent execution.
+Closing `FORGEOS-V1-WORLD-100` does not independently unlock another node because
+`FORGEOS-V1-WORLD-200` still requires terminal, Git, Nyx conversation, and verify
+capabilities. Reevaluate only `FORGEOS-V1-WORLD-200` and the current available
+frontier after closure.
 
 ## 18. Final closure routing
 

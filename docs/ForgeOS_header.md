@@ -314,26 +314,25 @@ validated project registration, boundary-safe raw file access, editor buffer ide
 incremental Rust syntax parsing, the Rust Analyzer JSON-RPC adapter, native PTY
 support, immutable registered-command policy, deterministic session lifecycle,
 read-only native Git inspection, typed Git mutation/worktree control, stable
-all-or-nothing patch application and persistent project registry/workspace restoration
-are closed. Nyx health and versioned client protocol remain the active V1 capability.
-Nyx_Server now owns and system-proves the public contract; ForgeOS must consume it
-through its real client path and complete operator validation:
+all-or-nothing patch application, persistent project registry/workspace restoration,
+and Nyx health/versioned public-client protocol are closed. Source-backed Forge World
+projection and typed input routing are the active V1 capability:
 
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-ACTIVE_RELEASE_GATE=FORGEOS-V1-NYX-100
-ACTIVE_V1_CONTRIBUTION=NYX_HEALTH_AND_VERSIONED_CLIENT_PROTOCOL
-ACTIVE_CAPABILITY_ID=FORGEOS-V1-NYX-100
-QUESTION=Can ForgeOS and a real Nyx_Server process consume one Nyx-owned versioned public health and capability contract without ForgeOS embedding or bypassing Nyx?
-CURRENT_RESULT=NYX_PUBLIC_API_GATE_PROVED_FORGE_HTTP_ADAPTER_OPERATOR_VALIDATION_PENDING
-BATON_OWNER=FORGEOS-V1-NYX-100
-ACTIVE_LANE=NYX_LOCAL_AI
-ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-002
-FIRST_BLOCKER=FORGE_HTTP_ADAPTER_REQUIRES_OPERATOR_CI_AND_REAL_NYX_PROCESS_WITNESS
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_RELEASE_GATE=FORGEOS-V1-WORLD-100
+ACTIVE_V1_CONTRIBUTION=SOURCE_BACKED_VIEW_PROJECTION_AND_TYPED_INPUT_ROUTING
+ACTIVE_CAPABILITY_ID=FORGEOS-V1-WORLD-100
+QUESTION=Can Forge World project immutable canonical project state and emit exact typed user intents without deriving identity from display state or directly mutating Forge Core?
+CURRENT_RESULT=NYX_PUBLIC_API_CLIENT_CLOSED_WORLD_PROJECTION_SLICE_ACTIVE
+BATON_OWNER=FORGEOS-V1-WORLD-100
+ACTIVE_LANE=FORGE_WORLD
+ACTIVE_SLICE=FORGEOS-V1-WORLD-100-SLICE-001
+FIRST_BLOCKER=FORGE_WORLD_HAS_ONLY_EMPTY_PRESENTATION_AND_INTERACTION_NAMESPACES_WITH_NO_SOURCE_BACKED_PROJECTION_OR_TYPED_ACTION_ROUTER
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100,FORGEOS-V1-RECOVERY-100]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
@@ -351,8 +350,8 @@ SOURCE_WORK_AUTHORIZED=YES
 VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-NYX-100
-NEXT_REQUIRED_ACTION=RUN_FORGE_CI_AND_REAL_NYX_PUBLIC_API_CLIENT_WITNESS
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-WORLD-100
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-WORLD-100-SLICE-001_AND_RUN_BEHAVIOR_ONLY_CI
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -368,7 +367,7 @@ V4 earns the full spatial developer operating system.
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
 tree is the canonical worksheet, the V1 router owns live selection, and
-`FORGEOS-V1-NYX-100` is the only active source skill.
+`FORGEOS-V1-WORLD-100` is the only active source skill.
 
 Any Nyx-facing slice must first read and report the mandatory preflight from
 `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and
@@ -378,11 +377,10 @@ the canonical owner, inspect the current Nyx source for the exact route, DTO,
 process seam, and implementation state, and prove the Forge patch contains no
 substitute Nyx implementation.
 
-This slice may establish only the ForgeOS-side HTTP client/adapter for Nyx-owned
-version, health, and capability contracts. Nyx_Server remains independent and owns all
-reported server truth. Model selection, conversations, tool permission, service
-lifecycle, remote agents, direct model-provider calls, `nyx_server` implementation,
-and Forge World presentation remain separate capabilities.
+This slice may establish only immutable Forge World projections from source-owned
+project registry state, renderer-owned frame metadata, and typed user-intent routing.
+It may not mutate Forge Core, execute commands, inspect Git, manage terminals, call
+Nyx, or implement the later Bevy shell and status HUD.
 
 ## 7. Program modes
 

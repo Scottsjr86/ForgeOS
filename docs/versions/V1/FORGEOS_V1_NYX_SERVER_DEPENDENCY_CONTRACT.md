@@ -44,10 +44,11 @@ Therefore:
 
 ```text
 Nyx public API gate proved
-  -> ForgeOS may replace its private fixture protocol with the Nyx-owned HTTP contract
-  -> ForgeOS must validate schema IDs, contract headers, versions, health, capabilities,
+  -> ForgeOS replaced its private fixture protocol with the Nyx-owned HTTP contract
+  -> ForgeOS validates schema IDs, contract headers, versions, health, capabilities,
      engine readiness, and provider readiness
-  -> FORGEOS-V1-NYX-100 remains ACTIVE until Forge CI and a real Nyx client witness pass
+  -> Forge CI and the independent real Nyx client witness passed
+  -> FORGEOS-V1-NYX-100 is CLOSED
 ```
 
 The verified gate input is recorded at

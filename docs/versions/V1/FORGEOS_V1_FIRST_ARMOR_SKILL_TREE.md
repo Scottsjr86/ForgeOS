@@ -845,7 +845,7 @@ never closes the node.
 - **Required Nyx evidence before Forge closure:** `API-FOUND-008`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** ForgeOS may supervise Nyx but may not embed, fork, or recreate the Nyx server/runtime inside forge-session or forge-nyx-client.
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Required services start in declared order, expose health, restart
   within policy, and stop cleanly on logout.
 - **Must not be true:** Forge World may not infer service health from process presence
@@ -1265,11 +1265,11 @@ never closes the node.
 - **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-100` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 - **Required Nyx evidence before Forge closure:** `API-FOUND-008`, `API-VERSION-010`, `API-SYS-044`, `API-SYS-047`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** No health server, capability registry, protocol-version authority, model call, or Nyx runtime may be implemented inside ForgeOS.
-- **Current seam finding:** Nyx_Server now owns and system-proves public contract version `1.0` at `/v1/nyx/version`, `/v1/nyx/health`, and `/v1/nyx/capabilities`. ForgeOS must consume those routes through its strict HTTP adapter and complete operator CI plus a real-process witness before closure.
+- **Current seam finding:** Nyx_Server owns and system-proves public contract version `1.0` at `/v1/nyx/version`, `/v1/nyx/health`, and `/v1/nyx/capabilities`; ForgeOS consumes it through the strict HTTP adapter, and operator CI plus the independent real-process witness passed.
 - **Prerequisites:** `FORGEOS-V1-CONTRACT-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-GUARD-002`
-- **Current state:** `ACTIVE`
-- **Forge client source records (not cross-repo closure):**
+- **Current state:** `CLOSED`
+- **Closure records:**
   `docs/versions/V1/skills/FORGEOS-V1-NYX-100/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-NYX-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** ForgeOS discovers Nyx through configured transport, negotiates a
@@ -1289,7 +1289,7 @@ never closes the node.
 - **Repository boundary:** ForgeOS may not mint Nyx checkpoints, reinterpret approval scope, regenerate a gated action, or maintain a second permission engine.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-HASH-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Tool requests carry scoped authority, immutable payload identity,
   expiration, decision, and exact resume token.
 - **Must not be true:** Approval may not authorize a different request or survive
@@ -1305,7 +1305,7 @@ never closes the node.
 - **Repository boundary:** ForgeOS may not invent terminal agent status, calculate provider truth from prose, or keep a competing canonical agent run record.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-STATE-000`, `FORGEOS-V1-HASH-000`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** Task identity, provider, model, source revision, worktree, scope,
   budget, status, response, and cost are durable and inspectable.
 - **Must not be true:** A task may not continue after cancellation or exceed its
@@ -1336,7 +1336,11 @@ never closes the node.
 - **Owner:** `forge-world`, `forge-protocol`
 - **Prerequisites:** `FORGEOS-V1-ARCH-001`, `FORGEOS-V1-CONTRACT-000`,
   `FORGEOS-V1-GUARD-001`, `FORGEOS-V1-GUARD-002`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-WORLD-100-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-WORLD-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-WORLD-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** Forge World receives immutable view models and emits typed user
   intents without owning domain mutation.
 - **Must not be true:** UI widgets, scenes, or animations may not directly write
@@ -1578,24 +1582,27 @@ CLOSED
   FORGEOS-V1-GIT-101
   FORGEOS-V1-PATCH-100
   FORGEOS-V1-PROJECT-200
+  FORGEOS-V1-NYX-100
 
-ACTIVE_SKILL=FORGEOS-V1-NYX-100
-ACTIVE_BLOCKER=FORGE_HTTP_ADAPTER_REQUIRES_OPERATOR_CI_AND_REAL_NYX_PROCESS_WITNESS
-ACTIVE_SLICE=FORGEOS-V1-NYX-100-SLICE-002
+ACTIVE_SKILL=FORGEOS-V1-WORLD-100
+ACTIVE_BLOCKER=FORGE_WORLD_HAS_ONLY_EMPTY_PRESENTATION_AND_INTERACTION_NAMESPACES_WITH_NO_SOURCE_BACKED_PROJECTION_OR_TYPED_ACTION_ROUTER
+ACTIVE_SLICE=FORGEOS-V1-WORLD-100-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
+  FORGEOS-V1-SESSION-201
   FORGEOS-V1-FILE-200
   FORGEOS-V1-TERMINAL-200
   FORGEOS-V1-GIT-200
-  FORGEOS-V1-WORLD-100
+  FORGEOS-V1-NYX-101
+  FORGEOS-V1-AGENT-100
   FORGEOS-V1-RECOVERY-100
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-NYX-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-WORLD-100` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields

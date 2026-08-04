@@ -1,14 +1,15 @@
 # FORGEOS-V1-NYX-100 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Nyx health and versioned client protocol
-Active slice: `FORGEOS-V1-NYX-100-SLICE-002`
+Closed: `2026-08-03`
+Closed slice: `FORGEOS-V1-NYX-100-SLICE-002`
 Mandatory wiring review: `docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md`
 Mandatory capability ownership review: `docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`
 Cross-repo gate authority: `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
 Verified Nyx gate input: `docs/versions/V1/skills/FORGEOS-V1-NYX-100/NYX_GATE_INPUT.json`
-Forge source authority: `Forge_OS_V1_base_37.tar`
-Forge source archive SHA-256: `874665eba0d1a040d7884c06ec266aefbbdb9864bc47c4d91e6d43f733e1bda3`
+Forge source authority: `Forge_OS_V1_base_38.tar`
+Forge source archive SHA-256: `f871c859b4cb161b77094e94e695800c44770e0ff0ee19d9a74f8d82d9503be2`
 Nyx source authority inspected: `Nyx_Server_base_13.tar`
 Nyx source archive SHA-256: `800e499b0d9b7d9aa60d4c55920f9e9dc7be48f1c4a52fbd794800c8f9c3b26d`
 Git revision: unavailable because the supplied source archives contain no `.git` metadata
@@ -42,9 +43,9 @@ The exact receipt hashes, Nyx CI result, public contract version, endpoint paths
 real-server witness hash, and standalone chat/development regression result are
 recorded in `NYX_GATE_INPUT.json`.
 
-This satisfies the Nyx-owned side of `NYX-GATE-FORGEOS-V1-NYX-100`. ForgeOS
-closure still requires behavior-only CI and the real Nyx client witness after
-this adapter patch is applied.
+This satisfies the Nyx-owned side of `NYX-GATE-FORGEOS-V1-NYX-100`. The
+operator subsequently passed Forge behavior-only CI and the independent real
+Nyx process witness, so the Forge capability is closed.
 
 ## Public ForgeOS contract
 
@@ -96,21 +97,19 @@ incompatible-major rejection, malformed responses, degraded readiness, schema
 mismatch, contract-header mismatch, and Unix HTTP transport. One ignored test is
 the explicit real Nyx process witness.
 
-## Operator validation still required
+## Accepted operator evidence
 
-Run Forge behavior-only CI:
+The operator ran the canonical behavior-only CI entrypoint and returned:
 
-```bash
-python3 scripts/run_ci.py
+```text
+FORGE_SEAM_DIRECTION_SUMMARY status=PASS packages=12 routes=42 forbidden=0 policy=exact-reviewed-subsystem-reachability-v1
+FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0 policy=exact-reviewed-production-graph-v1
+FORGE_SOURCE_SIZE_SUMMARY status=PASS modules=107 pass=107 warn=0 fail=0 warnings_denied=true
+CARGO_TEST_SUMMARY status=PASS suites=58 passed=274 failed=0 ignored=1 measured=0 filtered_out=0
+CI RESULT: PASS
 ```
 
-Start the verified Nyx_Server independently, using its own repository:
-
-```bash
-NYX_BIND=127.0.0.1:8088 cargo run --locked --quiet -p nyx_server --bin nyx_server
-```
-
-Then run the Forge client against that real process:
+The operator also started Nyx_Server independently and ran:
 
 ```bash
 FORGE_NYX_ADDR=127.0.0.1:8088 \
@@ -118,9 +117,18 @@ FORGE_NYX_ADDR=127.0.0.1:8088 \
   real_nyx_public_api_gate -- --ignored --nocapture
 ```
 
-A compatible but truthfully degraded Nyx response is a valid integration witness
-for this health-discovery skill. It remains classified `Unhealthy`; ForgeOS must
-not repaint it green.
+The real process returned public contract `1.0`, server version `0.1.0`, schema
+`nyx.1.0`, truthful `Degraded` health, twelve engine records, one provider
+record, and six capability records. ForgeOS classified the compatible but not
+model-ready server as `Unhealthy` and the test passed:
+
+```text
+test real_nyx_public_api_gate ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 8 filtered out
+```
+
+This proves the client preserves Nyx-owned readiness truth instead of treating
+transport success or process presence as readiness.
 
 ## Explicit non-claims
 
