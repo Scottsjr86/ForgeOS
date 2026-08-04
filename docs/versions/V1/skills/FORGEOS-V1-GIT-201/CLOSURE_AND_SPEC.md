@@ -1,14 +1,26 @@
 # FORGEOS-V1-GIT-201 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Safe Git mutation and isolated worktree control
-Active slice: `FORGEOS-V1-GIT-201-SLICE-001`
-Source authority: `Forge_OS_V1_base_47.tar`
+Closed slice: `FORGEOS-V1-GIT-201-SLICE-001`
+Source authority: `Forge_OS_V1_base_48.tar`
+
+## Closure evidence
+
+Operator behavior-only CI passed with:
+
+```text
+FORGE_SEAM_DIRECTION_SUMMARY status=PASS packages=12 routes=42 forbidden=0
+FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0
+FORGE_SOURCE_SIZE_SUMMARY status=PASS modules=138 pass=138 warn=0 fail=0
+CARGO_TEST_SUMMARY status=PASS suites=73 passed=345 failed=0 ignored=2
+CI RESULT: PASS
+```
 
 ## Capability statement
 
-ForgeOS now binds the existing native Git mutation primitives to one registered
-project and one exact consistency-checked inspection selected by the user. Empty,
+ForgeOS binds the existing native Git mutation primitives to one registered project
+and one exact consistency-checked inspection selected by the user. Empty,
 duplicate, foreign, stale, or inapplicable selections fail before mutation. Every
 successful operation returns its native outcome plus a new accepted project Git
 snapshot.
@@ -21,19 +33,7 @@ forge_app::composition::git_mutation_workspace::ProjectGitMutationResult
 forge_app::composition::git_mutation_workspace::ProjectGitMutationWorkspaceError
 ```
 
-The composition surface delegates native behavior to:
-
-```text
-forge_git::mutation::GitRepositoryMutator
-forge_git::mutation::StageRequest
-forge_git::mutation::UnstageRequest
-forge_git::mutation::RestoreRequest
-forge_git::mutation::CommitRequest
-forge_git::mutation::CreateWorktreeRequest
-forge_git::mutation::RemoveWorktreeRequest
-```
-
-## Intended behavior
+## Proved behavior
 
 - project, repository, and repository-object identity are revalidated before use;
 - every mutation begins from one accepted `ProjectGitSnapshot`;
@@ -55,18 +55,9 @@ crates/forge-app/tests/git_mutation_workspace.rs
 python3 scripts/run_ci.py
 ```
 
-## Operator validation still required
-
-Run the canonical behavior-only CI entrypoint:
-
-```bash
-python3 scripts/run_ci.py
-```
-
-The skill remains active until that command passes on the operator host.
-
 ## Explicit non-claims
 
-This slice does not provide arbitrary pathspecs, shell execution, broad reset or
-clean, force operations, merge, rebase, history rewriting, durable mutation history,
-version-bound validation receipts, Nyx repository tools, or Forge World Git UI.
+This capability does not provide arbitrary pathspecs, shell execution, broad reset
+or clean, force operations, merge, rebase, history rewriting, durable mutation
+history, version-bound validation receipts, Nyx repository tools, or Forge World
+Git UI.

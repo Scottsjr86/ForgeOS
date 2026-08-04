@@ -12,4 +12,5 @@ pub mod project_registry;
 pub mod projects;
 pub mod recovery;
 pub mod state;
+pub mod verification;
 pub mod workspaces;
