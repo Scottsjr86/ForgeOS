@@ -2,6 +2,8 @@
 //!
 //! Subsystem wiring will be added only by the capabilities that own it.
 
+pub mod editor_workspace;
+
 /// Enters the ForgeOS composition root.
 ///
 /// The architecture slice deliberately performs no product behavior.

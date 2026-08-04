@@ -1,11 +1,11 @@
 # FORGEOS-V1-FILE-200 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Repository file tree and search
 Active slice: `FORGEOS-V1-FILE-200-SLICE-001`
-Source authority: `Forge_OS_V1_base_40.tar`
-Source archive SHA-256: `88aaf0f0553e9179fb1bedab9043b306346fefbf1a33face6679064598373c3c`
-Git revision: `bd9bd36167dc46978141bbf84dd4a598c0468ab5`
+Source authority: `Forge_OS_V1_base_41.tar`
+Source archive SHA-256: `3c4e4d22a11a82558cde12c1b88ab7985d5b515eb0b9c6510b3af1d1b98ab67b`
+Git revision: `not supplied in operator CI handoff`
 
 ## Capability statement
 
@@ -62,16 +62,19 @@ exact raw file opening, editor-buffer composition, known-content search, no-matc
 search, match truncation, symlink escape rejection, oversized-file reporting,
 non-UTF-8 paths, and repository immutability.
 
-## Operator validation still required
+## Operator validation
 
-Run the canonical behavior-only CI entrypoint:
+The operator ran the canonical behavior-only CI entrypoint and returned:
 
-```bash
-python3 scripts/run_ci.py
+```text
+FORGE_SEAM_DIRECTION_SUMMARY status=PASS packages=12 routes=42 forbidden=0
+FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0
+FORGE_SOURCE_SIZE_SUMMARY status=PASS modules=119 pass=119 warn=0 fail=0
+CARGO_TEST_SUMMARY status=PASS suites=64 passed=297 failed=0 ignored=1
+CI RESULT: PASS
 ```
 
-The skill remains active until the operator returns green structural guards and
-Rust tests for this slice.
+This evidence closes the bounded repository browsing and search capability.
 
 ## Explicit non-claims
 

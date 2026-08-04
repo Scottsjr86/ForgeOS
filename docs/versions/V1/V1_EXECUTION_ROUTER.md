@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200]
 AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-FILE-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-FILE-200
+ACTIVE_SKILLS=[FORGEOS-V1-EDITOR-200]
+ACTIVE_BATON_OWNER=FORGEOS-V1-EDITOR-200
 ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=FILE_AND_EDITOR
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_APPROVED_REPOSITORY_TREE_EXACT_FILE_OPEN_AND_TEXT_SEARCH
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_MULTI_BUFFER_ATOMIC_SAVE_CONFLICT_AND_DISCARD_COMPOSITION
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -149,13 +149,14 @@ Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, native Git inspection and mutation, stable
 all-or-nothing patch application, persistent project registry/workspace restoration,
 Nyx public health/version discovery, source-backed Forge World projection, and the
-workspace recovery primitive are closed. `FORGEOS-V1-FILE-200` is the only active
-source skill. Dedicated session bootstrap and managed Nyx lifecycle remain available.
-Multi-buffer save remains locked. Managed terminal sessions, integrated Git
-inspection, Nyx checkpoint transport, and remote-agent records remain available but
-inactive. The active skill may only expose manifest-approved tree entries, exact
-FILE-100 opens, deterministic text matches, and explicit rejected-entry evidence. It may not mutate files, save buffers, execute
-commands, inspect Git, call Nyx, or render the later Forge World file panel.
+workspace recovery primitive and repository browsing/search are closed.
+`FORGEOS-V1-EDITOR-200` is the only active source skill. Dedicated session bootstrap,
+managed Nyx lifecycle, managed terminal sessions, integrated Git inspection, Nyx
+checkpoint transport, and remote-agent records remain available but inactive. The
+active skill may only compose editor-owned buffer state with project-owned exact file
+revisions and atomic writes. It may not add language intelligence, terminal or command
+execution, Git behavior, Nyx behavior, rendered editor UI, autosave, or background
+indexing.
 
 ## 3. Current-source intake law
 
@@ -827,59 +828,57 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Repository file tree and exact text search are active.
+Multi-buffer editing and atomic save are active.
 
 ```yaml
-skill_id: FORGEOS-V1-FILE-200
+skill_id: FORGEOS-V1-EDITOR-200
 state: ACTIVE
 lane: FILE_AND_EDITOR
-owning_subsystem: forge-project and forge-editor composition
+owning_subsystem: forge-editor state plus forge-app composition over forge-project file authority
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_40.tar sha256 88aaf0f0553e9179fb1bedab9043b306346fefbf1a33face6679064598373c3c
+source_revision: Forge_OS_V1_base_41.tar sha256 3c4e4d22a11a82558cde12c1b88ab7985d5b515eb0b9c6510b3af1d1b98ab67b
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-FILE-100
-  - FORGEOS-V1-PROJECT-200
+  - FORGEOS-V1-EDITOR-100
+  - FORGEOS-V1-FILE-200
 originating_path_or_probe: >
-  Enumerate manifest-approved roots, open one selected file through FILE-100,
-  search known text and a no-match query, and attempt denied and symlink escape
-  paths while verifying repository bytes remain unchanged.
+  Open two repository files, edit both independently, atomically save one while the
+  other remains dirty, create and save one new file, force one external-change
+  conflict, reject a stale discard confirmation, and explicitly discard/reopen the
+  current external bytes.
 first_blocker: >
-  ForgeOS can safely read one named regular file through a registered repository
-  boundary, but it has no deterministic approved-root tree, no safe discovered-file
-  list, and no exact text-search result surface.
-active_slice: FORGEOS-V1-FILE-200-SLICE-001
+  ForgeOS has an editor buffer state machine and a project-owned atomic file adapter,
+  but no product composition route retains exact file object preconditions per buffer,
+  maps save outcomes back to the matching generation, detects external replacement, or
+  requires generation-bound confirmation before discard and reopen.
+active_slice: FORGEOS-V1-EDITOR-200-SLICE-001
 allowed_paths:
-  - crates/forge-project/src/lib.rs
-  - crates/forge-project/src/repository_view.rs
-  - crates/forge-project/src/text_search.rs
-  - crates/forge-project/tests/repository_browse_search.rs
-  - crates/forge-app/tests/public_routes.rs
-  - crates/forge-app/tests/repository_navigation.rs
+  - crates/forge-editor/src/buffers.rs
+  - crates/forge-editor/tests/buffer_state.rs
+  - crates/forge-app/src/composition/mod.rs
+  - crates/forge-app/src/composition/editor_workspace.rs
+  - crates/forge-app/tests/editor_workspace.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-RECOVERY-100/**
   - docs/versions/V1/skills/FORGEOS-V1-FILE-200/**
+  - docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/**
 forbidden_paths_and_behavior:
-  - filesystem writes, file creation, deletion, rename, or permission mutation
-  - following symlinks or accepting parent traversal, absolute, or noncanonical paths
-  - crossing an unexpected filesystem device or canonical repository boundary
-  - hiding unreadable, oversized, changed, or unsupported entries
-  - treating display text or tree position as repository identity
-  - regular expressions, fuzzy search, ignore-file policy, Git filtering, or indexing daemons
-  - terminal, Git, Nyx, session, recovery, or Forge World product behavior
+  - editor-owned filesystem access or project-owned buffer state
+  - save without the exact file object, content hash, length, and editor generation
+  - silent overwrite after external change or stale discard confirmation
+  - truncating, partially writing, or normalizing unrelated bytes
+  - autosave, background indexing, language navigation, terminal, Git, Nyx, or World UI
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
-  - forge_project::repository_view::RepositoryBrowser
-  - forge_project::repository_view::RepositoryTreeSnapshot
-  - forge_project::repository_view::RepositoryScanIssue
-  - forge_project::text_search::TextSearchQuery
-  - forge_project::text_search::TextSearchReport
-  - forge_project::text_search::TextSearchMatch
+  - forge_editor::buffers::DiscardConfirmation
+  - forge_editor::buffers::BufferRegistry::remove_discarding
+  - forge_app::composition::editor_workspace::EditorWorkspace
+  - forge_app::composition::editor_workspace::EditorSaveResult
+  - forge_app::composition::editor_workspace::EditorWorkspaceError
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -889,24 +888,24 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  Approved roots produce a deterministic exact-path tree; denied scopes fail closed;
-  symlink and mount escape routes are never followed; selected files open through the
-  existing FILE-100 path; known text returns stable path, byte, line, and column
-  matches; no-match is an empty valid report; unreadable or rejected entries remain
-  explicit; search truncation is truthful; repository bytes remain unchanged; all
-  structural guards and behavior tests pass.
+  Multiple buffers retain independent bytes and dirty state; exact file revision
+  preconditions drive atomic create and replace; a successful save updates only the
+  matching buffer generation; external changes become explicit conflicts and preserve
+  external bytes; destructive close is blocked without confirmation; stale discard
+  confirmation fails; explicit discard/reopen loads current disk bytes; unedited files
+  remain unchanged; all structural guards and behavior tests pass.
 block_edge: >
-  Tree traversal exposes a denied path, follows a symlink, crosses a mount, relies on
-  lossy path identity, hides a scan/read failure, mutates source, reports unstable
-  ordering or positions, exceeds source-size policy, regresses a structural guard, or
-  CI fails.
+  A save bypasses project file authority, loses the exact object precondition, marks a
+  newer edit clean, overwrites external bytes, accepts stale discard confirmation,
+  mutates an unrelated file or buffer, exceeds source-size policy, regresses a
+  structural guard, or CI fails.
 user_acceptance_path: >
   The user runs python3 scripts/run_ci.py and returns the exact CI command summary.
-  The repository_browse_search and repository_navigation suites must pass with no
-  structural guard regression.
+  The buffer_state and editor_workspace suites must pass with no structural guard
+  regression.
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-FILE-200. Unlock and reevaluate
-  FORGEOS-V1-EDITOR-200 plus the existing available frontier; do not activate a Nyx
+  After operator CI passes, close only FORGEOS-V1-EDITOR-200. Unlock and reevaluate
+  FORGEOS-V1-EDITOR-201 plus the existing available frontier; do not activate a Nyx
   owned gate without its separate cross-repository proof.
 parallel_compatibility: NONE_IN_FILE_AND_EDITOR_LANE
 ```
@@ -917,17 +916,17 @@ This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
 
 ---
 
-## 17. Direct unlock handling for repository browsing
+## 17. Direct unlock handling for multi-buffer editing
 
-`FORGEOS-V1-FILE-200` may close only after behavior-only CI proves deterministic
-approved-root traversal, exact file opening, known-content and no-match search,
-explicit unreadable-entry reporting, symlink escape rejection, non-UTF-8 path
-preservation, truthful match truncation, and repository immutability.
+`FORGEOS-V1-EDITOR-200` may close only after behavior-only CI proves independent
+multi-buffer dirty state, atomic save through project file authority, exact revision
+conflict detection, new-file creation, clean close, generation-bound destructive
+discard, explicit reopen, and preservation of unedited repository bytes.
 
-Closing `FORGEOS-V1-FILE-200` directly unlocks `FORGEOS-V1-EDITOR-200`.
-`FORGEOS-V1-NYX-201` and `FORGEOS-V1-PROJECT-300` remain locked until their other
-direct prerequisites close. Reevaluate only those direct dependents and the current
-available frontier after closure.
+Closing `FORGEOS-V1-EDITOR-200` directly unlocks `FORGEOS-V1-EDITOR-201`.
+`FORGEOS-V1-CODE-300` remains locked until its other direct prerequisites close.
+Reevaluate only those direct dependents and the current available frontier after
+closure.
 
 ## 18. Final closure routing
 

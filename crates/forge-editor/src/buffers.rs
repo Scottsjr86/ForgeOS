@@ -230,6 +230,27 @@ pub enum CloseDisposition {
     ConflictResolutionRequired,
 }
 
+/// Exact confirmation for discarding the current local buffer generation.
+///
+/// The fields are private so callers must obtain the token from the current
+/// buffer state. A later edit invalidates the token and prevents stale UI
+/// confirmation from discarding newer work.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DiscardConfirmation {
+    buffer_id: BufferId,
+    content_version: ContentVersion,
+}
+
+impl DiscardConfirmation {
+    pub const fn buffer_id(self) -> BufferId {
+        self.buffer_id
+    }
+
+    pub const fn content_version(self) -> ContentVersion {
+        self.content_version
+    }
+}
+
 /// Immutable bytes and precondition handed to the file-owning save path.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SaveIntent {
@@ -350,6 +371,14 @@ impl EditorBuffer {
             SynchronizationState::Clean { .. } => CloseDisposition::Safe,
             SynchronizationState::Dirty { .. } => CloseDisposition::ConfirmationRequired,
             SynchronizationState::Conflict { .. } => CloseDisposition::ConflictResolutionRequired,
+        }
+    }
+
+    /// Produces a generation-bound confirmation token for an explicit discard.
+    pub const fn discard_confirmation(&self) -> DiscardConfirmation {
+        DiscardConfirmation {
+            buffer_id: self.id,
+            content_version: self.content_version,
         }
     }
 
@@ -619,10 +648,36 @@ impl BufferRegistry {
         if disposition != CloseDisposition::Safe {
             return Err(BufferError::DestructiveCloseBlocked(disposition));
         }
+        self.remove_registered(id)
+    }
+
+    /// Removes a dirty or conflicted buffer only when the caller confirms the
+    /// exact current content generation.
+    pub fn remove_discarding(
+        &mut self,
+        confirmation: DiscardConfirmation,
+    ) -> Result<EditorBuffer, BufferError> {
+        let buffer = self
+            .buffers
+            .get(&confirmation.buffer_id)
+            .ok_or(BufferError::UnknownBuffer(confirmation.buffer_id))?;
+        if buffer.pending_save.is_some() {
+            return Err(BufferError::SaveAlreadyPending);
+        }
+        if buffer.content_version != confirmation.content_version {
+            return Err(BufferError::StaleDiscardConfirmation {
+                expected: confirmation.content_version,
+                found: buffer.content_version,
+            });
+        }
+        self.remove_registered(confirmation.buffer_id)
+    }
+
+    fn remove_registered(&mut self, id: BufferId) -> Result<EditorBuffer, BufferError> {
         let removed = self
             .buffers
             .remove(&id)
-            .expect("buffer existence was checked");
+            .ok_or(BufferError::UnknownBuffer(id))?;
         self.documents.remove(removed.document());
         Ok(removed)
     }
@@ -670,6 +725,10 @@ pub enum BufferError {
     },
     SaveResultMismatch,
     DestructiveCloseBlocked(CloseDisposition),
+    StaleDiscardConfirmation {
+        expected: ContentVersion,
+        found: ContentVersion,
+    },
 }
 
 impl fmt::Display for BufferError {
@@ -717,6 +776,12 @@ impl fmt::Display for BufferError {
             Self::DestructiveCloseBlocked(disposition) => {
                 write!(formatter, "buffer close is blocked by {disposition:?}")
             }
+            Self::StaleDiscardConfirmation { expected, found } => write!(
+                formatter,
+                "discard confirmation targets content version {}, current version is {}",
+                expected.get(),
+                found.get()
+            ),
         }
     }
 }

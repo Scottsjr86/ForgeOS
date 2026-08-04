@@ -276,3 +276,35 @@ fn invalid_ranges_cursors_and_destructive_close_are_rejected() {
         ))
     );
 }
+
+#[test]
+fn destructive_discard_requires_the_exact_current_generation() {
+    let mut registry = BufferRegistry::new();
+    registry
+        .open_new(buffer_id(9), document(1, "discard.txt"))
+        .expect("buffer opens");
+    registry
+        .get_mut(buffer_id(9))
+        .unwrap()
+        .replace_range(0..0, b"first")
+        .expect("first edit");
+    let stale = registry.get(buffer_id(9)).unwrap().discard_confirmation();
+    registry
+        .get_mut(buffer_id(9))
+        .unwrap()
+        .replace_range(0..5, b"second")
+        .expect("second edit");
+
+    assert!(matches!(
+        registry.remove_discarding(stale),
+        Err(BufferError::StaleDiscardConfirmation { .. })
+    ));
+    assert_eq!(registry.get(buffer_id(9)).unwrap().bytes(), b"second");
+
+    let fresh = registry.get(buffer_id(9)).unwrap().discard_confirmation();
+    let removed = registry
+        .remove_discarding(fresh)
+        .expect("fresh confirmation removes buffer");
+    assert_eq!(removed.bytes(), b"second");
+    assert!(registry.is_empty());
+}

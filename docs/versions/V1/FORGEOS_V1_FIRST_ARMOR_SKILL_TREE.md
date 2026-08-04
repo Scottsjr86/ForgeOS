@@ -859,9 +859,8 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-FILE-100`, `FORGEOS-V1-PROJECT-200`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-FILE-200-SLICE-001`
-- **Source records:**
+- **Current state:** `CLOSED`
+- **Closure records:**
   `docs/versions/V1/skills/FORGEOS-V1-FILE-200/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-FILE-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** The user browses the approved repository tree, opens files, finds
@@ -874,9 +873,13 @@ never closes the node.
 
 ## `FORGEOS-V1-EDITOR-200` — Multi-buffer file editing and atomic save
 
-- **Owner:** `forge-editor`
+- **Owner:** `forge-editor`, `forge-app` composition over `forge-project` file authority
 - **Prerequisites:** `FORGEOS-V1-EDITOR-100`, `FORGEOS-V1-FILE-200`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-EDITOR-200-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-EDITOR-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** Multiple buffers preserve independent dirty state, save atomically,
   detect external changes, and warn before destructive close.
 - **Must not be true:** Save may not truncate on failure, overwrite a newer external
@@ -1557,10 +1560,10 @@ All Tier-0 foundations, structural guards, validated project registration,
 boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, read-only Git inspection, typed Git mutation and
-linked-worktree control, stable all-or-nothing patch application, and persistent
-project registry/workspace restoration are closed. Nyx health and versioned client
-protocol remain active because the Forge client is locally implemented but the real
-Nyx-owned public contract and real-process witness are still missing.
+linked-worktree control, stable all-or-nothing patch application, persistent project
+registry/workspace restoration, Nyx public health discovery, Forge World source
+projection, crash recovery primitives, and repository browsing/search are closed.
+Multi-buffer editing and atomic save are active.
 
 Current frontier:
 
@@ -1591,10 +1594,11 @@ CLOSED
   FORGEOS-V1-NYX-100
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-RECOVERY-100
+  FORGEOS-V1-FILE-200
 
-ACTIVE_SKILL=FORGEOS-V1-FILE-200
-ACTIVE_BLOCKER=FORGEOS_CAN_SAFELY_READ_ONE_NAMED_FILE_BUT_HAS_NO_APPROVED_ROOT_TREE_ENUMERATION_OR_DETERMINISTIC_TEXT_SEARCH_SURFACE
-ACTIVE_SLICE=FORGEOS-V1-FILE-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-EDITOR-200
+ACTIVE_BLOCKER=FORGEOS_HAS_BUFFER_STATE_AND_ATOMIC_FILE_WRITES_BUT_NO_PRODUCT_ADAPTER_THAT_BINDS_EXACT_FILE_REVISIONS_TO_MULTI_BUFFER_SAVE_CONFLICT_DISCARD_AND_REOPEN
+ACTIVE_SLICE=FORGEOS-V1-EDITOR-200-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
@@ -1608,7 +1612,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-FILE-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-EDITOR-200` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields
