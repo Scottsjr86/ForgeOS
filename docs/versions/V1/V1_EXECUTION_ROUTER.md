@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-RECOVERY-100]
-ACTIVE_BATON_OWNER=FORGEOS-V1-RECOVERY-100
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+ACTIVE_SKILLS=[FORGEOS-V1-FILE-200]
+ACTIVE_BATON_OWNER=FORGEOS-V1-FILE-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=RECOVERY
+ACTIVE_LANE=FILE_AND_EDITOR
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_WORKSPACE_RECOVERY_IMAGE_CRASH_JOURNAL_AND_EXPLICIT_RESTORE_CHOICES
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_APPROVED_REPOSITORY_TREE_EXACT_FILE_OPEN_AND_TEXT_SEARCH
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -148,13 +148,14 @@ boundary-safe file access, editor buffer identity, incremental Rust parsing, the
 Rust Analyzer adapter, native PTY support, immutable registered-command policy,
 deterministic session lifecycle, native Git inspection and mutation, stable
 all-or-nothing patch application, persistent project registry/workspace restoration,
-Nyx public health/version discovery, and source-backed Forge World projection are
-closed. `FORGEOS-V1-RECOVERY-100` is the only active source skill. Dedicated session
-bootstrap, managed Nyx lifecycle, repository file browsing, managed terminal sessions,
-integrated Git inspection, Nyx checkpoint transport, and remote-agent records remain
-available but inactive. The active skill may only define and persist conservative
-recovery evidence. It may not replay effects, claim historical processes are alive, or
-overwrite a valid current recovery image with older data.
+Nyx public health/version discovery, source-backed Forge World projection, and the
+workspace recovery primitive are closed. `FORGEOS-V1-FILE-200` is the only active
+source skill. Dedicated session bootstrap and managed Nyx lifecycle remain available.
+Multi-buffer save remains locked. Managed terminal sessions, integrated Git
+inspection, Nyx checkpoint transport, and remote-agent records remain available but
+inactive. The active skill may only expose manifest-approved tree entries, exact
+FILE-100 opens, deterministic text matches, and explicit rejected-entry evidence. It may not mutate files, save buffers, execute
+commands, inspect Git, call Nyx, or render the later Forge World file panel.
 
 ## 3. Current-source intake law
 
@@ -826,65 +827,59 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Workspace snapshot and crash-journal recovery are active.
+Repository file tree and exact text search are active.
 
 ```yaml
-skill_id: FORGEOS-V1-RECOVERY-100
+skill_id: FORGEOS-V1-FILE-200
 state: ACTIVE
-lane: RECOVERY
-owning_subsystem: forge-core, forge-project, and forge-session
+lane: FILE_AND_EDITOR
+owning_subsystem: forge-project and forge-editor composition
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_39.tar sha256 5abb16e390a109d1f35b1add7e4896ce8b9b340364ac51286ee49a58660b072e
+source_revision: Forge_OS_V1_base_40.tar sha256 88aaf0f0553e9179fb1bedab9043b306346fefbf1a33face6679064598373c3c
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-STATE-000
-  - FORGEOS-V1-PROCESS-000
-  - FORGEOS-V1-HASH-000
+  - FORGEOS-V1-FILE-100
+  - FORGEOS-V1-PROJECT-200
 originating_path_or_probe: >
-  Persist a safe workspace recovery image, interrupt publication, corrupt the
-  current image, retain historical process evidence, and inspect the exact recovery
-  choices without replaying actions or claiming stale process liveness.
+  Enumerate manifest-approved roots, open one selected file through FILE-100,
+  search known text and a no-match query, and attempt denied and symlink escape
+  paths while verifying repository bytes remain unchanged.
 first_blocker: >
-  ForgeOS can retain one opaque last-safe workspace payload and generic previous
-  state bytes, but it has no canonical crash journal, no historical-process
-  revalidation record, no generation-guarded recovery publication, and no explicit
-  assessment that prevents an older image from replacing a valid current image.
-active_slice: FORGEOS-V1-RECOVERY-100-SLICE-001
+  ForgeOS can safely read one named regular file through a registered repository
+  boundary, but it has no deterministic approved-root tree, no safe discovered-file
+  list, and no exact text-search result surface.
+active_slice: FORGEOS-V1-FILE-200-SLICE-001
 allowed_paths:
-  - crates/forge-core/src/lib.rs
-  - crates/forge-core/src/recovery.rs
-  - crates/forge-core/tests/workspace_recovery.rs
   - crates/forge-project/src/lib.rs
-  - crates/forge-project/src/recovery_store.rs
-  - crates/forge-project/tests/workspace_recovery_store.rs
-  - crates/forge-session/src/lib.rs
-  - crates/forge-session/src/lifecycle.rs
-  - crates/forge-session/src/recovery.rs
-  - crates/forge-session/tests/recovery_evidence.rs
+  - crates/forge-project/src/repository_view.rs
+  - crates/forge-project/src/text_search.rs
+  - crates/forge-project/tests/repository_browse_search.rs
+  - crates/forge-app/tests/public_routes.rs
+  - crates/forge-app/tests/repository_navigation.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-WORLD-100/**
   - docs/versions/V1/skills/FORGEOS-V1-RECOVERY-100/**
+  - docs/versions/V1/skills/FORGEOS-V1-FILE-200/**
 forbidden_paths_and_behavior:
-  - automatic replay of interrupted file, command, Git, service, or model effects
-  - treating a historical process identity as proof that a process is still alive
-  - restoring a previous image over a valid current image
-  - wall-clock or random recovery identity
-  - terminal, Git, Nyx, file-edit, session-bootstrap, or Forge World product behavior
+  - filesystem writes, file creation, deletion, rename, or permission mutation
+  - following symlinks or accepting parent traversal, absolute, or noncanonical paths
+  - crossing an unexpected filesystem device or canonical repository boundary
+  - hiding unreadable, oversized, changed, or unsupported entries
+  - treating display text or tree position as repository identity
+  - regular expressions, fuzzy search, ignore-file policy, Git filtering, or indexing daemons
+  - terminal, Git, Nyx, session, recovery, or Forge World product behavior
   - documentation, Git-state, formatting, or Markdown CI gates
   - V2, V3, or V4 source and documents
 public_contracts_touched:
-  - forge_core::recovery::WorkspaceRecoveryRecord
-  - forge_core::recovery::InterruptedAction
-  - forge_core::recovery::RecordedProcess
-  - forge_session::recovery::SessionRecoveryEvidence
-  - forge_session::lifecycle::SessionSupervisor::recovery_evidence
-  - forge_project::recovery_store::WorkspaceRecoveryStore
-  - forge_project::recovery_store::RecoveryAssessment
-  - forge_project::recovery_store::RecoveryChoice
+  - forge_project::repository_view::RepositoryBrowser
+  - forge_project::repository_view::RepositoryTreeSnapshot
+  - forge_project::repository_view::RepositoryScanIssue
+  - forge_project::text_search::TextSearchQuery
+  - forge_project::text_search::TextSearchReport
+  - forge_project::text_search::TextSearchMatch
 required_commands:
   - python3 scripts/run_ci.py
 regression_commands: []
@@ -894,44 +889,44 @@ validation_execution_policy: >
   assistant environment, prepare and apply-check the patch and set
   OPERATOR_VALIDATION_PENDING without blocking source implementation.
 pass_edge: >
-  Recovery records are versioned, checksummed, and stably hashed; interrupted actions
-  remain non-replayable; active process observations reopen only as requiring
-  revalidation; atomic publication requires the exact current generation; abandoned
-  staging is visible; corrupt current data offers only an explicit valid-previous
-  restore; a valid current image cannot be replaced by an older image; all structural
-  guards and behavior tests pass.
+  Approved roots produce a deterministic exact-path tree; denied scopes fail closed;
+  symlink and mount escape routes are never followed; selected files open through the
+  existing FILE-100 path; known text returns stable path, byte, line, and column
+  matches; no-match is an empty valid report; unreadable or rejected entries remain
+  explicit; search truncation is truthful; repository bytes remain unchanged; all
+  structural guards and behavior tests pass.
 block_edge: >
-  Recovery replays an effect, claims a process is alive from recorded identity,
-  silently chooses an image, accepts malformed or noncanonical bytes, permits stale or
-  skipped generations, overwrites a valid current image, hides interrupted staging,
-  exceeds source-size policy, regresses a structural guard, or CI fails.
+  Tree traversal exposes a denied path, follows a symlink, crosses a mount, relies on
+  lossy path identity, hides a scan/read failure, mutates source, reports unstable
+  ordering or positions, exceeds source-size policy, regresses a structural guard, or
+  CI fails.
 user_acceptance_path: >
   The user runs python3 scripts/run_ci.py and returns the exact CI command summary.
-  The workspace_recovery, workspace_recovery_store, and recovery_evidence suites must
-  pass with no structural guard regression.
+  The repository_browse_search and repository_navigation suites must pass with no
+  structural guard regression.
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-RECOVERY-100. Reevaluate its direct
-  dependent FORGEOS-V1-RECOVERY-200 and the existing available frontier;
-  RECOVERY-200 remains locked until its other direct prerequisites close.
-parallel_compatibility: NONE_IN_RECOVERY_LANE
+  After operator CI passes, close only FORGEOS-V1-FILE-200. Unlock and reevaluate
+  FORGEOS-V1-EDITOR-200 plus the existing available frontier; do not activate a Nyx
+  owned gate without its separate cross-repository proof.
+parallel_compatibility: NONE_IN_FILE_AND_EDITOR_LANE
 ```
 
 This packet is active. `FORGEOS-V1-SESSION-200`, `FORGEOS-V1-SESSION-201`,
-`FORGEOS-V1-FILE-200`, `FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`,
+`FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-GIT-200`,
 `FORGEOS-V1-NYX-101`, and `FORGEOS-V1-AGENT-100` remain available but inactive.
 
 ---
 
-## 17. Direct unlock handling for recovery primitive
+## 17. Direct unlock handling for repository browsing
 
-`FORGEOS-V1-RECOVERY-100` may close only after behavior-only CI proves canonical
-round-trip, malformed-record rejection, generation-guarded publication, interrupted
-staging visibility, explicit previous-image recovery, valid-current protection, and
-conservative session process evidence.
+`FORGEOS-V1-FILE-200` may close only after behavior-only CI proves deterministic
+approved-root traversal, exact file opening, known-content and no-match search,
+explicit unreadable-entry reporting, symlink escape rejection, non-UTF-8 path
+preservation, truthful match truncation, and repository immutability.
 
-Closing `FORGEOS-V1-RECOVERY-100` does not independently unlock another node because
-`FORGEOS-V1-RECOVERY-200` still requires session lifecycle, terminal, and Nyx
-conversation capabilities. Reevaluate only `FORGEOS-V1-RECOVERY-200` and the current
+Closing `FORGEOS-V1-FILE-200` directly unlocks `FORGEOS-V1-EDITOR-200`.
+`FORGEOS-V1-NYX-201` and `FORGEOS-V1-PROJECT-300` remain locked until their other
+direct prerequisites close. Reevaluate only those direct dependents and the current
 available frontier after closure.
 
 ## 18. Final closure routing

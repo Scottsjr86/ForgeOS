@@ -110,18 +110,18 @@ The bounded authority migration is complete and source execution is active:
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS-V1-RECOVERY-100
+BATON_OWNER=FORGEOS-V1-FILE-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_SKILLS=[FORGEOS-V1-RECOVERY-100]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-FILE-200,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100]
-ACTIVE_LANE=RECOVERY
-ACTIVE_QUESTION=Can ForgeOS atomically retain a safe workspace image and expose crash residue without replaying interrupted actions or claiming historical processes remain alive?
-FIRST_BLOCKER=FORGEOS_CAN_RETAIN_AN_OPAQUE_LAST_SAFE_SNAPSHOT_BUT_HAS_NO_CANONICAL_CRASH_JOURNAL_PROCESS_REVALIDATION_RECORD_OR_GENERATION_GUARDED_RECOVERY_CHOICE
-ACTIVE_SLICE=FORGEOS-V1-RECOVERY-100-SLICE-001
-SOURCE_IMPLEMENTATION_ALLOWED=YES_CANONICAL_RECOVERY_IMAGE_SESSION_EVIDENCE_AND_ATOMIC_STORE_ONLY
-CURRENT_RESULT=WORLD_PROJECTION_CLOSED_RECOVERY_PRIMITIVE_SLICE_ACTIVE
-RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-RECOVERY-100_IF_OPERATOR_EVIDENCE_PASSES
+ACTIVE_SKILLS=[FORGEOS-V1-FILE-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-GIT-200,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100]
+ACTIVE_LANE=FILE_AND_EDITOR
+ACTIVE_QUESTION=Can ForgeOS browse only approved repository roots, open exact files, and find text without escaping or mutating source?
+FIRST_BLOCKER=FORGEOS_CAN_SAFELY_READ_ONE_NAMED_FILE_BUT_HAS_NO_APPROVED_ROOT_TREE_ENUMERATION_OR_DETERMINISTIC_TEXT_SEARCH_SURFACE
+ACTIVE_SLICE=FORGEOS-V1-FILE-200-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES_READ_ONLY_TREE_SEARCH_AND_EDITOR_OPEN_COMPOSITION_ONLY
+CURRENT_RESULT=RECOVERY_PRIMITIVE_CLOSED_FILE_TREE_AND_SEARCH_SLICE_ACTIVE
+RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-FILE-200_IF_OPERATOR_EVIDENCE_PASSES
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
@@ -131,14 +131,14 @@ NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 ```
 
 Persistent project registry/workspace restoration, Nyx health/versioned public
-client protocol, and Forge World projection/input routing are closed.
-`FORGEOS-V1-RECOVERY-100` is the only active source skill. Dedicated session bootstrap,
-managed Nyx lifecycle, repository file browsing, managed terminal sessions, integrated
-Git inspection, Nyx checkpoint transport, and remote-agent records remain available
-but inactive. The active skill owns only canonical safe recovery images, conservative
-session crash evidence, explicit recovery assessment, and atomic generation-guarded
-publication. It may not replay commands, assert stale process liveness, or restore an
-older image over a valid current image.
+client protocol, Forge World projection/input routing, and the recovery primitive are
+closed. `FORGEOS-V1-FILE-200` is the only active source skill. Dedicated session
+bootstrap and managed Nyx lifecycle remain available. Multi-buffer save remains
+locked. Managed terminal sessions, integrated Git inspection, Nyx checkpoint
+transport, and remote-agent records remain available but inactive. The active skill
+owns only approved-root tree enumeration, exact file opening through FILE-100,
+deterministic text search, and explicit rejected-entry reporting. It may not mutate source, save buffers, execute commands, inspect Git,
+call Nyx, or render the later Forge World file panel.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source

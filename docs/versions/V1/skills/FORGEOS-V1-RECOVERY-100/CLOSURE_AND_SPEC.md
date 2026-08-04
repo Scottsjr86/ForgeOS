@@ -1,6 +1,6 @@
 # FORGEOS-V1-RECOVERY-100 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Workspace snapshot and crash-journal primitive
 Active slice: `FORGEOS-V1-RECOVERY-100-SLICE-001`
 Source authority: `Forge_OS_V1_base_39.tar`
@@ -53,16 +53,11 @@ crates/forge-session/tests/recovery_evidence.rs
 python3 scripts/run_ci.py
 ```
 
-## Operator validation still required
+## Operator acceptance evidence
 
-Run the canonical behavior-only CI entrypoint:
-
-```bash
-python3 scripts/run_ci.py
-```
-
-The skill remains active until the operator returns green structural guards and
-Rust tests for this slice.
+The operator ran `python3 scripts/run_ci.py` against the applied slice. All three
+structural guards passed with 115 of 115 source modules clean, and the Rust test run
+passed 287 tests with zero failures and one intentionally ignored real-Nyx witness.
 
 ## Explicit non-claims
 

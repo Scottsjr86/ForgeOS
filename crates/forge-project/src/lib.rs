@@ -9,3 +9,5 @@ pub mod persistence;
 pub mod recovery_store;
 pub mod registry;
 pub mod registry_store;
+pub mod repository_view;
+pub mod text_search;

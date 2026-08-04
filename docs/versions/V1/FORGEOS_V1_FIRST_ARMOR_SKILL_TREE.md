@@ -859,7 +859,11 @@ never closes the node.
 
 - **Owner:** `forge-editor`, `forge-project`
 - **Prerequisites:** `FORGEOS-V1-FILE-100`, `FORGEOS-V1-PROJECT-200`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-FILE-200-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-FILE-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-FILE-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** The user browses the approved repository tree, opens files, finds
   text, and receives explicit errors for unreadable or out-of-bound paths.
 - **Must not be true:** Symlink, `..`, mount, or canonicalization tricks may not escape
@@ -1353,9 +1357,8 @@ never closes the node.
 - **Owner:** `forge-project`, `forge-session`
 - **Prerequisites:** `FORGEOS-V1-STATE-000`, `FORGEOS-V1-PROCESS-000`,
   `FORGEOS-V1-HASH-000`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-RECOVERY-100-SLICE-001`
-- **Source records:**
+- **Current state:** `CLOSED`
+- **Closure records:**
   `docs/versions/V1/skills/FORGEOS-V1-RECOVERY-100/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-RECOVERY-100/USER_GUIDE_SOURCE.md`
 - **Must be true:** Snapshots are versioned, atomic, checksummed, and distinguish safe
@@ -1586,15 +1589,16 @@ CLOSED
   FORGEOS-V1-PATCH-100
   FORGEOS-V1-PROJECT-200
   FORGEOS-V1-NYX-100
+  FORGEOS-V1-WORLD-100
+  FORGEOS-V1-RECOVERY-100
 
-ACTIVE_SKILL=FORGEOS-V1-RECOVERY-100
-ACTIVE_BLOCKER=FORGEOS_CAN_RETAIN_AN_OPAQUE_LAST_SAFE_SNAPSHOT_BUT_HAS_NO_CANONICAL_CRASH_JOURNAL_PROCESS_REVALIDATION_RECORD_OR_GENERATION_GUARDED_RECOVERY_CHOICE
-ACTIVE_SLICE=FORGEOS-V1-RECOVERY-100-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-FILE-200
+ACTIVE_BLOCKER=FORGEOS_CAN_SAFELY_READ_ONE_NAMED_FILE_BUT_HAS_NO_APPROVED_ROOT_TREE_ENUMERATION_OR_DETERMINISTIC_TEXT_SEARCH_SURFACE
+ACTIVE_SLICE=FORGEOS-V1-FILE-200-SLICE-001
 
 AVAILABLE
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
-  FORGEOS-V1-FILE-200
   FORGEOS-V1-TERMINAL-200
   FORGEOS-V1-GIT-200
   FORGEOS-V1-NYX-101
@@ -1604,7 +1608,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-RECOVERY-100` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-FILE-200` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields
