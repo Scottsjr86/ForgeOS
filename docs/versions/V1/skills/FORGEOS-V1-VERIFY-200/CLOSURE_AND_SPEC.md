@@ -1,13 +1,13 @@
 # FORGEOS-V1-VERIFY-200 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Version-bound build and test result records
-Active slice: `FORGEOS-V1-VERIFY-200-SLICE-001`
-Source authority: `Forge_OS_V1_base_48.tar`
+Closed slice: `FORGEOS-V1-VERIFY-200-SLICE-001`
+Source authority: `Forge_OS_V1_base_49.tar`
 
 ## Capability statement
 
-ForgeOS now runs one immutable registered command between two consistency-checked
+ForgeOS runs one immutable registered command between two consistency-checked
 project Git inspections and emits one canonical append-only verification record.
 The record binds exact command identity, executable, argv, native source revision,
 dirty-state identity, terminal outcome, exit code, and content-addressed stdout and
@@ -25,7 +25,19 @@ forge_app::composition::verification_workspace::ProjectVerificationWorkspace
 forge_app::composition::verification_workspace::VerificationApplicability
 ```
 
-## Intended behavior
+## Closure evidence
+
+Operator behavior-only CI passed after the active slice:
+
+```text
+FORGE_SEAM_DIRECTION_SUMMARY status=PASS packages=12 routes=42 forbidden=0
+FORGE_CORE_PURITY_SUMMARY status=PASS packages=2 allowed=2 forbidden=0
+FORGE_SOURCE_SIZE_SUMMARY status=PASS modules=142 pass=142 warn=0 fail=0
+CARGO_TEST_SUMMARY status=PASS suites=75 passed=356 failed=0 ignored=2
+CI RESULT: PASS
+```
+
+## Proved behavior
 
 - validation begins from one consistency-checked project Git snapshot;
 - command execution is rejected before spawn when the configured revision is stale;
@@ -50,19 +62,9 @@ crates/forge-app/tests/verification_workspace.rs
 python3 scripts/run_ci.py
 ```
 
-## Operator validation still required
-
-Run the canonical behavior-only CI entrypoint:
-
-```bash
-python3 scripts/run_ci.py
-```
-
-The skill remains active until that command passes on the operator host.
-
 ## Explicit non-claims
 
-This slice does not provide Forge World validation UI, CI pipeline scheduling,
+This capability does not provide Forge World validation UI, CI pipeline scheduling,
 remote-agent proof, Nyx-issued validation, artifact upload, wall-clock duration,
 format/build/test semantic inference from display names, or Tier-3 verification
 workflow closure.

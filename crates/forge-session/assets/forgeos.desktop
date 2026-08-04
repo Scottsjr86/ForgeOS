@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=ForgeOS
+Comment=ForgeOS First Armor development session
+Type=Application
+Exec=/usr/libexec/forgeos/forgeos-session-launcher
+TryExec=/usr/libexec/forgeos/forgeos-session-launcher
+DesktopNames=ForgeOS;

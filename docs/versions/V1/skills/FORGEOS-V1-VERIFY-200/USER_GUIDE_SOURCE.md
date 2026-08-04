@@ -1,6 +1,6 @@
 # FORGEOS-V1-VERIFY-200 User Guide Source
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 
 ## What this capability does
 

@@ -128,15 +128,15 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-VERIFY-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-VERIFY-200
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+ACTIVE_SKILLS=[FORGEOS-V1-SESSION-200]
+ACTIVE_BATON_OWNER=FORGEOS-V1-SESSION-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=VERIFICATION_AND_EVIDENCE
+ACTIVE_LANE=SESSION_AND_HOST_INTEGRATION
 SOURCE_WORK_AUTHORIZED=YES
 QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_VERSION_BOUND_RESULT_RECORDS
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_DEDICATED_SESSION_BOOTSTRAP
 FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
@@ -151,14 +151,13 @@ and mutation primitives, stable patch application, persistent project registry/w
 restoration, Nyx public health/version discovery, source-backed Forge World
 projection, recovery, repository browsing/search, multi-buffer atomic save, Rust
 language intelligence, managed project-bound terminals, registered command execution,
-consistency-checked project-bound Git inspection, and safe project-bound Git mutation
-are closed. Dedicated session bootstrap, managed Nyx lifecycle, Nyx checkpoint
-transport, and remote-agent records remain available but inactive.
-`FORGEOS-V1-VERIFY-200` is the only active source skill. It may only bind one exact
-registered command and native terminal outcome to consistency-checked source state
-before and after execution, retain exact output references, and append immutable
-history. It may not infer command meaning from prose, accept stale evidence as
-current, call Nyx, schedule pipelines, or render later Forge World UI.
+consistency-checked Git inspection, safe project-bound Git mutation, and version-bound
+verification are closed. Managed Nyx lifecycle, Nyx checkpoint transport, and
+remote-agent records remain available but inactive. `FORGEOS-V1-SESSION-200` is the
+only active source skill. It may only add a canonical display-manager entry, one
+sanitized shell-free launcher, exact composition-root arguments, deterministic child
+environment, and truthful startup status. It may not install host files, supervise
+Nyx, configure a compositor, render Forge World, or close packaging.
 
 ## 3. Current-source intake law
 
@@ -830,82 +829,79 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Version-bound build and test result records are active.
+Dedicated ForgeOS session bootstrap is active.
 
 ```yaml
-skill_id: FORGEOS-V1-VERIFY-200
+skill_id: FORGEOS-V1-SESSION-200
 state: ACTIVE
-lane: VERIFICATION_AND_EVIDENCE
-owning_subsystem: forge-core with forge-app composition over forge-terminal and forge-git truth
+lane: SESSION_AND_HOST_INTEGRATION
+owning_subsystem: forge-session
 source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_48.tar
+source_revision: Forge_OS_V1_base_49.tar
 worktree_or_branch: current single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-COMMAND-200
-  - FORGEOS-V1-GIT-200
-  - FORGEOS-V1-STATE-000
+  - FORGEOS-V1-SESSION-100
 originating_path_or_probe: >
-  Run passing, failing, timed-out, and cancelled immutable registered commands from
-  one registered project; compare exact argv and output with the native command
-  record; alter dirty state and HEAD after a pass; persist and restore history; then
-  require stale or foreign records to remain historical instead of satisfying the
-  current source state.
+  Launch an executable fixture through the real forgeos-session-launcher binary;
+  verify exact child arguments, a sanitized display-manager environment, `/` as the
+  working directory, exact nonzero child status, missing-executable failure, and a
+  canonical shell-free desktop-entry source.
 first_blocker: >
-  ForgeOS can run exact registered commands and capture consistency-checked Git
-  state, but has no canonical append-only record binding exact argv, terminal
-  outcome, output identity, and pre-run/post-run source identities.
-active_slice: FORGEOS-V1-VERIFY-200-SLICE-001
+  ForgeOS has a composition binary and deterministic internal session state machine,
+  but no canonical display-manager entry or sanitized shell-free launcher that starts
+  from a worktree-independent directory and propagates real startup failure.
+active_slice: FORGEOS-V1-SESSION-200-SLICE-001
 allowed_paths:
-  - crates/forge-core/src/lib.rs
-  - crates/forge-core/src/verification.rs
-  - crates/forge-core/tests/verification_records.rs
-  - crates/forge-app/src/composition/mod.rs
-  - crates/forge-app/src/composition/verification_workspace.rs
-  - crates/forge-app/tests/verification_workspace.rs
+  - crates/forge-session/src/lib.rs
+  - crates/forge-session/src/bootstrap.rs
+  - crates/forge-session/src/bin/forgeos-session-launcher.rs
+  - crates/forge-session/assets/forgeos.desktop
+  - crates/forge-session/tests/session_bootstrap.rs
   - docs/ForgeOS_header.md
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-GIT-201/**
   - docs/versions/V1/skills/FORGEOS-V1-VERIFY-200/**
+  - docs/versions/V1/skills/FORGEOS-V1-SESSION-200/**
 forbidden_paths:
-  - crates/forge-terminal/src/execution.rs
-  - crates/forge-git/src/**
   - crates/forge-nyx-client/**
   - crates/forge-world/**
+  - crates/forge-app/src/composition/**
+  - host display-manager configuration
   - nyx_server source
 must_pass:
-  - records bind exact command ID, definition identity, executable, argv, and process ID
-  - records bind exact native revision and complete dirty-state identities before and after execution
-  - pass, fail, timeout, cancellation, and execution failure remain distinct
-  - normal native exit codes remain exact
-  - stdout and stderr remain separate and content-addressed
-  - passing evidence satisfies only the exact post-run source state
-  - stale, failed, cancelled, timed-out, and foreign evidence cannot satisfy current validation
-  - history is append-only, canonically ordered, and state-record round-trippable
+  - desktop entry references one absolute installed launcher without shell interpolation
+  - default composition root is one absolute installed path
+  - launcher clears the ambient environment and restores only declared session variables
+  - launcher does not source a shell profile or inherit the caller's current directory
+  - composition root starts from `/` with exact child arguments
+  - normal child exit status is propagated exactly
+  - invalid environment, relative executable, and spawn failure return explicit nonzero status
+  - other desktop-session files are never modified
   - python3 scripts/run_ci.py
 must_not_claim:
-  - Forge World validation UI
-  - CI pipeline scheduling or background execution
-  - semantic classification of commands from display names
-  - Nyx-issued proof or remote-agent proof
-  - wall-clock duration or performance benchmarking
-  - Tier-3 verification workflow closure
+  - installed host session files
+  - SDDM, GDM, or other display-manager configuration
+  - compositor or Forge World shell completion
+  - Nyx service supervision
+  - clean-machine package installation
+  - Tier-3 login-session closure
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-VERIFY-200. Reevaluate its direct
+  After operator CI passes, close only FORGEOS-V1-SESSION-200. Reevaluate its direct
   unlocks and the current frontier; no dependent skill becomes active by adjacency.
 ```
 
-## 17. Direct unlock handling for version-bound verification
+## 17. Direct unlock handling for dedicated session bootstrap
 
-`FORGEOS-V1-VERIFY-200` may close only after behavior-only CI proves exact source
-binding, exact argv and output preservation, distinct terminal outcomes, stale-result
-rejection, append-only canonical history, and state-record restoration.
+`FORGEOS-V1-SESSION-200` may close only after behavior-only CI proves the real
+launcher binary, deterministic child environment, shell-free exact execution,
+worktree-independent startup, truthful failure propagation, and canonical desktop
+entry source.
 
-Closing `FORGEOS-V1-VERIFY-200` satisfies the verification prerequisite for later
-Forge World and complete validation workflows. Nyx and agent skills still require
-their explicit Nyx-owned gates and may not activate from verification closure alone.
+Closing `FORGEOS-V1-SESSION-200` satisfies one prerequisite of the reproducible
+session package and the later complete login journey. It does not close managed
+service lifecycle, install files on the host, or activate a display manager.
 
 ## 18. Final closure routing
 

@@ -110,18 +110,18 @@ The bounded authority migration is complete and source execution is active:
 ```text
 PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
-BATON_OWNER=FORGEOS-V1-VERIFY-200
+BATON_OWNER=FORGEOS-V1-SESSION-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_SKILLS=[FORGEOS-V1-VERIFY-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201]
-ACTIVE_LANE=VERIFICATION_AND_EVIDENCE
-ACTIVE_QUESTION=Can ForgeOS preserve immutable pass, fail, timeout, and cancellation evidence bound to the exact registered command plus the exact source state before and after execution?
-FIRST_BLOCKER=FORGEOS_CAN_RUN_EXACT_REGISTERED_COMMANDS_AND_CAPTURE_CONSISTENT_GIT_STATE_BUT_HAS_NO_CANONICAL_APPEND_ONLY_RECORD_BINDING_EXACT_ARGV_TERMINAL_OUTCOME_OUTPUT_AND_PRE_POST_SOURCE_IDENTITIES
-ACTIVE_SLICE=FORGEOS-V1-VERIFY-200-SLICE-001
-SOURCE_IMPLEMENTATION_ALLOWED=YES_VERSION_BOUND_VERIFICATION_RECORDS_ONLY
-CURRENT_RESULT=SAFE_GIT_MUTATION_CLOSED_VERSION_BOUND_VERIFICATION_ACTIVE
-RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-VERIFY-200_IF_GREEN
+ACTIVE_SKILLS=[FORGEOS-V1-SESSION-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-SESSION-201,FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200]
+ACTIVE_LANE=SESSION_AND_HOST_INTEGRATION
+ACTIVE_QUESTION=Can a display manager launch the installed ForgeOS composition root from a deterministic shell-free environment and receive its real startup result?
+FIRST_BLOCKER=FORGEOS_HAS_A_COMPOSITION_BINARY_AND_INTERNAL_SESSION_STATE_MACHINE_BUT_NO_CANONICAL_DISPLAY_MANAGER_ENTRY_OR_SANITIZED_SHELL_FREE_LAUNCHER_THAT_PROPAGATES_REAL_STARTUP_FAILURE
+ACTIVE_SLICE=FORGEOS-V1-SESSION-200-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES_DEDICATED_SESSION_BOOTSTRAP_ONLY
+CURRENT_RESULT=VERSION_BOUND_VERIFICATION_CLOSED_SESSION_BOOTSTRAP_ACTIVE
+RETURN_PATH=RUN_BEHAVIOR_ONLY_CI_THEN_CLOSE_ONLY_FORGEOS-V1-SESSION-200_IF_GREEN
 CI_AUTHORITY=ci/master.yaml_via_scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
@@ -133,15 +133,14 @@ NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
 Persistent project registry/workspace restoration, Nyx health/versioned public
 client protocol, Forge World projection/input routing, recovery, repository
 browsing/search, multi-buffer atomic save, Rust language intelligence, managed
-project-bound terminal sessions, registered command execution, and
-consistency-checked project-bound Git inspection and safe project-bound Git
-mutation are closed. `FORGEOS-V1-VERIFY-200` is the only active source skill.
-Dedicated session bootstrap, managed Nyx lifecycle, Nyx checkpoint transport, and
-remote-agent records remain available but inactive. The active skill may only bind
-one exact registered command execution to consistency-checked pre-run and post-run
-source state, preserve the terminal outcome and content-addressed output, and append
-immutable history. It may not infer validation from display names, accept stale
-results as current, call Nyx, schedule pipelines, or render later Forge World UI.
+project-bound terminal sessions, registered command execution, consistency-checked
+Git inspection, safe Git mutation, and version-bound verification are closed.
+`FORGEOS-V1-SESSION-200` is the only active source skill. Managed Nyx lifecycle,
+Nyx checkpoint transport, and remote-agent records remain available but inactive.
+The active skill may only provide the dedicated display-manager entry, sanitized
+shell-free launcher, exact child arguments, deterministic child environment, and
+truthful startup status. It may not install host files, configure a display manager,
+supervise Nyx, render Forge World, or close distribution work.
 
 The authority set is closed. No model may invent additional authority documents,
 prose validators, checklists, or migration gates before beginning the active source

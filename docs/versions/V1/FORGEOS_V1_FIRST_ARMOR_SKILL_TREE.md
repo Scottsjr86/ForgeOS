@@ -828,7 +828,11 @@ never closes the node.
 
 - **Owner:** `forge-session`
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-SESSION-200-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-200/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** A display-manager session entry launches the ForgeOS composition
   root with the expected environment and returns a real failure status when startup
   fails.
@@ -1075,8 +1079,9 @@ never closes the node.
 - **Owner:** `forge-core`, `forge-terminal`
 - **Prerequisites:** `FORGEOS-V1-COMMAND-200`, `FORGEOS-V1-GIT-200`,
   `FORGEOS-V1-STATE-000`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-VERIFY-200-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 75 suites, 356 tests passed, 0 failed,
+  2 ignored, and all three structural guards green.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-VERIFY-200/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-VERIFY-200/USER_GUIDE_SOURCE.md`
@@ -1583,19 +1588,6 @@ section ever disagree.
 
 ## 8. Current frontier
 
-All Tier-0 foundations, structural guards, validated project registration,
-boundary-safe file access, editor buffer identity, incremental Rust parsing, the
-Rust Analyzer adapter, native PTY support, immutable registered-command policy,
-deterministic session lifecycle, consistency-checked project-bound Git inspection,
-typed Git mutation/worktree primitives, stable all-or-nothing patch application,
-persistent project registry/workspace restoration, Nyx public health discovery,
-Forge World source projection, crash recovery, repository browsing/search,
-multi-buffer editing, Rust language intelligence, managed project terminals, and
-registered command execution are closed. Project-bound safe Git mutation and
-isolated worktree control are active.
-
-Current frontier:
-
 ```text
 CLOSED
   FORGEOS-V1-ARCH-000
@@ -1604,25 +1596,25 @@ CLOSED
   FORGEOS-V1-GUARD-001
   FORGEOS-V1-GUARD-002
   FORGEOS-V1-CONTRACT-000
-  FORGEOS-V1-PROCESS-000
-  FORGEOS-V1-PATH-000
   FORGEOS-V1-STATE-000
+  FORGEOS-V1-PATH-000
+  FORGEOS-V1-PROCESS-000
   FORGEOS-V1-HASH-000
   FORGEOS-V1-PROJECT-100
+  FORGEOS-V1-SESSION-100
   FORGEOS-V1-FILE-100
   FORGEOS-V1-EDITOR-100
   FORGEOS-V1-PARSER-100
   FORGEOS-V1-LSP-100
   FORGEOS-V1-TERMINAL-100
   FORGEOS-V1-COMMAND-100
-  FORGEOS-V1-SESSION-100
   FORGEOS-V1-GIT-100
   FORGEOS-V1-GIT-101
-  FORGEOS-V1-PATCH-100
-  FORGEOS-V1-PROJECT-200
   FORGEOS-V1-NYX-100
+  FORGEOS-V1-PATCH-100
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-RECOVERY-100
+  FORGEOS-V1-PROJECT-200
   FORGEOS-V1-FILE-200
   FORGEOS-V1-EDITOR-200
   FORGEOS-V1-EDITOR-201
@@ -1630,13 +1622,13 @@ CLOSED
   FORGEOS-V1-COMMAND-200
   FORGEOS-V1-GIT-200
   FORGEOS-V1-GIT-201
+  FORGEOS-V1-VERIFY-200
 
-ACTIVE_SKILL=FORGEOS-V1-VERIFY-200
-ACTIVE_BLOCKER=FORGEOS_CAN_RUN_EXACT_REGISTERED_COMMANDS_AND_CAPTURE_CONSISTENT_GIT_STATE_BUT_HAS_NO_CANONICAL_APPEND_ONLY_RECORD_BINDING_EXACT_ARGV_TERMINAL_OUTCOME_OUTPUT_AND_PRE_POST_SOURCE_IDENTITIES
-ACTIVE_SLICE=FORGEOS-V1-VERIFY-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-SESSION-200
+ACTIVE_BLOCKER=FORGEOS_HAS_A_COMPOSITION_BINARY_AND_INTERNAL_SESSION_STATE_MACHINE_BUT_NO_CANONICAL_DISPLAY_MANAGER_ENTRY_OR_SANITIZED_SHELL_FREE_LAUNCHER_THAT_PROPAGATES_REAL_STARTUP_FAILURE
+ACTIVE_SLICE=FORGEOS-V1-SESSION-200-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
   FORGEOS-V1-NYX-101
   FORGEOS-V1-AGENT-100
@@ -1645,7 +1637,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-VERIFY-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-SESSION-200` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields
