@@ -1,10 +1,10 @@
 # FORGEOS-V1-NYX-101 Closure and Specification
 
-Status: `ACTIVE`
+Status: `CLOSED`
 Capability: Permission grant, checkpoint, and immutable resume token
 Active slice: `FORGEOS-V1-NYX-101-SLICE-001`
-Forge source authority: `Forge_OS_V1_base_52.tar`
-Forge source archive SHA-256: `962527439cc6f8f8b433adde3ba58ea75b8fa7a802a0e947d1e8ce96c89ef98a`
+Forge source authority: `Forge_OS_V1_base_53.tar`
+Forge source archive SHA-256: `f85d5ed4b2660cd81a91ab56ca8ab38e99a9d14957cbc5b1a3ddf0dbbdbdf10e`
 Nyx source authority inspected: `Nyx_Server_base_16.tar`
 Nyx source archive SHA-256: `83fdf8947259b863912986660ed054cc6a208aefcd967245abe5135367ed8f5a`
 Verified Nyx gate input: `docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json`
@@ -92,19 +92,23 @@ One ignored test is the explicit independent real-Nyx process witness. It create
 approves, and resumes one `repo.write_file` request, rejects replay, and verifies
 the corresponding Nyx audit event.
 
-## Operator validation required
+## Operator validation
 
-Run Forge behavior-only CI:
+The operator ran Forge behavior-only CI:
 
 ```bash
 python3 scripts/run_ci.py
 ```
 
-Then run the real-process witness against an independently started
-`Nyx_Server_base_16` process using the commands in `USER_GUIDE_SOURCE.md`.
+Result: `PASS` with 80 suites, 385 tests passed, 0 failed, 3 ignored, and all
+three structural guards green.
 
-The capability remains `ACTIVE` and `OPERATOR_VALIDATION_PENDING` until both
-commands pass.
+The operator then ran the independent real Nyx permission witness. It created the
+exact scoped `repo.write_file` checkpoint, independently reconciled request,
+payload, scope, policy, and effect hashes, approved and consumed the exact request,
+verified the Nyx audit sequence, and proved replay rejection. Result: `PASS`.
+
+The bounded capability is closed.
 
 ## Explicit non-claims
 

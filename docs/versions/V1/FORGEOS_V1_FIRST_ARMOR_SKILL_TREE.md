@@ -998,7 +998,7 @@ never closes the node.
 - **Required Nyx evidence before Forge closure:** `API-SYS-020`, `API-SYS-021`, `API-SYS-022`, `API-SYS-027`, `ROUTING-REG-012`, `PERSIST-SESSION-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** ForgeOS may not call local model runtimes directly, own the model registry, store canonical Nyx conversation state, or synthesize stream events.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-SESSION-201`
-- **Initial state:** `LOCKED`
+- **Current state:** `AVAILABLE`
 - **Must be true:** ForgeOS discovers Nyx, lists available local models, selects one,
   creates a session, streams responses, handles errors, and restores conversation
   identity.
@@ -1334,8 +1334,8 @@ never closes the node.
 - **Repository boundary:** ForgeOS may not mint Nyx checkpoints, reinterpret approval scope, regenerate a gated action, persist a competing permission ledger, execute the resumed tool locally, or maintain a second permission engine.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-HASH-000`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-NYX-101-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 80 suites, 385 tests passed, 0 failed, 3 ignored, and all three structural guards green. The independent real-Nyx permission witness passed with exact approval, one execution, audit reconciliation, and replay rejection.
 - **Closure records:**
   `docs/versions/V1/skills/FORGEOS-V1-NYX-101/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-NYX-101/USER_GUIDE_SOURCE.md`
@@ -1358,7 +1358,9 @@ never closes the node.
 - **Repository boundary:** ForgeOS may not invent terminal agent status, calculate provider truth from prose, or keep a competing canonical agent run record.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-STATE-000`, `FORGEOS-V1-HASH-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `BLOCKED`
+- **Gate request:** `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_REQUEST.md`
+- **First blocker:** Required Nyx system proof for `AGENT-FOUND-002`, `AGENT-RUN-001`, `AGENT-BUDGET-001`, `ROUTING-COST-001`, and `PERSIST-RUN-001` has not yet returned from the newest Nyx_Server source.
 - **Must be true:** Task identity, provider, model, source revision, worktree, scope,
   budget, status, response, and cost are durable and inspectable.
 - **Must not be true:** A task may not continue after cancellation or exceed its
@@ -1625,6 +1627,7 @@ CLOSED
   FORGEOS-V1-GIT-100
   FORGEOS-V1-GIT-101
   FORGEOS-V1-NYX-100
+  FORGEOS-V1-NYX-101
   FORGEOS-V1-PATCH-100
   FORGEOS-V1-WORLD-100
   FORGEOS-V1-RECOVERY-100
@@ -1640,20 +1643,21 @@ CLOSED
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
 
-ACTIVE_SKILL=FORGEOS-V1-NYX-101
-ACTIVE_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_PUBLIC_PERMISSION_API_ADAPTER_OR_INDEPENDENT_NYX_COMPATIBLE_HASH_RECONCILIATION
-ACTIVE_SLICE=FORGEOS-V1-NYX-101-SLICE-001
-VERIFIED_NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json
+BLOCKED_SKILL=FORGEOS-V1-AGENT-100
+ACTIVE_BLOCKER=REQUIRED_NYX_SKILLS_AGENT_FOUND_002_AGENT_RUN_001_AGENT_BUDGET_001_ROUTING_COST_001_AND_PERSIST_RUN_001_HAVE_NOT_BEEN_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
+ACTIVE_SLICE=NONE_CROSS_REPO_GATE_PROBE
+NYX_GATE_REQUEST=docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_REQUEST.md
 
 AVAILABLE
-  FORGEOS-V1-AGENT-100
   FORGEOS-V1-NYX-200
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-`FORGEOS-V1-NYX-101` is the only active ForgeOS source skill. Its Nyx-owned gate is verified; the current work is restricted to the thin public client, independent hash reconciliation, strict response validation, fixture coverage, and the real-process witness.
+No ForgeOS source skill is active. `FORGEOS-V1-AGENT-100` is blocked on its
+Nyx-owned cross-repository gate; higher product behavior remains inactive until
+the required Nyx proof returns.
 
 ## 9. Skill worksheet update fields
 

@@ -54,7 +54,11 @@
   "standalone_chat_dev_result": "PASS",
   "wiring_preflight": {
     "canonical_owner": "Nyx_Server",
-    "nyx_engine_families": ["POLICY", "TOOLS", "PERSISTENCE"],
+    "nyx_engine_families": [
+      "POLICY",
+      "TOOLS",
+      "PERSISTENCE"
+    ],
     "forgeos_role": "thin_http_client_scope_envelope_presenter_and_independent_hash_verifier",
     "transport": "HTTP/1.1 over configured local TCP or Unix socket",
     "inspected_nyx_paths": [
@@ -75,5 +79,15 @@
     "forgeos_executes_the_resumed_tool_locally": false,
     "forgeos_contacts_model_providers_directly": false
   },
-  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+  "forge_validation_state": "OPERATOR_VALIDATED_CLOSED",
+  "forge_validation": {
+    "ci_command": "python3 scripts/run_ci.py",
+    "ci_result": "PASS",
+    "ci_suites": 80,
+    "ci_passed": 385,
+    "ci_failed": 0,
+    "ci_ignored": 3,
+    "real_nyx_witness_test": "real_nyx_permission_gate_proves_exact_approval_and_replay_rejection",
+    "real_nyx_witness_result": "PASS"
+  }
 }

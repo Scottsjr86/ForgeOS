@@ -1,6 +1,6 @@
 # FORGEOS-V1-NYX-101 User Guide Source
 
-Status: `ACTIVE`
+Status: `CLOSED`
 Capability: Nyx-owned permission checkpoints and exact immutable resume
 Cross-repo gate input: `docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json`
 
@@ -65,6 +65,10 @@ completed audit event.
   by Nyx;
 - ForgeOS never treats HTTP success alone as permission;
 - ForgeOS never executes `repo.write_file` or any other Nyx tool locally.
+
+## Closure evidence
+
+Forge CI passed with 80 suites, 385 tests passed, 0 failed, and 3 ignored. The independent real-Nyx checkpoint, approval, exact resume, audit, and replay-rejection witness also passed.
 
 ## Current V1 limitations
 
