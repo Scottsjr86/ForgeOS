@@ -180,6 +180,15 @@ pub fn hash_canonical_bytes(domain: HashDomain, bytes: &[u8]) -> ContentHash {
     input.identity()
 }
 
+/// Raw SHA-256 for an external versioned contract that explicitly owns its digest bytes.
+///
+/// This is not a Forge canonical identity and must not replace the domain-separated
+/// Forge hash APIs above. It exists only for independent interoperability checks
+/// against contracts, such as Nyx, that publish raw SHA-256 values.
+pub fn hash_external_contract_bytes(bytes: &[u8]) -> ContentHash {
+    ContentHash::from_bytes(sha256::digest(bytes))
+}
+
 /// Verifies canonical bytes against an expected identity.
 pub fn verify_canonical_bytes(
     domain: HashDomain,
@@ -378,6 +387,18 @@ mod tests {
             "abcd".parse::<ContentHash>(),
             Err(HashContractError::InvalidDigestLength { .. })
         ));
+    }
+
+    #[test]
+    fn external_contract_digest_matches_raw_sha256_vectors() {
+        assert_eq!(
+            hash_external_contract_bytes(b"").to_string(),
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        );
+        assert_eq!(
+            hash_external_contract_bytes(b"abc").to_string(),
+            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+        );
     }
 
     #[test]

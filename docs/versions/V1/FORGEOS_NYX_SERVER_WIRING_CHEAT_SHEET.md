@@ -661,37 +661,38 @@ ForgeOS must treat a 404 from a detail route after restart as "Nyx detail is not
 available in this process state," not fabricate the missing detail from chat
 history.
 
-### 6.9 Checkpoint resolution
+### 6.9 Permission checkpoints and exact immutable resume
 
-| Method | Path | Input | Current behavior |
+The canonical public permission surface is Nyx-owned and contract-versioned:
+
+| Method | Path | Input / result | ForgeOS use |
 |---|---|---|---|
-| `POST` | `/v1/nyx/checkpoints/:checkpoint_id/resolve` | decision plus optional actor and reason | Records approve or deny in Nyx session and cached run state. Current N1 does not resume or execute the paused tool. |
+| `POST` | `/v1/nyx/permissions/checkpoints` | `nyx.permission_checkpoint_create.v1` -> immutable `nyx.permission_checkpoint.v1` | Create or idempotently recover one exact scoped request checkpoint. |
+| `GET` | `/v1/nyx/permissions/checkpoints/:checkpoint_id` | immutable checkpoint | Refresh the Nyx-owned state before display or action. |
+| `POST` | `/v1/nyx/permissions/checkpoints/:checkpoint_id/resolve` | `nyx.permission_decision.v1` -> `nyx.permission_resolve.v1` | Submit explicit approve or deny against the exact reviewed hashes. |
+| `POST` | `/v1/nyx/permissions/resume` | `nyx.permission_resume.v1` -> `nyx.permission_resume_result.v1` | Return the exact Nyx-issued token with the exact approved request. |
+| `GET` | `/v1/nyx/permissions/audit` | ordered `nyx.permission_audit_report.v1` | Present Nyx-owned checkpoint, rejection, execution, and replay evidence. |
 
-Request shape:
-
-```json
-{
-  "decision": "approve",
-  "resolved_by": "operator-id",
-  "reason": "bounded explanation"
-}
-```
-
-or decision `deny`.
-
-Current response includes:
+Every request uses `x-nyx-contract-version: 1.0`. The checkpoint binds:
 
 ```text
-checkpoint_id
-run_id
-decision record
-updated checkpoint record
-execution_resumed=false
+request and idempotency key
+session, optional thread/run, tool call, and actor
+workspace root, allowed paths, network origins, and declared side effects
+canonical request, payload, scope, policy, effect, and condition hashes
+expiry, explicit decision, one resume-token hash, execution, result, and audit sequence
 ```
 
-This is crucial. ForgeOS must not regenerate the tool request and execute it
-locally after approval. Exact approval-resume semantics belong to a later Nyx
-capability and its cross-repository gate.
+Nyx canonicalizes the request, evaluates policy, creates and persists checkpoint
+identity, mints the token, reserves execution, executes the tool, consumes the
+token, and records audit history. ForgeOS may construct the client envelope,
+display the returned checkpoint, submit the operator decision, return the exact
+token/request, and independently reconcile hashes. It may not keep a competing
+checkpoint ledger or execute the approved tool locally.
+
+The older run-inspection checkpoint routes remain run-history surfaces. They do
+not replace the canonical permission API above and must not be used to synthesize
+resume behavior.
 
 ---
 
@@ -982,7 +983,7 @@ GGUF discovery and rescan
 managed llama-server lifecycle and diagnostics
 memory status
 run summaries, details, trace, context, tool audit, file touches, policy explain
-checkpoint inspection and decision recording
+checkpoint inspection, exact approval, immutable resume, replay protection, and audit
 request, trace, diagnostic, session, thread, and run identities
 ```
 
@@ -991,7 +992,6 @@ request, trace, diagnostic, session, thread, and run identities
 ```text
 Phase-1 protocol DTOs without a dedicated create/update route
 runtime instance spec read from environment without auto-start behavior
-checkpoint decision recording without exact paused-tool resume
 in-process detailed run caches without proven durable rehydration
 server health without a canonical schema-stamped capability list
 permissive CORS without an authentication contract
@@ -1004,7 +1004,6 @@ Nyx Unix-domain-socket public HTTP server
 streaming chat
 public session create/list/switch endpoints
 public thread create/list/switch endpoints
-checkpoint approval that resumes the exact paused tool call
 general write/process/network tool catalog for Forge workflows
 remote OpenAI heavyweight-agent workflow required by later Forge skills
 Nyx-generated patch proposal endpoint and durable patch artifact contract
@@ -1141,7 +1140,7 @@ not only fixtures.
 | workspace mismatch | block project-aware Nyx work; show expected and reported roots |
 | sandbox denial | preserve 403 and Nyx error; do not retry outside Nyx |
 | checkpoint required | preserve 409, run ID, checkpoint ID, and approval state |
-| checkpoint approved in current N1 | show `execution_resumed=false`; do not execute locally |
+| checkpoint approved | preserve the Nyx-issued token only in the immediate client flow; resume only the exact request through Nyx |
 | Nyx restart | new boot timestamp; re-evaluate readiness and cache lifetime |
 | malformed run detail | keep chat response but mark evidence unavailable/incompatible |
 | trace headers | preserve `x-nyx-trace-id` and `x-nyx-diagnostic-id` |

@@ -1,8 +1,13 @@
 //! ForgeOS client boundary for the separate nyx_server model host.
 //!
-//! Public routes are explicit. Capability implementations remain owned by
-//! their named modules and are added only by the skills that prove them.
+//! Nyx_Server owns AI behavior, policy, checkpoints, and durable server state.
+//! ForgeOS owns only transport, presentation, project envelopes, and independent
+//! verification of the Nyx-owned contracts it consumes.
+
+mod canonical_json;
 
 pub mod patches;
+pub mod permission;
+pub mod permission_client;
 pub mod protocol;
 pub mod transport;

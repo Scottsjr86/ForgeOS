@@ -1,0 +1,79 @@
+{
+  "schema": "forgeos.nyx_cross_repo_gate_input.v1",
+  "contract_id": "FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT",
+  "forge_skill_id": "FORGEOS-V1-NYX-101",
+  "nyx_gate_id": "NYX-GATE-FORGEOS-V1-NYX-101",
+  "nyx_source_archive": "Nyx_Server_base_16.tar",
+  "nyx_source_archive_sha256": "83fdf8947259b863912986660ed054cc6a208aefcd967245abe5135367ed8f5a",
+  "public_contract_version": "1.0",
+  "required_request_header": "x-nyx-contract-version",
+  "public_endpoints": {
+    "create_checkpoint": "POST /v1/nyx/permissions/checkpoints",
+    "read_checkpoint": "GET /v1/nyx/permissions/checkpoints/:checkpoint_id",
+    "resolve_checkpoint": "POST /v1/nyx/permissions/checkpoints/:checkpoint_id/resolve",
+    "resume_exact_request": "POST /v1/nyx/permissions/resume",
+    "audit": "GET /v1/nyx/permissions/audit"
+  },
+  "proved_tool_surface": "repo.write_file",
+  "banked_skills": [
+    {
+      "skill_id": "POLICY-CHECKPOINT-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/POLICY-CHECKPOINT-001-proof-permission-gate-v1.json",
+      "sha256": "a63390d572d7eea6864e2a4bc4bbf8069d4207cc6e725a07dc9928ce9f28071f"
+    },
+    {
+      "skill_id": "POLICY-APPROVAL-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/POLICY-APPROVAL-001-proof-permission-gate-v1.json",
+      "sha256": "ae95c40d870dfd366013260bb10e2a40786e5d92df6252627f6e5016ed8feffe"
+    },
+    {
+      "skill_id": "POLICY-TOOL-015",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/POLICY-TOOL-015-proof-permission-gate-v1.json",
+      "sha256": "06e4d21560b605dbad782f6aeda15791b8c677e0598be4ccad8657dd0389f188"
+    },
+    {
+      "skill_id": "PERSIST-IDEMP-KEY-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/PERSIST-IDEMP-KEY-001-proof-permission-gate-v1.json",
+      "sha256": "a45ee27c853645f09243ef8e05dcd3bf7b39a8221b5acc9528f93f690fa6c37a"
+    }
+  ],
+  "real_server_witness": {
+    "command": "python3 scripts/run_permission_gate_witness.py --out experiments/skills/policy/runs/permission-gate-v1/real_server_witness_v1.json",
+    "result": "PASS",
+    "path": "experiments/skills/policy/runs/permission-gate-v1/real_server_witness_v1.json",
+    "sha256": "785093a40352432a711c5d0b5cb9e54987d30972a5f9016eaf1819c26a552e35"
+  },
+  "nyx_ci": {
+    "command": "python3 scripts/run_ci.py professional",
+    "result": "PASS"
+  },
+  "standalone_chat_dev_result": "PASS",
+  "wiring_preflight": {
+    "canonical_owner": "Nyx_Server",
+    "nyx_engine_families": ["POLICY", "TOOLS", "PERSISTENCE"],
+    "forgeos_role": "thin_http_client_scope_envelope_presenter_and_independent_hash_verifier",
+    "transport": "HTTP/1.1 over configured local TCP or Unix socket",
+    "inspected_nyx_paths": [
+      "crates/nyx_protocol/src/permission.rs",
+      "crates/nyx_core/src/permission.rs",
+      "crates/nyx_server/src/http/permission.rs",
+      "crates/nyx_server/src/http/mod.rs",
+      "crates/nyx_server/src/http/routes.rs",
+      "scripts/run_permission_gate_witness.py",
+      "experiments/skills/policy/runs/permission-gate-v1/real_server_witness_v1.json"
+    ]
+  },
+  "ownership_preflight": {
+    "nyx_server_remains_independent": true,
+    "forgeos_embeds_nyx_permission_behavior": false,
+    "forgeos_mints_checkpoint_or_resume_identity": false,
+    "forgeos_persists_competing_permission_state": false,
+    "forgeos_executes_the_resumed_tool_locally": false,
+    "forgeos_contacts_model_providers_directly": false
+  },
+  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+}

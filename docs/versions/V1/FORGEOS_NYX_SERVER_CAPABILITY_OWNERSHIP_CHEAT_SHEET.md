@@ -234,7 +234,7 @@ ContextBundle construction and selection reports
 sandboxed repository inventory, reads, search, and snippets
 safe-read tool registry and execution
 strict policy snapshots and tool decisions
-checkpoint records and decision capture
+durable permission checkpoints, explicit approval/denial, immutable resume, replay protection, and audit
 bounded agent and tool-loop substrate
 append-only memory ledger, rotation, reopen, and derived index rebuild
 snapshot manifests, list, diff, and content reads
@@ -245,8 +245,7 @@ RunRecord contracts, traces, file touches, tool audits, and redacted diagnostics
 
 ```text
 durable sessions and threads
-durable run, context, response, and checkpoint rehydration
-exact checkpoint continuation after process restart
+durable run, context, and response rehydration beyond the permission journal
 complete backend and route decision engine
 full model-runtime fleet management
 full write, process, and network tool families
@@ -261,7 +260,7 @@ portable flight-recorder export and hostile external verification
 
 ```text
 public session and thread lifecycle API sufficient for Forge product use
-exact suspended-action approval and resume contract
+agent-run suspended-action continuation beyond the general permission API
 complete remote heavyweight-agent workflow
 Nyx-owned durable patch proposal and returned-artifact contract
 production authentication for non-loopback exposure
@@ -375,7 +374,7 @@ REAL OR PARTIAL:
   cancellation, budget, and error contracts in protocol/source
 
 PLANNED OR INCOMPLETE:
-  durable restart-safe continuation
+  complete agent-run restart-safe continuation beyond the permission API
   complete multi-step repository agent product path
   remote heavyweight-agent orchestration
   personas and bounded multi-agent evaluators
@@ -931,13 +930,13 @@ REAL ON DISK:
   optional fsync and partial trailing-line recovery
   derived memory index rebuild
   temporal snapshot manifests and content reads
+  permission checkpoint, idempotency, token-consumption, and audit journal
 
 IN MEMORY ONLY:
   sessions
   threads
-  run records
+  general run records
   context bundles
-  checkpoint continuation state
 
 CONTRACT ONLY OR PLANNED:
   general Persistence Engine

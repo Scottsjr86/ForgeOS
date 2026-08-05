@@ -108,27 +108,27 @@ or visual proximity in the skill graph has no scheduling authority.
 The bounded authority migration is complete and source execution is active:
 
 ```text
-PROGRAM_MODE=CAPABILITY_PROBE
+PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 BATON_OWNER=FORGEOS-V1-NYX-101
-ACTIVE_REPOSITORY=Nyx_Server
-ACTIVE_SKILLS=[]
-BLOCKED_SKILLS=[FORGEOS-V1-NYX-101]
+ACTIVE_REPOSITORY=Forge_OS_V1
+ACTIVE_SKILLS=[FORGEOS-V1-NYX-101]
+BLOCKED_SKILLS=[]
 AVAILABLE_SKILLS=[FORGEOS-V1-AGENT-100,FORGEOS-V1-NYX-200]
 CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201]
 ACTIVE_LANE=NYX_POLICY_AND_PERMISSION
-ACTIVE_QUESTION=Does Nyx_Server own and system-prove exact checkpoint, approval, scoped authority, expiration, and immutable idempotent resume behavior for general clients?
-FIRST_BLOCKER=THE_REQUIRED_NYX_GATE_SKILLS_HAVE_NOT_BEEN_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
-ACTIVE_SLICE=NONE_CROSS_REPO_GATE_PROBE
-SOURCE_IMPLEMENTATION_ALLOWED=NO_UNTIL_NEWEST_NYX_SERVER_ARCHIVE_IS_VERIFIED
-CURRENT_RESULT=SESSION_201_CLOSED_NYX_101_CROSS_REPO_GATE_REQUIRED
-RETURN_PATH=COMPLETE_THE_NYX_101_GATE_IN_NYX_SERVER_THEN_RETURN_WITH_FRESH_ARCHIVE_RECEIPTS_AND_REAL_SERVER_WITNESS
+ACTIVE_QUESTION=Can ForgeOS consume the Nyx-owned public permission checkpoint and exact immutable-resume contract without creating competing permission state or executing around Nyx?
+FIRST_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_PUBLIC_PERMISSION_API_ADAPTER_OR_INDEPENDENT_NYX_COMPATIBLE_HASH_RECONCILIATION
+ACTIVE_SLICE=FORGEOS-V1-NYX-101-SLICE-001
+SOURCE_IMPLEMENTATION_ALLOWED=YES_FOR_DECLARED_FORGE_CLIENT_PATHS_ONLY
+CURRENT_RESULT=NYX_101_GATE_VERIFIED_FORGE_CLIENT_SLICE_ACTIVE
+RETURN_PATH=RUN_FORGE_BEHAVIOR_CI_AND_THE_INDEPENDENT_REAL_NYX_PERMISSION_WITNESS
 CI_AUTHORITY=EACH_REPOSITORY_OWNED_BEHAVIOR_CI
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 NYX_WIRING_CHEAT_SHEET_REVIEW=COMPLETE
 NYX_CAPABILITY_OWNERSHIP_REVIEW=COMPLETE
-NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_NYX_HANDOFF
+NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json
 ```
 
 Persistent project registry/workspace restoration, Nyx health/versioned public
@@ -137,13 +137,17 @@ browsing/search, multi-buffer atomic save, Rust language intelligence, managed
 project-bound terminal sessions, registered command execution, consistency-checked
 Git inspection, safe Git mutation, version-bound verification, dedicated
 display-manager session bootstrap, and managed external Nyx service lifecycle are
-closed. No ForgeOS source skill is currently active. The baton is parked on the
-Nyx-owned `FORGEOS-V1-NYX-101` cross-repository gate. ForgeOS must not mint
-checkpoints, reinterpret approvals, regenerate gated actions, or create a second
-permission engine while that Nyx behavior is missing or unproved.
+closed.
+
+The Nyx permission gate is now verified from `Nyx_Server_base_16.tar`. The active
+ForgeOS slice may add only a thin public HTTP client, exact client request envelopes,
+independent Nyx-compatible hash reconciliation, strict response validation, and the
+real-process witness. Nyx_Server remains authoritative for policy, checkpoint state,
+approval, expiration, idempotency, token creation, tool execution, persistence, and
+audit history.
 
 The authority set is closed. No model may invent additional authority documents,
-prose validators, checklists, or migration gates before beginning the active source
+prose validators, checklists, or migration gates before completing the active source
 skill.
 
 ## 3. Program modes

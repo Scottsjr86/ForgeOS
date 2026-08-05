@@ -320,46 +320,47 @@ with typed input routing, workspace snapshot/crash-journal recovery, repository 
 tree/exact text search, multi-buffer atomic editing, Rust syntax/language intelligence,
 managed project-bound terminal sessions, registered project command execution,
 consistency-checked project-bound native Git inspection, safe project-bound Git
-mutation with isolated worktree control, version-bound build/test evidence, and
-dedicated display-manager session bootstrap and managed external Nyx service
-lifecycle are closed. The next V1 capability is blocked at the Nyx-owned
-permission/checkpoint cross-repository gate:
+mutation with isolated worktree control, version-bound build/test evidence, dedicated
+display-manager session bootstrap, and managed external Nyx service lifecycle are
+closed. The Nyx-owned permission gate is now system-proved, and the active ForgeOS
+slice is the thin checkpoint and immutable-resume client:
 
 ```text
-PROGRAM_MODE=CAPABILITY_PROBE
-ACTIVE_QUESTION_CLASS=CROSS_REPOSITORY_GATE
+PROGRAM_MODE=SLICE
+ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 ACTIVE_RELEASE_GATE=FORGEOS-V1-NYX-101
-ACTIVE_V1_CONTRIBUTION=NYX_OWNED_PERMISSION_CHECKPOINT_AND_IMMUTABLE_RESUME
+ACTIVE_V1_CONTRIBUTION=NYX_OWNED_PERMISSION_CHECKPOINT_AND_IMMUTABLE_RESUME_CLIENT
 ACTIVE_CAPABILITY_ID=FORGEOS-V1-NYX-101
-QUESTION=Does the current Nyx_Server expose system-proved checkpoint, approval, scoped tool authority, and idempotent immutable resume behavior that ForgeOS can consume without owning a second permission engine?
-CURRENT_RESULT=SESSION_201_CLOSED_NYX_101_CROSS_REPO_GATE_REQUIRED
+QUESTION=Can ForgeOS consume Nyx's system-proved checkpoint, approval, scoped tool authority, expiration, immutable resume, replay protection, and audit contract without owning a second permission engine?
+CURRENT_RESULT=NYX_101_GATE_VERIFIED_FORGE_CLIENT_SLICE_ACTIVE
 BATON_OWNER=FORGEOS-V1-NYX-101
 ACTIVE_LANE=NYX_POLICY_AND_PERMISSION
-ACTIVE_SLICE=NONE_UNTIL_NYX_GATE_IS_PROVED
-FIRST_BLOCKER=REQUIRED_NYX_SKILLS_POLICY_CHECKPOINT_001_POLICY_APPROVAL_001_POLICY_TOOL_015_AND_PERSIST_IDEMP_KEY_001_ARE_NOT_YET_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
+ACTIVE_SLICE=FORGEOS-V1-NYX-101-SLICE-001
+FIRST_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_THIN_PUBLIC_PERMISSION_API_ADAPTER_OR_INDEPENDENT_HASH_RECONCILIATION
 CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201]
+ACTIVE_SKILLS=[FORGEOS-V1-NYX-101]
 AVAILABLE_SKILLS=[FORGEOS-V1-AGENT-100,FORGEOS-V1-NYX-200]
-BLOCKED_SKILLS=[FORGEOS-V1-NYX-101]
+BLOCKED_SKILLS=[]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
 ARCHIVE_FILENAME_AND_HASH_POLICY=ORIENTATION_ONLY_NOT_A_WORKFLOW_GATE
 ACTIVE_NYX_ROLE=AI_MODEL_HOST_AND_BOUNDED_AGENT_RUNTIME
-NYX_WIRING_CHEAT_SHEET_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
-NYX_CAPABILITY_OWNERSHIP_REVIEW=REQUIRED_BEFORE_ANY_NYX_FACING_EDIT
-NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=REQUIRED_IN_PATCH_OR_HANDOFF
+NYX_WIRING_CHEAT_SHEET_REVIEW=COMPLETE
+NYX_CAPABILITY_OWNERSHIP_REVIEW=COMPLETE
+NYX_WIRING_AND_OWNERSHIP_PREFLIGHT_RECEIPT=RECORDED_IN_NYX_GATE_INPUT
 NYX_SOURCE_IN_FORGEOS_ARCHIVE=NO_UNLESS_EXPLICITLY_VENDOR_LOCKED
-REPOSITORY_SWITCH_NOTICE=REQUIRED
-PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
+REPOSITORY_SWITCH_NOTICE=COMPLETE_NYX_SERVER_TO_FORGE_OS_V1
+PATCH_ARTIFACT_SCOPE=FORGE_OS_V1_ONLY
 FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_ARCHIVE
 SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
-SOURCE_WORK_AUTHORIZED=NO_UNTIL_NEWEST_NYX_SERVER_ARCHIVE_IS_VERIFIED
-VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_REPOSITORY_OWNED_CI
+SOURCE_WORK_AUTHORIZED=YES
+VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=SESSION_201_VALIDATED_AND_CLOSED
-NEXT_REQUIRED_ACTION=IN_NYX_SERVER_COMPLETE_NYX_GATE_FORGEOS_V1_NYX_101_THEN_RETURN_WITH_RECEIPTS_AND_FRESH_ARCHIVE
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-NYX-101
+NEXT_REQUIRED_ACTION=EXECUTE_FORGEOS-V1-NYX-101-SLICE-001_THEN_RUN_FORGE_CI_AND_REAL_NYX_PERMISSION_WITNESS
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -374,23 +375,22 @@ V4 earns the full spatial developer operating system.
 ```
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
-tree is the canonical worksheet, the V1 router owns live selection, and no
-ForgeOS source skill is active while `FORGEOS-V1-NYX-101` waits on its Nyx-owned
-gate.
+tree is the canonical worksheet, the V1 router owns live selection, and
+`FORGEOS-V1-NYX-101` is the only active source skill.
 
-Any Nyx-facing slice must first read and report the mandatory preflight from
-`docs/versions/V1/FORGEOS_NYX_SERVER_WIRING_CHEAT_SHEET.md` and
-`docs/versions/V1/FORGEOS_NYX_SERVER_CAPABILITY_OWNERSHIP_CHEAT_SHEET.md`. A
-missing wiring or ownership receipt stops source edits. The model must identify
-the canonical owner, inspect the current Nyx source for the exact route, DTO,
-process seam, and implementation state, and prove the Forge patch contains no
-substitute Nyx implementation.
+The verified Nyx gate input is recorded at
+`docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json`. Nyx_Server owns
+checkpoint identity, policy decisions, approval state, expiration, resume tokens,
+idempotency, tool execution, durable permission state, and audit truth. ForgeOS may
+only construct the exact client request, display the Nyx-owned checkpoint, submit the
+operator decision, return the exact token and request, and independently verify the
+published hashes.
 
-The next legal implementation belongs in `Nyx_Server`. It may establish only the
-general Nyx-owned checkpoint, approval, scoped authority, expiration, and immutable
-idempotent resume behavior required by the declared gate. ForgeOS may not mint or
-persist a substitute checkpoint, reinterpret approval scope, regenerate a gated
-action, or create a private one-client permission protocol.
+This slice may add only the public HTTP permission adapter, Nyx-compatible canonical
+JSON hash reconciliation, strict schema and immutable-field validation, typed server
+rejections, fixture tests, and one independent real-process witness. It may not mint
+or persist checkpoints, evaluate policy, execute the resumed tool locally, or create a
+private Forge-only permission protocol.
 
 ## 7. Program modes
 

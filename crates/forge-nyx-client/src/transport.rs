@@ -23,6 +23,28 @@ const DEFAULT_IO_TIMEOUT: Duration = Duration::from_secs(2);
 const DEFAULT_MAX_RESPONSE_BYTES: usize = 4 * 1024 * 1024;
 const MAX_SUPPORTED_VERSIONS: usize = 32;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum NyxHttpMethod {
+    Get,
+    Post,
+}
+
+impl NyxHttpMethod {
+    const fn as_str(self) -> &'static str {
+        match self {
+            Self::Get => "GET",
+            Self::Post => "POST",
+        }
+    }
+}
+
+#[derive(Debug)]
+pub(crate) struct NyxJsonResponse {
+    pub(crate) status: u16,
+    pub(crate) contract_version: NyxProtocolVersion,
+    pub(crate) body: Vec<u8>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NyxTransportEndpoint {
     UnixSocket(PathBuf),
@@ -112,14 +134,14 @@ impl NyxClientConfig {
         self.maximum_response_bytes
     }
 
-    fn preferred_version(&self) -> NyxProtocolVersion {
+    pub(crate) fn preferred_version(&self) -> NyxProtocolVersion {
         *self
             .supported_versions
             .last()
             .expect("validated Nyx supported version set")
     }
 
-    fn supports_major(&self, major: u16) -> bool {
+    pub(crate) fn supports_major(&self, major: u16) -> bool {
         self.supported_versions
             .iter()
             .any(|version| version.major() == major)
@@ -198,12 +220,14 @@ pub fn probe_nyx(config: &NyxClientConfig) -> NyxProbeOutcome {
     match probe_nyx_inner(config) {
         Ok(response) if response.is_ready() => NyxProbeOutcome::Ready { response },
         Ok(response) => NyxProbeOutcome::Unhealthy { response },
-        Err(ProbeFailure::Unavailable(reason)) => NyxProbeOutcome::Unavailable { reason },
-        Err(ProbeFailure::Incompatible(reason)) => NyxProbeOutcome::Incompatible { reason },
+        Err(NyxJsonRequestFailure::Unavailable(reason)) => NyxProbeOutcome::Unavailable { reason },
+        Err(NyxJsonRequestFailure::Incompatible(reason)) => {
+            NyxProbeOutcome::Incompatible { reason }
+        }
     }
 }
 
-fn probe_nyx_inner(config: &NyxClientConfig) -> Result<NyxServiceReport, ProbeFailure> {
+fn probe_nyx_inner(config: &NyxClientConfig) -> Result<NyxServiceReport, NyxJsonRequestFailure> {
     let requested = config.preferred_version();
 
     let version_response = fetch_contract(config, VERSION_PATH, requested)?;
@@ -219,7 +243,7 @@ fn probe_nyx_inner(config: &NyxClientConfig) -> Result<NyxServiceReport, ProbeFa
             .compatible_major_versions
             .contains(&requested.major())
     {
-        return Err(ProbeFailure::Incompatible(
+        return Err(NyxJsonRequestFailure::Incompatible(
             NyxIncompatibility::UnsupportedNegotiatedProtocol {
                 requested,
                 negotiated: version.public_contract_version,
@@ -253,37 +277,64 @@ fn fetch_contract(
     config: &NyxClientConfig,
     path: &'static str,
     requested: NyxProtocolVersion,
-) -> Result<ContractResponse, ProbeFailure> {
-    let request = build_request(config, path, requested);
+) -> Result<ContractResponse, NyxJsonRequestFailure> {
+    let response = request_json(config, NyxHttpMethod::Get, path, path, requested, None)?;
+    if response.status != 200 {
+        return Err(NyxJsonRequestFailure::Unavailable(
+            NyxUnavailableReason::HttpStatus {
+                path,
+                status: response.status,
+            },
+        ));
+    }
+    Ok(ContractResponse {
+        contract_version: response.contract_version,
+        body: response.body,
+    })
+}
+
+pub(crate) fn request_json(
+    config: &NyxClientConfig,
+    method: NyxHttpMethod,
+    path_label: &'static str,
+    path: &str,
+    requested: NyxProtocolVersion,
+    body: Option<&[u8]>,
+) -> Result<NyxJsonResponse, NyxJsonRequestFailure> {
+    let request = build_json_request(config, method, path, requested, body);
     let bytes =
-        connect_and_exchange(config, request.as_bytes()).map_err(ProbeFailure::Unavailable)?;
+        connect_and_exchange(config, &request).map_err(NyxJsonRequestFailure::Unavailable)?;
     let response = parse_http_response(&bytes).map_err(|detail| {
-        ProbeFailure::Incompatible(NyxIncompatibility::MalformedResponse { path, detail })
+        NyxJsonRequestFailure::Incompatible(NyxIncompatibility::MalformedResponse {
+            path: path_label,
+            detail,
+        })
     })?;
     let contract_text = response
         .headers
         .get(HEADER_NYX_CONTRACT_VERSION)
         .ok_or_else(|| {
-            ProbeFailure::Incompatible(NyxIncompatibility::MissingContractHeader { path })
+            NyxJsonRequestFailure::Incompatible(NyxIncompatibility::MissingContractHeader {
+                path: path_label,
+            })
         })?;
     let contract_version =
-        NyxProtocolVersion::parse(contract_text).map_err(|error| malformed(path, error))?;
-
+        NyxProtocolVersion::parse(contract_text).map_err(|error| malformed(path_label, error))?;
     if response.status == 426 {
-        let supported =
-            decode_incompatible_versions(&response.body).map_err(|error| malformed(path, error))?;
-        return Err(ProbeFailure::Incompatible(
+        let supported = decode_incompatible_versions(&response.body)
+            .map_err(|error| malformed(path_label, error))?;
+        return Err(NyxJsonRequestFailure::Incompatible(
             NyxIncompatibility::RejectedContract {
                 requested,
                 supported,
             },
         ));
     }
-    if response.status != 200 {
-        return Err(ProbeFailure::Unavailable(
-            NyxUnavailableReason::HttpStatus {
-                path,
-                status: response.status,
+    if !config.supports_major(contract_version.major()) {
+        return Err(NyxJsonRequestFailure::Incompatible(
+            NyxIncompatibility::UnsupportedNegotiatedProtocol {
+                requested,
+                negotiated: contract_version,
             },
         ));
     }
@@ -293,15 +344,16 @@ fn fetch_contract(
             .next()
             .is_some_and(|value| value.trim() == "application/json")
         {
-            return Err(ProbeFailure::Incompatible(
+            return Err(NyxJsonRequestFailure::Incompatible(
                 NyxIncompatibility::MalformedResponse {
-                    path,
+                    path: path_label,
                     detail: format!("unexpected content type '{content_type}'"),
                 },
             ));
         }
     }
-    Ok(ContractResponse {
+    Ok(NyxJsonResponse {
+        status: response.status,
         contract_version,
         body: response.body,
     })
@@ -311,28 +363,44 @@ fn verify_header(
     path: &'static str,
     header: NyxProtocolVersion,
     body: NyxProtocolVersion,
-) -> Result<(), ProbeFailure> {
+) -> Result<(), NyxJsonRequestFailure> {
     if header != body {
-        return Err(ProbeFailure::Incompatible(
+        return Err(NyxJsonRequestFailure::Incompatible(
             NyxIncompatibility::ContractHeaderMismatch { path, header, body },
         ));
     }
     Ok(())
 }
 
-fn malformed(path: &'static str, error: NyxProtocolError) -> ProbeFailure {
-    ProbeFailure::Incompatible(NyxIncompatibility::MalformedResponse {
+fn malformed(path: &'static str, error: NyxProtocolError) -> NyxJsonRequestFailure {
+    NyxJsonRequestFailure::Incompatible(NyxIncompatibility::MalformedResponse {
         path,
         detail: error.to_string(),
     })
 }
 
-fn build_request(config: &NyxClientConfig, path: &str, requested: NyxProtocolVersion) -> String {
-    format!(
-        "GET {path} HTTP/1.1\r\nHost: {}\r\nAccept: application/json\r\n{}: {requested}\r\nConnection: close\r\n\r\n",
+fn build_json_request(
+    config: &NyxClientConfig,
+    method: NyxHttpMethod,
+    path: &str,
+    requested: NyxProtocolVersion,
+    body: Option<&[u8]>,
+) -> Vec<u8> {
+    let body = body.unwrap_or_default();
+    let mut request = format!(
+        "{} {path} HTTP/1.1\r\nHost: {}\r\nAccept: application/json\r\n{}: {requested}\r\n",
+        method.as_str(),
         config.endpoint.host_header(),
         HEADER_NYX_CONTRACT_VERSION,
-    )
+    );
+    if matches!(method, NyxHttpMethod::Post) {
+        request.push_str("Content-Type: application/json\r\n");
+        request.push_str(&format!("Content-Length: {}\r\n", body.len()));
+    }
+    request.push_str("Connection: close\r\n\r\n");
+    let mut bytes = request.into_bytes();
+    bytes.extend_from_slice(body);
+    bytes
 }
 
 fn connect_and_exchange(
@@ -496,7 +564,7 @@ struct ContractResponse {
 }
 
 #[derive(Debug)]
-enum ProbeFailure {
+pub(crate) enum NyxJsonRequestFailure {
     Unavailable(NyxUnavailableReason),
     Incompatible(NyxIncompatibility),
 }

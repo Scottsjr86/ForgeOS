@@ -1329,17 +1329,26 @@ never closes the node.
 
 - **Owner:** `nyx_server`, `forge-nyx-client`
 - **Nyx cross-repo gate:** `NYX-GATE-FORGEOS-V1-NYX-101` in `docs/versions/V1/FORGEOS_V1_NYX_SERVER_DEPENDENCY_CONTRACT.md`
-- **Required Nyx evidence before Forge closure:** `POLICY-CHECKPOINT-001`, `POLICY-APPROVAL-001`, `POLICY-TOOL-015`, `PERSIST-IDEMP-KEY-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
-- **Repository boundary:** ForgeOS may not mint Nyx checkpoints, reinterpret approval scope, regenerate a gated action, or maintain a second permission engine.
+- **Verified Nyx gate input:** `docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json`
+- **Required Nyx evidence before Forge closure:** `POLICY-CHECKPOINT-001`, `POLICY-APPROVAL-001`, `POLICY-TOOL-015`, `PERSIST-IDEMP-KEY-001`; each verified `BANKED` with `PROOF_SYSTEM` from `Nyx_Server_base_16.tar`.
+- **Repository boundary:** ForgeOS may not mint Nyx checkpoints, reinterpret approval scope, regenerate a gated action, persist a competing permission ledger, execute the resumed tool locally, or maintain a second permission engine.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-STATE-000`,
   `FORGEOS-V1-HASH-000`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-NYX-101-SLICE-001`
+- **Closure records:**
+  `docs/versions/V1/skills/FORGEOS-V1-NYX-101/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-NYX-101/USER_GUIDE_SOURCE.md`
 - **Must be true:** Tool requests carry scoped authority, immutable payload identity,
-  expiration, decision, and exact resume token.
-- **Must not be true:** Approval may not authorize a different request or survive
-  payload mutation.
-- **User acceptance:** The user verifies request hashes and decision behavior.
-- **Regression shield:** Denied and expired requests cannot execute later.
+  expiration, decision, and exact resume token. ForgeOS independently reconciles
+  Nyx's request, payload, scope, policy, effect, condition, and token hashes.
+- **Must not be true:** Approval may not authorize a different request, survive
+  payload mutation, or cause ForgeOS to execute around Nyx.
+- **User acceptance:** The user runs Forge CI and the independent real-Nyx witness,
+  then verifies exact request hashes, approval, one execution, replay rejection, and
+  the Nyx-owned audit event.
+- **Regression shield:** Denied, expired, altered, consumed, and replayed requests
+  cannot execute later; malformed or contradictory Nyx responses fail closed.
 
 ## `FORGEOS-V1-AGENT-100` — Remote-agent task and budget record
 
@@ -1631,9 +1640,10 @@ CLOSED
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
 
-BLOCKED_SKILL=FORGEOS-V1-NYX-101
-ACTIVE_BLOCKER=THE_REQUIRED_NYX_SKILLS_POLICY_CHECKPOINT_001_POLICY_APPROVAL_001_POLICY_TOOL_015_AND_PERSIST_IDEMP_KEY_001_HAVE_NOT_BEEN_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
-ACTIVE_SLICE=NONE_CROSS_REPO_GATE_PROBE
+ACTIVE_SKILL=FORGEOS-V1-NYX-101
+ACTIVE_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_PUBLIC_PERMISSION_API_ADAPTER_OR_INDEPENDENT_NYX_COMPATIBLE_HASH_RECONCILIATION
+ACTIVE_SLICE=FORGEOS-V1-NYX-101-SLICE-001
+VERIFIED_NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-NYX-101/NYX_GATE_INPUT.json
 
 AVAILABLE
   FORGEOS-V1-AGENT-100
@@ -1643,7 +1653,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-No ForgeOS source skill is active. `FORGEOS-V1-NYX-101` is blocked on its Nyx-owned cross-repository gate; higher product behavior remains inactive until the required Nyx proof returns.
+`FORGEOS-V1-NYX-101` is the only active ForgeOS source skill. Its Nyx-owned gate is verified; the current work is restricted to the thin public client, independent hash reconciliation, strict response validation, fixture coverage, and the real-process witness.
 
 ## 9. Skill worksheet update fields
 
