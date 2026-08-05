@@ -10,4 +10,6 @@ pub mod patches;
 pub mod permission;
 pub mod permission_client;
 pub mod protocol;
+pub mod remote_agent;
+pub mod remote_agent_client;
 pub mod transport;

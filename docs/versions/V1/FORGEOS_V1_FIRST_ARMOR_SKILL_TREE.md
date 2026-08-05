@@ -1358,9 +1358,11 @@ never closes the node.
 - **Repository boundary:** ForgeOS may not invent terminal agent status, calculate provider truth from prose, or keep a competing canonical agent run record.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-STATE-000`, `FORGEOS-V1-HASH-000`
-- **Current state:** `BLOCKED`
+- **Current state:** `ACTIVE`
 - **Gate request:** `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_REQUEST.md`
-- **First blocker:** Required Nyx system proof for `AGENT-FOUND-002`, `AGENT-RUN-001`, `AGENT-BUDGET-001`, `ROUTING-COST-001`, and `PERSIST-RUN-001` has not yet returned from the newest Nyx_Server source.
+- **Verified gate input:** `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_INPUT.json`
+- **Active slice:** `FORGEOS-V1-AGENT-100-SLICE-001`
+- **First blocker:** `forge-nyx-client` has no public remote-agent API adapter or independent reconciliation for Nyx-owned task, source, budget, route, cost, and terminal-state records.
 - **Must be true:** Task identity, provider, model, source revision, worktree, scope,
   budget, status, response, and cost are durable and inspectable.
 - **Must not be true:** A task may not continue after cancellation or exceed its
@@ -1643,10 +1645,11 @@ CLOSED
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
 
-BLOCKED_SKILL=FORGEOS-V1-AGENT-100
-ACTIVE_BLOCKER=REQUIRED_NYX_SKILLS_AGENT_FOUND_002_AGENT_RUN_001_AGENT_BUDGET_001_ROUTING_COST_001_AND_PERSIST_RUN_001_HAVE_NOT_BEEN_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
-ACTIVE_SLICE=NONE_CROSS_REPO_GATE_PROBE
-NYX_GATE_REQUEST=docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_REQUEST.md
+ACTIVE
+  FORGEOS-V1-AGENT-100
+ACTIVE_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_PUBLIC_REMOTE_AGENT_API_ADAPTER_OR_INDEPENDENT_RECORD_RECONCILIATION
+ACTIVE_SLICE=FORGEOS-V1-AGENT-100-SLICE-001
+NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_INPUT.json
 
 AVAILABLE
   FORGEOS-V1-NYX-200
@@ -1655,9 +1658,9 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-No ForgeOS source skill is active. `FORGEOS-V1-AGENT-100` is blocked on its
-Nyx-owned cross-repository gate; higher product behavior remains inactive until
-the required Nyx proof returns.
+`FORGEOS-V1-AGENT-100` is the only active ForgeOS source skill. The Nyx-owned
+gate is verified; the active work is limited to the thin client adapter and
+independent response verification.
 
 ## 9. Skill worksheet update fields
 

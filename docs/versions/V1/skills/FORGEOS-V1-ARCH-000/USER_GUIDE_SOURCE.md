@@ -25,8 +25,8 @@ and passes its initial tests as one workspace.
 
 ## Configuration
 
-- Rust edition: 2021
-- Cargo resolver: 2
+- Rust edition: 2024
+- Cargo resolver: 3
 - Publishing: disabled for workspace crates
 - Unsafe Rust: forbidden through workspace lints
 - Workspace membership: the twelve declared ForgeOS V1 authority crates

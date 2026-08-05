@@ -232,7 +232,7 @@ impl Fixture {
                 .expect("fixture source should be written");
 
             let mut manifest =
-                format!("[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nedition = \"2021\"\n");
+                format!("[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nedition = \"2024\"\n");
             if !package.dependencies.is_empty() {
                 manifest.push_str("\n[dependencies]\n");
                 for dependency in &package.dependencies {

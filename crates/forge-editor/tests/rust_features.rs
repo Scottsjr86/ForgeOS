@@ -466,7 +466,7 @@ fn real_rust_analyzer_proves_diagnostics_definition_completion_and_symbols() {
     fs::create_dir_all(root.join("src")).expect("create real workspace");
     fs::write(
         root.join("Cargo.toml"),
-        "[package]\nname = \"forgeos_ra_witness\"\nversion = \"0.1.0\"\nedition = \"2021\"\n",
+        "[package]\nname = \"forgeos_ra_witness\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
     )
     .expect("write Cargo.toml");
     let source = b"pub fn helper() -> u32 { 42 }\npub fn broken() -> u32 {\n    let value = helper();\n    let _ = std::mem::\n    value + \"bad\"\n}\n";

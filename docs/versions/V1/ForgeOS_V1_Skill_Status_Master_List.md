@@ -2,8 +2,8 @@
 
 > Current status snapshot for the active ForgeOS V1 build.
 >
-> Source basis: `Forge_OS_V1_base_53.tar`, the canonical V1 skill tree, accepted Forge behavior-only CI through `FORGEOS-V1-NYX-101`, and the verified `Nyx_Server_base_16.tar` permission gate.
-> `FORGEOS-V1-NYX-101` is closed. The baton is blocked at the Nyx-owned `FORGEOS-V1-AGENT-100` run and budget gate.
+> Source basis: `Forge_OS_V1_base_54.tar`, the canonical V1 skill tree, accepted Forge behavior-only CI through `FORGEOS-V1-NYX-101`, and the verified `Nyx_Server_base_18.tar` remote-agent gate.
+> `FORGEOS-V1-AGENT-100` is active as a thin ForgeOS client-adapter slice.
 
 ## Snapshot
 
@@ -11,9 +11,9 @@
 |---|---:|
 | Total V1 skills | 67 |
 | ✅ Completed / closed | 36 |
-| 🔨 Active / started | 0 |
+| 🔨 Active / started | 1 |
 | 🟢 Available / ready to start | 1 |
-| ⛔ Blocked cross-repository | 1 |
+| ⛔ Blocked cross-repository | 0 |
 | 🔒 Locked by prerequisites | 29 |
 
 **Raw closed-node count:** 36 of 67, or 53.7%. This is not a release-completion percentage because higher-tier nodes integrate many lower-tier capabilities.
@@ -26,7 +26,7 @@
 | 🔨 `ACTIVE` | Started now. This is the current baton owner. |
 | 🟢 `AVAILABLE` | All direct prerequisites are complete. It can be selected, but has not started. |
 | 🔒 `LOCKED` | One or more direct prerequisites are unfinished. |
-| `BLOCKED` | Work started but hit an external or technical blocker. `FORGEOS-V1-AGENT-100` is blocked on Nyx-owned proof. |
+| `BLOCKED` | Work started but hit an external or technical blocker. None currently. |
 | `SOURCE_PROVED` | Source behavior is proved but user acceptance is still pending. None currently. |
 | `USER_ACCEPTANCE_READY` | Mechanical proof is complete and waiting for explicit user approval. None currently. |
 | `INVALIDATED` | Earlier proof was broken by a later change and must be rerun. None currently. |
@@ -40,20 +40,20 @@
 | 4 | Integrated V1 capabilities | 8 | locked 8 |
 | 3 | Complete user and operator workflows | 13 | locked 13 |
 | 2 | Functional V1 systems | 19 | closed 11, available 1, locked 7 |
-| 1 | Local mechanisms | 16 | closed 15, blocked 1, locked 0 |
+| 1 | Local mechanisms | 16 | closed 15, active 1, locked 0 |
 | 0 | Atomic foundations and guards | 10 | closed 10 |
 
 ## Current baton
 
-### ⛔ `FORGEOS-V1-AGENT-100` — Remote-agent task and budget record
+### 🔨 `FORGEOS-V1-AGENT-100` — Remote-agent task and budget record
 
 - **Tier:** 1
-- **Status:** `BLOCKED_CROSS_REPOSITORY_GATE`
-- **Current position:** ForgeOS has no legal source slice until Nyx_Server proves canonical task identity, provider/model attribution, revision/worktree scope, budget, cost, cancellation, terminal status, and durable run history.
+- **Status:** `ACTIVE`
+- **Current position:** Nyx's public 1.0 run contract is system-proved. ForgeOS is adding only a thin HTTP client and independent record validation.
 - **Direct prerequisites:** `NYX-100` ✅, `PATH-000` ✅, `STATE-000` ✅, `HASH-000` ✅
-- **Required Nyx proof:** `AGENT-FOUND-002`, `AGENT-RUN-001`, `AGENT-BUDGET-001`, `ROUTING-COST-001`, and `PERSIST-RUN-001`, each banked with at least `PROOF_SYSTEM`.
-- **Repository owner now:** `Nyx_Server`
-- **Return condition:** Fresh Nyx archive, exact receipts and hashes, public surfaces, real-server complete/failed/cancelled/budget-hit witness, Nyx CI, and standalone chat/dev result.
+- **Verified Nyx proof:** `AGENT-FOUND-002`, `AGENT-RUN-001`, `AGENT-BUDGET-001`, `ROUTING-COST-001`, and `PERSIST-RUN-001`, each banked with `PROOF_SYSTEM`.
+- **Active slice:** `FORGEOS-V1-AGENT-100-SLICE-001`
+- **Validation state:** `OPERATOR_VALIDATION_PENDING`
 
 ## Available skills right now
 
@@ -126,7 +126,7 @@ Functional subsystems assembled from local mechanisms.
 | 🟢 AVAILABLE | `FORGEOS-V1-NYX-200` | Local model selection and Nyx conversation lifecycle | ✅ `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-SESSION-201` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-201` | Project-aware Nyx read tools | 🔒 `FORGEOS-V1-NYX-200`<br>✅ `FORGEOS-V1-FILE-200`<br>✅ `FORGEOS-V1-GIT-200` |
 | 🔒 LOCKED | `FORGEOS-V1-NYX-202` | Safe registered commands and exact checkpoint resume | ✅ `FORGEOS-V1-NYX-101`<br>🔒 `FORGEOS-V1-NYX-201`<br>✅ `FORGEOS-V1-COMMAND-200` |
-| 🔒 LOCKED | `FORGEOS-V1-AGENT-200` | OpenAI heavyweight task dispatch | ⛔ `FORGEOS-V1-AGENT-100`<br>🟢 `FORGEOS-V1-NYX-200`<br>✅ `FORGEOS-V1-GIT-201` |
+| 🔒 LOCKED | `FORGEOS-V1-AGENT-200` | OpenAI heavyweight task dispatch | 🔨 `FORGEOS-V1-AGENT-100`<br>🟢 `FORGEOS-V1-NYX-200`<br>✅ `FORGEOS-V1-GIT-201` |
 | 🔒 LOCKED | `FORGEOS-V1-AGENT-201` | Returned patch intake, review, and controlled application | 🔒 `FORGEOS-V1-AGENT-200`<br>✅ `FORGEOS-V1-PATCH-100`<br>✅ `FORGEOS-V1-GIT-201` |
 | ✅ CLOSED | `FORGEOS-V1-VERIFY-200` | Version-bound build and test result records | ✅ `FORGEOS-V1-COMMAND-200`<br>✅ `FORGEOS-V1-GIT-200`<br>✅ `FORGEOS-V1-STATE-000` |
 | 🔒 LOCKED | `FORGEOS-V1-WORLD-200` | Basic Bevy shell and truthful status HUD | ✅ `FORGEOS-V1-WORLD-100`<br>✅ `FORGEOS-V1-PROJECT-200`<br>✅ `FORGEOS-V1-TERMINAL-200`<br>✅ `FORGEOS-V1-GIT-200`<br>🔒 `FORGEOS-V1-NYX-200`<br>✅ `FORGEOS-V1-VERIFY-200` |
@@ -152,7 +152,7 @@ Concrete local mechanisms and adapters that make the systems real.
 | ✅ CLOSED | `FORGEOS-V1-GIT-101` | Git mutation and worktree primitives | ✅ `FORGEOS-V1-GIT-100`<br>✅ `FORGEOS-V1-CONTRACT-000` |
 | ✅ CLOSED | `FORGEOS-V1-NYX-100` | Nyx health and versioned client protocol | ✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-GUARD-002` |
 | ✅ CLOSED | `FORGEOS-V1-NYX-101` | Permission grant, checkpoint, and immutable resume token | ✅ `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
-| ⛔ BLOCKED | `FORGEOS-V1-AGENT-100` | Remote-agent task and budget record | ✅ `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
+| 🔨 ACTIVE | `FORGEOS-V1-AGENT-100` | Remote-agent task and budget record | ✅ `FORGEOS-V1-NYX-100`<br>✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
 | ✅ CLOSED | `FORGEOS-V1-PATCH-100` | Patch identity, base validation, and safe application primitive | ✅ `FORGEOS-V1-PATH-000`<br>✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-HASH-000` |
 | ✅ CLOSED | `FORGEOS-V1-WORLD-100` | Source-backed view projection and input action routing | ✅ `FORGEOS-V1-ARCH-001`<br>✅ `FORGEOS-V1-CONTRACT-000`<br>✅ `FORGEOS-V1-GUARD-001`<br>✅ `FORGEOS-V1-GUARD-002` |
 | ✅ CLOSED | `FORGEOS-V1-RECOVERY-100` | Workspace snapshot and crash-journal primitive | ✅ `FORGEOS-V1-STATE-000`<br>✅ `FORGEOS-V1-PROCESS-000`<br>✅ `FORGEOS-V1-HASH-000` |

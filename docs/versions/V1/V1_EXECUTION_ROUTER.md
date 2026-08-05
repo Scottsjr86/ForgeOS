@@ -122,7 +122,7 @@ the router before editing. If the router conflicts with
 Current bounded state:
 
 ```text
-PROGRAM_MODE=CAPABILITY_PROBE
+PROGRAM_MODE=SLICE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
@@ -130,18 +130,18 @@ GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
 CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-NYX-101,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201]
 AVAILABLE_SKILLS=[FORGEOS-V1-NYX-200]
-BLOCKED_SKILLS=[FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[]
+BLOCKED_SKILLS=[]
+ACTIVE_SKILLS=[FORGEOS-V1-AGENT-100]
 ACTIVE_BATON_OWNER=FORGEOS-V1-AGENT-100
-ACTIVE_REPOSITORY=Nyx_Server
+ACTIVE_REPOSITORY=Forge_OS_V1
 ACTIVE_LANE=REMOTE_AGENT
-ACTIVE_SLICE=NONE_UNTIL_NYX_GATE_IS_PROVED
-SOURCE_WORK_AUTHORIZED=NO_UNTIL_NEWEST_NYX_SERVER_ARCHIVE_IS_VERIFIED
+ACTIVE_SLICE=FORGEOS-V1-AGENT-100-SLICE-001
+SOURCE_WORK_AUTHORIZED=YES_FOR_DECLARED_FORGE_CLIENT_PATHS_ONLY
 QUEUED_FIRST_SKILL=NONE
-NEXT_ACTION=COMPLETE_NYX_GATE_FORGEOS_V1_AGENT_100_IN_NYX_SERVER
-FINAL_ACTIVATION_REQUIRED=YES_AFTER_GATE_RETURN
-NYX_GATE_REQUEST=docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_REQUEST.md
-CI_ENTRYPOINT=TARGET_REPOSITORY_OWNED_CI
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_THIN_NYX_REMOTE_AGENT_CLIENT
+FINAL_ACTIVATION_REQUIRED=NO_GATE_ALREADY_VERIFIED
+NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_INPUT.json
+CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
@@ -164,11 +164,11 @@ witness created one exact `repo.write_file` checkpoint, approved and consumed it
 verified the returned hashes and audit sequence, and rejected replay. Therefore
 `FORGEOS-V1-NYX-101` is closed.
 
-The router selects `FORGEOS-V1-AGENT-100` next because it is the lowest valid
-dependency-depth frontier node. Its required behavior remains Nyx-owned. ForgeOS
-may not start a client slice until Nyx_Server returns system proof for
-`AGENT-FOUND-002`, `AGENT-RUN-001`, `AGENT-BUDGET-001`, `ROUTING-COST-001`, and
-`PERSIST-RUN-001`.
+Nyx_Server returned system proof for `AGENT-FOUND-002`, `AGENT-RUN-001`,
+`AGENT-BUDGET-001`, `ROUTING-COST-001`, and `PERSIST-RUN-001` from
+`Nyx_Server_base_18.tar`. The router activates the thin ForgeOS client slice. Nyx
+remains authoritative for run identity, routing, execution, budget enforcement,
+cancellation, continuation, provider cost, persistence, and terminal state.
 
 ## 3. Current-source intake law
 
@@ -840,68 +840,71 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-The Nyx permission client is closed. The baton is blocked at the Nyx-owned
-remote-agent task, budget, cost, cancellation, and durable run-record gate.
+The Nyx permission client is closed and the Nyx remote-agent gate is verified.
+The active slice is the thin ForgeOS remote-agent client adapter.
 
 ```yaml
 skill_id: FORGEOS-V1-AGENT-100
-state: BLOCKED
+state: ACTIVE
 lane: REMOTE_AGENT
-owning_subsystem: nyx_server, forge-nyx-client
-source_repository: Nyx_Server
-source_revision: newest clean Nyx_Server archive supplied in the Nyx work thread
-worktree_or_branch: target-repository-owned single-skill worktree
+owning_subsystem: forge-nyx-client, nyx_server
+source_repository: Forge_OS_V1
+source_revision: newest clean ForgeOS archive supplied in this thread
+worktree_or_branch: active single-skill worktree
+active_slice: FORGEOS-V1-AGENT-100-SLICE-001
 direct_prerequisites:
   - FORGEOS-V1-NYX-100
   - FORGEOS-V1-PATH-000
   - FORGEOS-V1-STATE-000
   - FORGEOS-V1-HASH-000
 originating_path_or_probe: >
-  Inspect the current Nyx agent, routing, provider-cost, cancellation, persistence,
-  and run-introspection paths; prove complete, failed, cancelled, and budget-hit
-  task records through a real independently running Nyx_Server process.
+  Consume Nyx's public create, list, read, cancel, and continue surfaces and reject
+  malformed or contradictory task, source, budget, route, cost, and terminal state.
 first_blocker: >
-  ForgeOS is forbidden from owning canonical remote-agent run state, and the newest
-  Nyx_Server source has not yet returned system proof for AGENT-FOUND-002,
-  AGENT-RUN-001, AGENT-BUDGET-001, ROUTING-COST-001, and PERSIST-RUN-001.
-active_slice: NONE_UNTIL_NYX_GATE_IS_PROVED
+  forge-nyx-client has no public remote-agent API adapter or independent record
+  reconciliation against the verified Nyx 1.0 contract.
 allowed_paths:
-  - Nyx_Server paths selected by the Nyx workflow router
-  - Nyx-owned public protocol, agent, routing, budget, cost, cancellation,
-    persistence, witness, receipt, and workflow-status paths required by the gate
+  - crates/forge-nyx-client/src/lib.rs
+  - crates/forge-nyx-client/src/remote_agent.rs
+  - crates/forge-nyx-client/src/remote_agent/**
+  - crates/forge-nyx-client/src/remote_agent_client.rs
+  - crates/forge-nyx-client/tests/nyx_remote_agent.rs
+  - crates/forge-nyx-client/tests/fixtures/remote_agent_provider.py
+  - docs/workflow/WORKFLOW_AUTHORITY.md
+  - docs/ForgeOS_header.md
+  - docs/versions/V1/V1_EXECUTION_ROUTER.md
+  - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
+  - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
+  - docs/versions/V1/skills/FORGEOS-V1-AGENT-100/**
 forbidden_paths:
-  - Forge_OS_V1 source during the Nyx gate
+  - Nyx_Server source
   - Forge-owned canonical agent-run ledger
   - direct ForgeOS provider calls
   - ForgeOS-calculated provider status or cost from prose
-  - private ForgeOS-only Nyx agent protocol
+  - agent execution or worktree mutation inside forge-nyx-client
 must_pass:
-  - all five required Nyx skills are BANKED or RELEASE_EARNED
-  - minimum proof level is PROOF_SYSTEM
-  - task identity binds provider, model, source revision, worktree, scope, and budget
-  - complete, failed, cancelled, and budget-hit terminal states are durable
-  - cancellation prevents later continuation
-  - recorded cost and budget posture remain truthful
-  - one task cannot mutate another task record or worktree
-  - a real Nyx_Server witness passes
-  - Nyx repository behavior CI passes
-  - standalone Nyx chat and development operation remains green
+  - exact request hash and server-derived task/run identities reconcile
+  - provider, model, revision, worktree, scope, budget, route, and cost bind exactly
+  - completed, failed, cancelled, and budget-hit records validate truthfully
+  - terminal records cannot continue
+  - foreign or stale control identity is rejected
+  - list ordering is deterministic and unique
+  - Forge behavior CI passes
+  - independent real-Nyx client witness passes
 must_not_claim:
-  - ForgeOS-side agent client integration
-  - FORGEOS-V1-AGENT-100 closure
-  - remote provider dispatch from ForgeOS
-  - agent patch intake or application
-  - project-aware Nyx tools
+  - Forge-owned agent execution
+  - provider dispatch around Nyx
+  - patch intake or application
+  - competing durable run state
 return_path: >
-  Return to the ForgeOS integration thread with the newest clean Nyx_Server archive,
-  exact receipt paths and SHA-256 values, public contract version and surfaces, real
-  server witness command/result, repository CI result, and standalone chat/dev result.
+  Run Forge behavior CI and the ignored real-Nyx remote-agent client witness, then
+  return exact command summaries and witness output for closure.
 ```
 
 ## 17. Cross-repository gate handling for Nyx remote-agent run authority
 
-`FORGEOS-V1-AGENT-100` may not receive a ForgeOS source slice until the current Nyx
-repository proves all required gate skills. The Nyx implementation must remain a
+`FORGEOS-V1-AGENT-100` received its ForgeOS source slice only after the current Nyx
+repository proved all required gate skills. The Nyx implementation must remain a
 general server capability for chat, development, CLI, editor, script, bot, and other
 clients. It may not depend on ForgeOS or encode Forge project truth as Nyx-owned
 canonical state.

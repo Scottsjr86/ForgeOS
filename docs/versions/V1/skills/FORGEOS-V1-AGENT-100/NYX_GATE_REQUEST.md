@@ -1,8 +1,9 @@
 # FORGEOS-V1-AGENT-100 Nyx Gate Request
 
-Status: `REQUESTED`
+Status: `VERIFIED_RETURNED`
 Gate ID: `NYX-GATE-FORGEOS-V1-AGENT-100`
 Target repository: `Nyx_Server`
+Verified return: `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_INPUT.json`
 
 ## Required Nyx skills
 

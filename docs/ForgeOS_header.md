@@ -322,45 +322,42 @@ consistent Git inspection, safe Git mutation, version-bound verification, dedica
 session bootstrap, managed external Nyx lifecycle, and the Nyx-owned permission,
 checkpoint, immutable-resume, replay-protection, and audit client are closed.
 
-The lowest-depth remaining frontier is the Nyx-owned remote-agent task and budget
-record gate. No ForgeOS source skill is active while Nyx proves the canonical run,
-budget, cost, cancellation, and persistence behavior:
+The Nyx-owned remote-agent task, budget, cost, cancellation, and persistence gate
+is verified. The only active work is the thin ForgeOS client and independent record
+verification:
 
 ```text
-PROGRAM_MODE=CAPABILITY_PROBE
-ACTIVE_QUESTION_CLASS=CROSS_REPOSITORY_GATE
+PROGRAM_MODE=SLICE
+ACTIVE_QUESTION_CLASS=V1_CAPABILITY
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 ACTIVE_RELEASE_GATE=FORGEOS-V1-AGENT-100
-ACTIVE_V1_CONTRIBUTION=NYX_OWNED_REMOTE_AGENT_TASK_BUDGET_AND_RUN_RECORD
+ACTIVE_V1_CONTRIBUTION=THIN_NYX_REMOTE_AGENT_TASK_BUDGET_AND_RUN_RECORD_CLIENT
 ACTIVE_CAPABILITY_ID=FORGEOS-V1-AGENT-100
-QUESTION=Does the current Nyx_Server expose system-proved remote-agent task identity, provider and model attribution, source revision and worktree scope, budget and cost truth, cancellation, terminal status, and durable run records that ForgeOS can consume without owning a second agent ledger?
-CURRENT_RESULT=NYX_101_CLOSED_AGENT_100_CROSS_REPO_GATE_REQUIRED
+QUESTION=Can ForgeOS submit and inspect Nyx-owned remote-agent runs while preserving exact task, provider, model, source, worktree, scope, budget, status, response, and cost identity without owning execution or a second run ledger?
+CURRENT_RESULT=NYX_REMOTE_AGENT_GATE_VERIFIED_FORGE_CLIENT_SLICE_ACTIVE
 BATON_OWNER=FORGEOS-V1-AGENT-100
 ACTIVE_LANE=REMOTE_AGENT
-ACTIVE_SLICE=NONE_UNTIL_NYX_GATE_IS_PROVED
-FIRST_BLOCKER=REQUIRED_NYX_SKILLS_AGENT_FOUND_002_AGENT_RUN_001_AGENT_BUDGET_001_ROUTING_COST_001_AND_PERSIST_RUN_001_ARE_NOT_YET_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
+ACTIVE_SLICE=FORGEOS-V1-AGENT-100-SLICE-001
+FIRST_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_PUBLIC_REMOTE_AGENT_API_ADAPTER_OR_INDEPENDENT_RECORD_RECONCILIATION
 CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-NYX-101,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201]
-ACTIVE_SKILLS=[]
+ACTIVE_SKILLS=[FORGEOS-V1-AGENT-100]
 AVAILABLE_SKILLS=[FORGEOS-V1-NYX-200]
-BLOCKED_SKILLS=[FORGEOS-V1-AGENT-100]
+BLOCKED_SKILLS=[]
 CANONICAL_FORGEOS_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_FORGEOS_ARCHIVE
 CANONICAL_NYX_SOURCE=NEWEST_USER_SUPPLIED_CLEAN_NYX_ARCHIVE
 OLDER_ARCHIVE_POLICY=SUPERSEDED_IGNORE_OR_DELETE
 ARCHIVE_FILENAME_AND_HASH_POLICY=ORIENTATION_ONLY_NOT_A_WORKFLOW_GATE
 ACTIVE_NYX_ROLE=AI_MODEL_HOST_AND_BOUNDED_AGENT_RUNTIME
-NYX_WIRING_CHEAT_SHEET_REVIEW=REQUIRED_BEFORE_TARGET_SOURCE_EDITS
-NYX_CAPABILITY_OWNERSHIP_REVIEW=REQUIRED_BEFORE_TARGET_SOURCE_EDITS
+NYX_WIRING_CHEAT_SHEET_REVIEW=COMPLETE
+NYX_CAPABILITY_OWNERSHIP_REVIEW=COMPLETE
 NYX_SOURCE_IN_FORGEOS_ARCHIVE=NO_UNLESS_EXPLICITLY_VENDOR_LOCKED
-REPOSITORY_SWITCH_NOTICE=REQUIRED_FORGE_OS_V1_TO_NYX_SERVER
 PATCH_ARTIFACT_SCOPE=ONE_REPOSITORY_ONLY
-FRESH_CHAT_INPUT=HEADER_PLUS_NEWEST_SUPPLIED_ACTIVE_REPOSITORY_ARCHIVE
-SOURCE_START_POLICY=VERIFY_FRESH_SOURCE_THEN_EXECUTE_ROUTER_NO_TAR_OR_DOC_DANCE
-SOURCE_WORK_AUTHORIZED=NO_UNTIL_NEWEST_NYX_SERVER_ARCHIVE_IS_VERIFIED
-VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_REPOSITORY_OWNED_CI
+SOURCE_WORK_AUTHORIZED=YES_FOR_DECLARED_FORGE_CLIENT_PATHS_ONLY
+VALIDATION_EXECUTION_POLICY=BEHAVIOR_ONLY_CI_VIA_SCRIPTS_RUN_CI_PY
 CI_FORBIDDEN_GATES=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 MISSING_ASSISTANT_RUST_TOOLCHAIN_POLICY=DO_NOT_BLOCK_SOURCE_PATCH
-OPERATOR_VALIDATION_STATE=NYX_101_VALIDATED_AND_CLOSED
-NEXT_REQUIRED_ACTION=IN_NYX_SERVER_COMPLETE_NYX_GATE_FORGEOS_V1_AGENT_100_THEN_RETURN_WITH_RECEIPTS_AND_FRESH_ARCHIVE
+OPERATOR_VALIDATION_STATE=PENDING_FOR_FORGEOS-V1-AGENT-100
+NEXT_REQUIRED_ACTION=RUN_FORGE_CI_AND_REAL_NYX_REMOTE_AGENT_CLIENT_WITNESS
 WRONG_REPOSITORY_POLICY=NOTIFY_AND_STOP_BEFORE_SOURCE_EDITS
 ```
 
@@ -375,19 +372,18 @@ V4 earns the full spatial developer operating system.
 ```
 
 The complete bounded authority set exists and agrees. The V1 First Armor skill
-tree is the canonical worksheet, the V1 router owns live selection, and no ForgeOS
-source skill is active while `FORGEOS-V1-AGENT-100` waits on its Nyx-owned gate.
+tree is the canonical worksheet, the V1 router owns live selection, and
+`FORGEOS-V1-AGENT-100` is the only active ForgeOS source skill.
 
-The next legal implementation belongs in `Nyx_Server`. It may establish only a
-general Nyx-owned remote-agent run contract with stable task identity, provider and
-model attribution, exact source revision and worktree scope, declared budget,
-recorded cost, cancellation, terminal outcome, response identity, and durable run
-history. Nyx_Server must remain independently usable for chat, development, CLI,
-editor, script, bot, and other clients.
+Nyx_Server already owns the general remote-agent run contract with stable task
+identity, provider and model attribution, exact source revision and worktree scope,
+declared budget, recorded cost, cancellation, terminal outcome, and durable run
+history. It remains independently usable for chat, development, CLI, editor, script,
+bot, and other clients.
 
-ForgeOS may later consume that public contract through a thin adapter. It may not
-contact providers around Nyx, invent terminal task status, calculate cost from model
-prose, mutate the authoritative worktree, or keep a competing canonical agent-run
+ForgeOS now consumes that contract through a thin adapter. It may not contact
+providers around Nyx, invent terminal task status, calculate cost from model prose,
+mutate the authoritative worktree, or keep a competing canonical agent-run
 ledger.
 
 ## 7. Program modes

@@ -1,0 +1,83 @@
+{
+  "schema": "forgeos.nyx_cross_repo_gate_input.v1",
+  "contract_id": "FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT",
+  "forge_skill_id": "FORGEOS-V1-AGENT-100",
+  "nyx_gate_id": "NYX-GATE-FORGEOS-V1-AGENT-100",
+  "nyx_source_archive": "Nyx_Server_base_18.tar",
+  "nyx_source_archive_sha256": "63ad9991229c12b4332cc68d1b9cc8e3d7691e047d5bd76f1b2aa9279825aae1",
+  "public_contract_version": "1.0",
+  "required_request_header": "x-nyx-contract-version",
+  "public_endpoints": {
+    "create_run": "POST /v1/nyx/agent/runs",
+    "list_runs": "GET /v1/nyx/agent/runs",
+    "read_run": "GET /v1/nyx/agent/runs/:run_id",
+    "cancel_run": "POST /v1/nyx/agent/runs/:run_id/cancel",
+    "continue_run": "POST /v1/nyx/agent/runs/:run_id/continue"
+  },
+  "banked_skills": [
+    {
+      "skill_id": "AGENT-FOUND-002",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/AGENT-FOUND-002-proof-remote-agent-gate-v1.json",
+      "sha256": "16f0083ce497a0b8820ce329ac1137f9ddaeaa596ab60a410877d0d5dadce0d7"
+    },
+    {
+      "skill_id": "AGENT-RUN-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/AGENT-RUN-001-proof-permission-gate-v1.json",
+      "sha256": "997ecf871e7eb0f27ac0689ebe210b0a1cac19e91cc2dba10af16e1df147331d"
+    },
+    {
+      "skill_id": "AGENT-BUDGET-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/AGENT-BUDGET-001-proof-remote-agent-gate-v1.json",
+      "sha256": "2351c1af2de186c7a3f03af68459da5e3d721005816c5e33e98568538c672bed"
+    },
+    {
+      "skill_id": "ROUTING-COST-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/ROUTING-COST-001-proof-remote-agent-gate-v1.json",
+      "sha256": "b16dccae333c2121556aa3b1e6cb2b7618422b553247484f86a9a20fc49d3ff9"
+    },
+    {
+      "skill_id": "PERSIST-RUN-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/PERSIST-RUN-001-proof-permission-gate-v1.json",
+      "sha256": "c2f605c2107a42b583043e56459ec884f7dc0b015e00ac04d20ba2b36825d475"
+    }
+  ],
+  "real_server_witness": {
+    "command": "python3 scripts/run_remote_agent_gate_witness.py --out experiments/skills/agent/runs/remote-agent-run-gate-v1/real_server_witness_v1.json",
+    "result": "PASS",
+    "path": "experiments/skills/agent/runs/remote-agent-run-gate-v1/real_server_witness_v1.json",
+    "sha256": "d0f7e89b338dd3007d8cd6b60dd99733440107a29ee58d54570c3e745b4eeeb4"
+  },
+  "nyx_ci": {
+    "command": "python3 scripts/run_ci.py professional",
+    "result": "PASS"
+  },
+  "standalone_chat_dev_result": "PASS",
+  "wiring_preflight": {
+    "canonical_owner": "Nyx_Server",
+    "nyx_engine_families": ["AGENT", "ROUTING", "PERSISTENCE"],
+    "forgeos_role": "thin_http_client_request_envelope_presenter_and_independent_record_verifier",
+    "transport": "HTTP/1.1 over configured local TCP or Unix socket",
+    "inspected_nyx_paths": [
+      "crates/nyx_protocol/src/remote_agent.rs",
+      "crates/nyx_protocol/src/routing.rs",
+      "crates/nyx_core/src/remote_agent.rs",
+      "crates/nyx_server/src/http/remote_agent.rs",
+      "scripts/run_remote_agent_gate_witness.py",
+      "experiments/skills/agent/runs/remote-agent-run-gate-v1/real_server_witness_v1.json"
+    ]
+  },
+  "ownership_preflight": {
+    "nyx_server_remains_independent": true,
+    "forgeos_embeds_agent_execution": false,
+    "forgeos_persists_competing_run_state": false,
+    "forgeos_calculates_provider_cost_from_prose": false,
+    "forgeos_contacts_model_providers_directly": false,
+    "forgeos_mutates_remote_agent_worktrees": false
+  },
+  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+}
