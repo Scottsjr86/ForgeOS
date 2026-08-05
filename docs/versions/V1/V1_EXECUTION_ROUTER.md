@@ -122,23 +122,24 @@ the router before editing. If the router conflicts with
 Current bounded state:
 
 ```text
-PROGRAM_MODE=SLICE
+PROGRAM_MODE=CAPABILITY_PROBE
 ACTIVE_RELEASE_TARGET=FORGEOS_V1_FIRST_ARMOR
 CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200]
-AVAILABLE_SKILLS=[FORGEOS-V1-NYX-101,FORGEOS-V1-AGENT-100]
-ACTIVE_SKILLS=[FORGEOS-V1-SESSION-201]
-ACTIVE_BATON_OWNER=FORGEOS-V1-SESSION-201
-ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=SESSION_AND_HOST_INTEGRATION
-SOURCE_WORK_AUTHORIZED=YES
-QUEUED_FIRST_SKILL=NONE_ALREADY_ACTIVE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_MANAGED_NYX_SERVICE_LIFECYCLE
-FINAL_ACTIVATION_REQUIRED=NO_COMPLETE
-CI_ENTRYPOINT=python3 scripts/run_ci.py
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201]
+AVAILABLE_SKILLS=[FORGEOS-V1-AGENT-100,FORGEOS-V1-NYX-200]
+BLOCKED_SKILLS=[FORGEOS-V1-NYX-101]
+ACTIVE_SKILLS=[]
+ACTIVE_BATON_OWNER=FORGEOS-V1-NYX-101
+ACTIVE_REPOSITORY=Nyx_Server
+ACTIVE_LANE=NYX_POLICY_AND_PERMISSION
+SOURCE_WORK_AUTHORIZED=NO_UNTIL_NEWEST_NYX_SERVER_ARCHIVE_IS_VERIFIED
+QUEUED_FIRST_SKILL=FORGEOS-V1-NYX-101
+NEXT_ACTION=COMPLETE_REQUIRED_NYX_PERMISSION_AND_IDEMPOTENT_RESUME_GATE
+FINAL_ACTIVATION_REQUIRED=YES_AFTER_NYX_GATE_PROOF
+CI_ENTRYPOINT=REPOSITORY_OWNED_BEHAVIOR_CI
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
@@ -151,13 +152,12 @@ and mutation primitives, stable patch application, persistent project registry/w
 restoration, Nyx public health/version discovery, source-backed Forge World
 projection, recovery, repository browsing/search, multi-buffer atomic save, Rust
 language intelligence, managed project-bound terminals, registered command execution,
-consistency-checked Git inspection, safe project-bound Git mutation, and version-bound
-verification and dedicated display-manager session bootstrap are closed. Nyx
-checkpoint transport and remote-agent records remain available but inactive.
-`FORGEOS-V1-SESSION-201` is the only active source skill. It may only add external
-Nyx process supervision, Nyx-owned health consumption, duplicate-instance rejection,
-bounded restart, and clean logout stop. It may not embed Nyx behavior, own model or
-conversation state, call providers, configure a compositor, or close packaging.
+consistency-checked Git inspection, safe project-bound Git mutation, version-bound
+verification, dedicated display-manager session bootstrap, and managed external Nyx
+service lifecycle are closed. `FORGEOS-V1-NYX-101` is blocked at its Nyx-owned
+cross-repository gate. No ForgeOS source edit is authorized until current Nyx source
+proves checkpoint, approval, scoped tool authority, and idempotent immutable resume
+semantics without becoming client-specific.
 
 ## 3. Current-source intake law
 
@@ -829,79 +829,73 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-Dedicated ForgeOS session bootstrap is active.
+Managed external Nyx service lifecycle is closed. The baton is blocked at the
+Nyx-owned permission and immutable-resume gate.
 
 ```yaml
-skill_id: FORGEOS-V1-SESSION-200
-state: ACTIVE
-lane: SESSION_AND_HOST_INTEGRATION
-owning_subsystem: forge-session
-source_repository: Forge_OS_V1
-source_revision: Forge_OS_V1_base_49.tar
-worktree_or_branch: current single-skill worktree
+skill_id: FORGEOS-V1-NYX-101
+state: BLOCKED
+lane: NYX_POLICY_AND_PERMISSION
+owning_subsystem: nyx_server, forge-nyx-client
+source_repository: Nyx_Server
+source_revision: newest clean Nyx_Server archive supplied in the Nyx work thread
+worktree_or_branch: target-repository-owned single-skill worktree
 direct_prerequisites:
-  - FORGEOS-V1-SESSION-100
+  - FORGEOS-V1-NYX-100
+  - FORGEOS-V1-STATE-000
+  - FORGEOS-V1-HASH-000
 originating_path_or_probe: >
-  Launch an executable fixture through the real forgeos-session-launcher binary;
-  verify exact child arguments, a sanitized display-manager environment, `/` as the
-  working directory, exact nonzero child status, missing-executable failure, and a
-  canonical shell-free desktop-entry source.
+  Inspect the current Nyx public policy, tool, checkpoint, approval, persistence,
+  and restart paths; prove that one exact gated request can be approved, denied,
+  expired, resumed once, rejected after payload mutation, and rejected after replay
+  through a real independently running Nyx_Server process.
 first_blocker: >
-  ForgeOS has a composition binary and deterministic internal session state machine,
-  but no canonical display-manager entry or sanitized shell-free launcher that starts
-  from a worktree-independent directory and propagates real startup failure.
-active_slice: FORGEOS-V1-SESSION-200-SLICE-001
+  ForgeOS is forbidden from owning checkpoint or approval semantics, and the newest
+  Nyx_Server source has not yet returned system proof for POLICY-CHECKPOINT-001,
+  POLICY-APPROVAL-001, POLICY-TOOL-015, and PERSIST-IDEMP-KEY-001.
+active_slice: NONE_UNTIL_NYX_GATE_IS_PROVED
 allowed_paths:
-  - crates/forge-session/src/lib.rs
-  - crates/forge-session/src/bootstrap.rs
-  - crates/forge-session/src/bin/forgeos-session-launcher.rs
-  - crates/forge-session/assets/forgeos.desktop
-  - crates/forge-session/tests/session_bootstrap.rs
-  - docs/ForgeOS_header.md
-  - docs/workflow/WORKFLOW_AUTHORITY.md
-  - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
-  - docs/versions/V1/V1_EXECUTION_ROUTER.md
-  - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-VERIFY-200/**
-  - docs/versions/V1/skills/FORGEOS-V1-SESSION-200/**
+  - Nyx_Server paths selected by the Nyx workflow router
+  - Nyx-owned public protocol, policy, tool, checkpoint, approval, persistence, test,
+    witness, receipt, and workflow-status paths required by the selected Nyx skills
 forbidden_paths:
-  - crates/forge-nyx-client/**
-  - crates/forge-world/**
-  - crates/forge-app/src/composition/**
-  - host display-manager configuration
-  - nyx_server source
+  - Forge_OS_V1 source during the Nyx gate
+  - Forge-owned checkpoint or approval state
+  - private ForgeOS-only Nyx protocol
+  - direct provider or tool execution around Nyx
 must_pass:
-  - desktop entry references one absolute installed launcher without shell interpolation
-  - default composition root is one absolute installed path
-  - launcher clears the ambient environment and restores only declared session variables
-  - launcher does not source a shell profile or inherit the caller's current directory
-  - composition root starts from `/` with exact child arguments
-  - normal child exit status is propagated exactly
-  - invalid environment, relative executable, and spawn failure return explicit nonzero status
-  - other desktop-session files are never modified
-  - python3 scripts/run_ci.py
+  - all four required Nyx skills are BANKED or RELEASE_EARNED
+  - minimum proof level is PROOF_SYSTEM
+  - exact request identity binds scope, payload, decision, expiration, and resume token
+  - altered, denied, expired, consumed, and replayed requests fail closed
+  - restart preserves idempotent replay protection
+  - a real Nyx_Server witness passes
+  - Nyx repository behavior CI passes
+  - standalone Nyx chat and development operation remains green
 must_not_claim:
-  - installed host session files
-  - SDDM, GDM, or other display-manager configuration
-  - compositor or Forge World shell completion
-  - Nyx service supervision
-  - clean-machine package installation
-  - Tier-3 login-session closure
+  - ForgeOS-side client integration
+  - FORGEOS-V1-NYX-101 closure
+  - registered-command execution through ForgeOS
+  - project-aware Nyx tools
+  - remote-agent dispatch
 return_path: >
-  After operator CI passes, close only FORGEOS-V1-SESSION-200. Reevaluate its direct
-  unlocks and the current frontier; no dependent skill becomes active by adjacency.
+  Return to the ForgeOS integration thread with the newest clean Nyx_Server archive,
+  exact receipt paths and SHA-256 values, public contract version and surfaces, real
+  server witness command/result, repository CI result, and standalone chat/dev result.
 ```
 
-## 17. Direct unlock handling for dedicated session bootstrap
+## 17. Cross-repository gate handling for Nyx permission authority
 
-`FORGEOS-V1-SESSION-200` may close only after behavior-only CI proves the real
-launcher binary, deterministic child environment, shell-free exact execution,
-worktree-independent startup, truthful failure propagation, and canonical desktop
-entry source.
+`FORGEOS-V1-NYX-101` may not receive a ForgeOS source slice until the current Nyx
+repository proves all required gate skills. The Nyx implementation must remain a
+general server capability for chat, development, CLI, editor, script, bot, and other
+clients. It may not depend on ForgeOS or encode Forge project truth into the Nyx
+canonical permission model.
 
-Closing `FORGEOS-V1-SESSION-200` satisfies one prerequisite of the reproducible
-session package and the later complete login journey. It does not close managed
-service lifecycle, install files on the host, or activate a display manager.
+After the gate returns, ForgeOS may activate a thin client-adapter slice that consumes
+the Nyx-owned contract, presents exact requests and decisions, and independently
+verifies payload identity. ForgeOS still may not mint checkpoints, broaden scope,
+regenerate a gated action, or maintain a competing pending-action store.
 
 ## 18. Final closure routing
 
@@ -941,9 +935,9 @@ Every source-capable ForgeOS turn must:
 
 ```text
 1. read docs/ForgeOS_header.md
-2. extract the newest clean user-supplied ForgeOS archive into an empty directory
-3. ignore all older archives
-4. inspect current source and Git-equivalent state
+2. identify the baton repository from the live router
+3. extract the newest clean user-supplied archive for that repository into an empty directory
+4. ignore all older archives and inspect current source and Git-equivalent state
 5. read docs/MISSION_FORGEOS.md
 6. read docs/GOVERNING_LAWS.md
 7. read docs/workflow/WORKFLOW_AUTHORITY.md section 2
@@ -959,8 +953,8 @@ Every source-capable ForgeOS turn must:
 17. restate the one skill, one blocker, one slice, pass edge, block edge, allowed
     paths, forbidden paths, public contracts, required CI command, and return path
 18. edit only the declared source and authority paths
-19. run or hand off only python3 scripts/run_ci.py as canonical CI
-20. update the mandatory status mirror in the same patch as any state transition
+19. run or hand off only the active repository's declared behavior CI
+20. update the mandatory status mirror in the same repository patch as any state transition
 ```
 
 After every skill-state transition, update the master status mirror in the same patch.

@@ -849,8 +849,8 @@ never closes the node.
 - **Required Nyx evidence before Forge closure:** `API-FOUND-008`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** ForgeOS may supervise Nyx but may not embed, fork, or recreate the Nyx server/runtime inside forge-session or forge-nyx-client.
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-SESSION-201-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 79 suites, 374 tests passed, 0 failed, 2 ignored, and all three structural guards green.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-SESSION-201/CLOSURE_AND_SPEC.md`,
   `docs/versions/V1/skills/FORGEOS-V1-SESSION-201/USER_GUIDE_SOURCE.md`, and
@@ -1629,21 +1629,21 @@ CLOSED
   FORGEOS-V1-GIT-201
   FORGEOS-V1-VERIFY-200
   FORGEOS-V1-SESSION-200
+  FORGEOS-V1-SESSION-201
 
-ACTIVE_SKILL=FORGEOS-V1-SESSION-201
-ACTIVE_BLOCKER=FORGEOS_HAS_DECLARATIVE_SERVICE_STATE_AND_A_NYX_PUBLIC_HEALTH_CLIENT_BUT_NO_SINGLE_PRODUCT_RUNTIME_THAT_OWNS_ONE_EXTERNAL_NYX_PROCESS_REJECTS_DUPLICATES_APPLIES_BOUNDED_RESTART_AND_STOPS_ON_LOGOUT
-ACTIVE_SLICE=FORGEOS-V1-SESSION-201-SLICE-001
+BLOCKED_SKILL=FORGEOS-V1-NYX-101
+ACTIVE_BLOCKER=THE_REQUIRED_NYX_SKILLS_POLICY_CHECKPOINT_001_POLICY_APPROVAL_001_POLICY_TOOL_015_AND_PERSIST_IDEMP_KEY_001_HAVE_NOT_BEEN_VERIFIED_FROM_THE_NEWEST_NYX_SERVER_SOURCE
+ACTIVE_SLICE=NONE_CROSS_REPO_GATE_PROBE
 
 AVAILABLE
-  FORGEOS-V1-NYX-101
   FORGEOS-V1-AGENT-100
+  FORGEOS-V1-NYX-200
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-SESSION-201` is active. Higher product behavior remains inactive
-until the router selects it.
+No ForgeOS source skill is active. `FORGEOS-V1-NYX-101` is blocked on its Nyx-owned cross-repository gate; higher product behavior remains inactive until the required Nyx proof returns.
 
 ## 9. Skill worksheet update fields
 

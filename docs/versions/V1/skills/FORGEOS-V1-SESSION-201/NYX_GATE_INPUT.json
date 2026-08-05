@@ -30,5 +30,5 @@
     "forgeos_owns_nyx_session_or_model_state": false,
     "forgeos_contacts_model_providers_directly": false
   },
-  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+  "forge_validation_state": "OPERATOR_VALIDATED_CLOSED"
 }

@@ -1,9 +1,9 @@
 # FORGEOS-V1-SESSION-201 Closure and Specification
 
-Status: `ACTIVE_OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
 Capability: Managed ForgeOS and Nyx service lifecycle
 Active slice: `FORGEOS-V1-SESSION-201-SLICE-001`
-Source authority: `Forge_OS_V1_base_50.tar`
+Source authority: `Forge_OS_V1_base_51.tar`
 
 ## Capability statement
 
@@ -52,14 +52,15 @@ crates/forge-nyx-client/tests/nyx_health.rs
 python3 scripts/run_ci.py
 ```
 
-## Operator validation still required
+## Operator validation
+
+The operator ran:
 
 ```bash
 python3 scripts/run_ci.py
 ```
 
-The skill remains active until the behavior-only CI command passes on the operator
-host.
+Result: `PASS` with 79 suites, 374 tests passed, 0 failed, 2 ignored, and all three structural guards green. The bounded managed-service capability is closed.
 
 ## Explicit non-claims
 
