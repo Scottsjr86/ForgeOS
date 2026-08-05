@@ -12,3 +12,4 @@ pub mod patch;
 pub mod ports;
 pub mod processes;
 pub mod pty;
+pub mod service_process;

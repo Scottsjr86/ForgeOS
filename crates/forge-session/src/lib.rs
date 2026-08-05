@@ -6,4 +6,5 @@
 pub mod bootstrap;
 pub mod lifecycle;
 pub mod recovery;
+pub mod service_runtime;
 pub mod services;

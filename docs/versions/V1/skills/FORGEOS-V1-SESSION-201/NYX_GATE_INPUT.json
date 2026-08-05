@@ -1,0 +1,34 @@
+{
+  "schema": "forgeos.nyx_cross_repo_gate_input.v1",
+  "contract_id": "FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT",
+  "forge_skill_id": "FORGEOS-V1-SESSION-201",
+  "nyx_gate_id": "NYX-GATE-FORGEOS-V1-SESSION-201",
+  "nyx_source_archive": "Nyx_Server_base_13.tar",
+  "nyx_source_archive_sha256": "800e499b0d9b7d9aa60d4c55920f9e9dc7be48f1c4a52fbd794800c8f9c3b26d",
+  "public_contract_version": "1.0",
+  "required_nyx_skills": [
+    {
+      "skill_id": "API-FOUND-008",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-FOUND-008-proof-public-api-gate-v1.json",
+      "sha256": "159dea4a57bf6292aa15e7752a685a9ceccbb0d2a46b80c85d97281c71309291"
+    }
+  ],
+  "reused_real_server_witness": {
+    "path": "experiments/skills/api/runs/public-api-gate-v1/real_server_witness_v1.json",
+    "sha256": "757e3b06e35804be3b62b7fed51664fecc31663f10d7130873151c9b788e2ed4",
+    "result": "PASS"
+  },
+  "wiring_preflight": {
+    "nyx_owner": "Nyx_Server",
+    "forgeos_role": "external_process_supervisor_and_public_health_client",
+    "transport": "HTTP/1.1 over configured local TCP or Unix socket"
+  },
+  "ownership_preflight": {
+    "nyx_server_remains_independent": true,
+    "forgeos_embeds_nyx_behavior": false,
+    "forgeos_owns_nyx_session_or_model_state": false,
+    "forgeos_contacts_model_providers_directly": false
+  },
+  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+}

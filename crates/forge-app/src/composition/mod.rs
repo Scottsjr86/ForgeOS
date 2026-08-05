@@ -6,6 +6,7 @@ pub mod command_workspace;
 pub mod editor_workspace;
 pub mod git_mutation_workspace;
 pub mod git_workspace;
+pub mod nyx_service;
 pub mod terminal_workspace;
 pub mod verification_workspace;
 

@@ -828,8 +828,8 @@ never closes the node.
 
 - **Owner:** `forge-session`
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`
-- **Current state:** `ACTIVE`
-- **Active slice:** `FORGEOS-V1-SESSION-200-SLICE-001`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 77 suites, 365 tests passed, 0 failed, 2 ignored, and all three structural guards green.
 - **Source records:**
   `docs/versions/V1/skills/FORGEOS-V1-SESSION-200/CLOSURE_AND_SPEC.md` and
   `docs/versions/V1/skills/FORGEOS-V1-SESSION-200/USER_GUIDE_SOURCE.md`
@@ -849,7 +849,12 @@ never closes the node.
 - **Required Nyx evidence before Forge closure:** `API-FOUND-008`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** ForgeOS may supervise Nyx but may not embed, fork, or recreate the Nyx server/runtime inside forge-session or forge-nyx-client.
 - **Prerequisites:** `FORGEOS-V1-SESSION-100`, `FORGEOS-V1-NYX-100`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-SESSION-201-SLICE-001`
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-201/CLOSURE_AND_SPEC.md`,
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-201/USER_GUIDE_SOURCE.md`, and
+  `docs/versions/V1/skills/FORGEOS-V1-SESSION-201/NYX_GATE_INPUT.json`
 - **Must be true:** Required services start in declared order, expose health, restart
   within policy, and stop cleanly on logout.
 - **Must not be true:** Forge World may not infer service health from process presence
@@ -1623,13 +1628,13 @@ CLOSED
   FORGEOS-V1-GIT-200
   FORGEOS-V1-GIT-201
   FORGEOS-V1-VERIFY-200
+  FORGEOS-V1-SESSION-200
 
-ACTIVE_SKILL=FORGEOS-V1-SESSION-200
-ACTIVE_BLOCKER=FORGEOS_HAS_A_COMPOSITION_BINARY_AND_INTERNAL_SESSION_STATE_MACHINE_BUT_NO_CANONICAL_DISPLAY_MANAGER_ENTRY_OR_SANITIZED_SHELL_FREE_LAUNCHER_THAT_PROPAGATES_REAL_STARTUP_FAILURE
-ACTIVE_SLICE=FORGEOS-V1-SESSION-200-SLICE-001
+ACTIVE_SKILL=FORGEOS-V1-SESSION-201
+ACTIVE_BLOCKER=FORGEOS_HAS_DECLARATIVE_SERVICE_STATE_AND_A_NYX_PUBLIC_HEALTH_CLIENT_BUT_NO_SINGLE_PRODUCT_RUNTIME_THAT_OWNS_ONE_EXTERNAL_NYX_PROCESS_REJECTS_DUPLICATES_APPLIES_BOUNDED_RESTART_AND_STOPS_ON_LOGOUT
+ACTIVE_SLICE=FORGEOS-V1-SESSION-201-SLICE-001
 
 AVAILABLE
-  FORGEOS-V1-SESSION-201
   FORGEOS-V1-NYX-101
   FORGEOS-V1-AGENT-100
 
@@ -1637,7 +1642,7 @@ LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-Only `FORGEOS-V1-SESSION-200` is active. Higher product behavior remains inactive
+Only `FORGEOS-V1-SESSION-201` is active. Higher product behavior remains inactive
 until the router selects it.
 
 ## 9. Skill worksheet update fields
