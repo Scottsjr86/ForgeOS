@@ -3,7 +3,7 @@ use forge_core::recovery::WorkspaceRecoveryRecord;
 use forge_project::recovery_store::{
     RecoveryChoice, RecoveryImageStatus, WorkspaceRecoveryStore, WorkspaceRecoveryStoreError,
 };
-use forge_protocol::identities::{ProjectId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId};
 use std::fs;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};

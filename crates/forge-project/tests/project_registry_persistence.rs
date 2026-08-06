@@ -9,7 +9,7 @@ use forge_core::projects::{
     AllowedProjectRoot, LanguageProfile, ManifestCommand, ProjectManifest, ProjectSetting,
 };
 use forge_project::registry_store::{PersistentProjectRegistry, PersistentProjectRegistryError};
-use forge_protocol::identities::{CommandId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProjectId, RepositoryId};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -237,9 +237,11 @@ fn duplicate_identity_failure_does_not_publish_partial_state() {
         .unwrap();
     let before = fs::read(&state_path).unwrap();
 
-    assert!(registry
-        .register(manifest(1, 22, "Duplicate"), &commands(22), &second)
-        .is_err());
+    assert!(
+        registry
+            .register(manifest(1, 22, "Duplicate"), &commands(22), &second)
+            .is_err()
+    );
     assert_eq!(fs::read(&state_path).unwrap(), before);
     assert_eq!(registry.len(), 1);
 }
@@ -301,16 +303,20 @@ fn invalid_allowed_root_and_wrong_command_repository_fail_before_publish() {
     fs::remove_dir_all(repo.join("src")).unwrap();
     fs::write(repo.join("src"), b"not a directory").unwrap();
 
-    assert!(registry
-        .register(manifest(1, 11, "ForgeOS"), &commands(11), &repo)
-        .is_err());
+    assert!(
+        registry
+            .register(manifest(1, 11, "ForgeOS"), &commands(11), &repo)
+            .is_err()
+    );
     assert!(registry.is_empty());
 
     fs::remove_file(repo.join("src")).unwrap();
     fs::create_dir(repo.join("src")).unwrap();
-    assert!(registry
-        .register(manifest(1, 11, "ForgeOS"), &commands(99), &repo)
-        .is_err());
+    assert!(
+        registry
+            .register(manifest(1, 11, "ForgeOS"), &commands(99), &repo)
+            .is_err()
+    );
     assert!(registry.is_empty());
 }
 

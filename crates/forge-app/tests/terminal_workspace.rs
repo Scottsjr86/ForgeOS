@@ -6,7 +6,7 @@ use forge_app::composition::terminal_workspace::{
 };
 use forge_core::projects::{AllowedProjectRoot, LanguageProfile, ProjectManifest};
 use forge_project::paths::{RepositoryBoundary, RepositoryBoundaryError};
-use forge_protocol::identities::{ProjectId, RepositoryId, TerminalId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId, TerminalId};
 use forge_terminal::managed::{ManagedTerminalError, ManagedTerminalHandle};
 use forge_terminal::pty::PtyDimensions;
 use std::ffi::OsString;
@@ -133,9 +133,11 @@ fn terminal_launch_is_bound_to_project_repository_and_allowed_directory() {
         .expect("spawn project terminal");
     let output = collect_until(&mut workspace, handle, b"\x00");
     let expected = fixture.repository.join("src/nested");
-    assert!(output
-        .windows(expected.as_os_str().as_bytes().len())
-        .any(|window| window == expected.as_os_str().as_bytes()));
+    assert!(
+        output
+            .windows(expected.as_os_str().as_bytes().len())
+            .any(|window| window == expected.as_os_str().as_bytes())
+    );
     assert_eq!(handle.project_id(), fixture.manifest.project_id());
     assert_eq!(handle.repository_id(), fixture.manifest.repository_id());
 }

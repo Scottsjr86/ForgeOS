@@ -2,7 +2,7 @@ use super::types::{LspError, LspProtocolError, RustAnalyzerConfig};
 use crate::processes::{
     configure_managed_process, terminate_managed_process, terminate_remaining_managed_process_group,
 };
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::VecDeque;
 use std::io::{self, BufRead, BufReader, Read, Write};
 use std::process::{Child, ChildStdin, Command, Stdio};

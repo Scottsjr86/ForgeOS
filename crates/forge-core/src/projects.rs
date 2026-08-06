@@ -4,7 +4,7 @@
 //! discovery and repository-boundary effects remain in `forge-project`.
 
 use crate::state::{StateRecord, StateRecordError};
-use forge_protocol::identities::{CommandId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::paths::{RepositoryPathError, RepositoryRelativePath};
 use std::fmt;
 use std::str;
@@ -392,7 +392,7 @@ impl ProjectManifest {
                 }
                 FIELD_SETTINGS => set_once(&mut settings, decode_settings(payload)?, tag)?,
                 _ if required => {
-                    return Err(ProjectManifestError::UnknownRequiredField { field: tag })
+                    return Err(ProjectManifestError::UnknownRequiredField { field: tag });
                 }
                 _ => {}
             }

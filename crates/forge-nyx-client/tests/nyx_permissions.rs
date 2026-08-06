@@ -5,7 +5,7 @@ use forge_nyx_client::permission::{
 use forge_nyx_client::permission_client::{NyxPermissionClient, NyxPermissionClientError};
 use forge_nyx_client::protocol::NyxProtocolVersion;
 use forge_nyx_client::transport::{NyxClientConfig, NyxTransportEndpoint};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::io::{Read, Write};
 use std::net::{SocketAddr, TcpListener};
 use std::sync::Arc;

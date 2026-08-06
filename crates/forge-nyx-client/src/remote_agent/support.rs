@@ -1,6 +1,6 @@
 use crate::canonical_json::raw_sha256_hex;
-use serde::de::DeserializeOwned;
 use serde::Serialize;
+use serde::de::DeserializeOwned;
 use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -45,7 +45,10 @@ impl fmt::Display for NyxRemoteAgentProtocolError {
                 "Nyx remote-agent hash mismatch for {field}: expected {expected}, got {actual}"
             ),
             Self::ImmutableMismatch { field } => {
-                write!(formatter, "Nyx remote-agent immutable field changed: {field}")
+                write!(
+                    formatter,
+                    "Nyx remote-agent immutable field changed: {field}"
+                )
             }
         }
     }

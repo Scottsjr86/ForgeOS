@@ -3,13 +3,13 @@
 use forge_core::projects::{AllowedProjectRoot, LanguageProfile, ProjectManifest};
 use forge_project::files::{FileExpectation, ProjectFileAccess, ProjectFileError, WriteDurability};
 use forge_project::paths::RepositoryBoundary;
-use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::hashes::{HashDomain, hash_canonical_bytes};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryPathRequest;
 use std::ffi::OsString;
 use std::fs;
 use std::os::unix::ffi::OsStringExt;
-use std::os::unix::fs::{symlink, PermissionsExt};
+use std::os::unix::fs::{PermissionsExt, symlink};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 

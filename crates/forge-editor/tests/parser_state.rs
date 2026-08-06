@@ -46,10 +46,12 @@ fn valid_rust_exposes_named_syntax_spans_for_exact_version() {
     assert_eq!(snapshot.root_kind(), "source_file");
     assert_eq!(snapshot.mode(), ParseMode::Initial);
     assert!(!snapshot.has_errors());
-    assert!(snapshot
-        .spans()
-        .iter()
-        .any(|span| span.kind() == "function_item"));
+    assert!(
+        snapshot
+            .spans()
+            .iter()
+            .any(|span| span.kind() == "function_item")
+    );
     assert_eq!(snapshot.source_len(), buffer.bytes().len());
 }
 
@@ -116,10 +118,12 @@ fn incremental_update_advances_to_the_exact_buffer_generation() {
             .update(buffer, &previous)
             .expect("incremental update succeeds");
         assert_eq!(snapshot.mode(), ParseMode::Incremental);
-        assert!(snapshot
-            .spans()
-            .iter()
-            .any(|span| span.kind() == "identifier"));
+        assert!(
+            snapshot
+                .spans()
+                .iter()
+                .any(|span| span.kind() == "identifier")
+        );
     }
     assert_eq!(parsed.content_version(), buffer.content_version());
     assert!(parsed.snapshot_for(buffer).is_ok());
@@ -144,10 +148,12 @@ fn structural_edit_reports_changed_ranges() {
         .update(buffer, &previous)
         .expect("incremental update succeeds");
     assert!(!snapshot.changed_ranges().is_empty());
-    assert!(snapshot
-        .changed_ranges()
-        .iter()
-        .all(|range| range.start_byte() <= range.end_byte()));
+    assert!(
+        snapshot
+            .changed_ranges()
+            .iter()
+            .all(|range| range.start_byte() <= range.end_byte())
+    );
 }
 
 #[test]

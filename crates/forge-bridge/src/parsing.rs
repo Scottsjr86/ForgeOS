@@ -6,7 +6,7 @@
 //! content identity, edits a cloned syntax tree, and commits the new tree only
 //! after parsing succeeds.
 
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use std::fmt;
 use tree_sitter::{InputEdit, Node, Parser, Point, Range, Tree};
 

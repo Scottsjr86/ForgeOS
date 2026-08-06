@@ -6,7 +6,7 @@
 //! `forge-project`; this module only models the state transitions required to
 //! drive those operations without creating duplicate authorities.
 
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::RepositoryId;
 use forge_protocol::paths::RepositoryRelativePath;
 use std::collections::BTreeMap;

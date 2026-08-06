@@ -1,10 +1,10 @@
 use forge_core::state::StateRecord;
 use forge_core::verification::{
-    VerificationLedger, VerificationLedgerError, VerificationOutcome, VerificationOutputReference,
-    VerificationRecord, VerificationSourceState, VERIFICATION_LEDGER_STATE_RECORD_TYPE,
+    VERIFICATION_LEDGER_STATE_RECORD_TYPE, VerificationLedger, VerificationLedgerError,
+    VerificationOutcome, VerificationOutputReference, VerificationRecord, VerificationSourceState,
 };
 use forge_protocol::hashes::ContentHash;
-use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProcessId, ProjectId, RepositoryId};
 
 fn id<T>(byte: u8, constructor: fn([u8; IDENTITY_BYTES]) -> T) -> T {
     constructor([byte; IDENTITY_BYTES])

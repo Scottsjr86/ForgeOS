@@ -10,7 +10,7 @@ use forge_git::mutation::{
 };
 use forge_git::status::GitStatusEntry;
 use forge_project::paths::RepositoryBoundary;
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use std::ffi::OsString;
 use std::fs;
@@ -263,13 +263,15 @@ fn confirmed_restore_discards_only_selected_tracked_bytes() {
         fs::read(fixture.repository.join("src/other.rs")).unwrap(),
         b"keep me\n"
     );
-    assert!(restored
-        .after()
-        .inspection()
-        .status()
-        .entries()
-        .iter()
-        .all(|entry| entry.path().as_bytes() != b"src/lib.rs"));
+    assert!(
+        restored
+            .after()
+            .inspection()
+            .status()
+            .entries()
+            .iter()
+            .all(|entry| entry.path().as_bytes() != b"src/lib.rs")
+    );
 
     let current = workspace.inspect().unwrap();
     assert!(matches!(
@@ -412,9 +414,11 @@ fn foreign_project_snapshot_cannot_authorize_mutation() {
         first_workspace.stage(&foreign, vec![relative("src/lib.rs")]),
         Err(ProjectGitMutationWorkspaceError::ProjectMismatch { .. })
     ));
-    assert!(git_ok(&first.repository, &["diff", "--cached", "--quiet"])
-        .status
-        .success());
+    assert!(
+        git_ok(&first.repository, &["diff", "--cached", "--quiet"])
+            .status
+            .success()
+    );
 }
 
 #[test]
@@ -433,16 +437,18 @@ fn non_utf8_selected_path_reaches_native_git_without_loss() {
     let staged = workspace
         .stage(&before, vec![relative(&relative_path)])
         .unwrap();
-    assert!(staged
-        .after()
-        .inspection()
-        .status()
-        .entries()
-        .iter()
-        .any(|entry| {
-            entry.path().as_bytes() == raw
-                && entry.status().is_some_and(|status| status.index() == b'A')
-        }));
+    assert!(
+        staged
+            .after()
+            .inspection()
+            .status()
+            .entries()
+            .iter()
+            .any(|entry| {
+                entry.path().as_bytes() == raw
+                    && entry.status().is_some_and(|status| status.index() == b'A')
+            })
+    );
     let native = git_ok(
         &fixture.repository,
         &["diff", "--cached", "--name-only", "-z"],

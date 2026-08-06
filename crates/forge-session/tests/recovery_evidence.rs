@@ -1,5 +1,5 @@
 use forge_core::recovery::{InterruptedEffectState, RecoveredProcessState};
-use forge_protocol::identities::{ProcessId, SessionId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProcessId, SessionId};
 use forge_session::lifecycle::{LifecycleAction, SessionSupervisor};
 use forge_session::services::{ManagedService, ServiceName, ServicePlan, StartupRestartPolicy};
 

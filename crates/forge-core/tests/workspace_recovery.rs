@@ -4,8 +4,8 @@ use forge_core::recovery::{
     RecoveryActionKind, WorkspaceRecoveryError, WorkspaceRecoveryRecord,
 };
 use forge_core::state::StateRecord;
-use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
-use forge_protocol::identities::{ProcessId, ProjectId, SessionId, IDENTITY_BYTES};
+use forge_protocol::hashes::{HashDomain, hash_canonical_bytes};
+use forge_protocol::identities::{IDENTITY_BYTES, ProcessId, ProjectId, SessionId};
 
 fn project(byte: u8) -> ProjectId {
     ProjectId::from_bytes([byte; IDENTITY_BYTES])
@@ -62,14 +62,18 @@ fn recovery_record_round_trips_canonical_safe_and_crash_evidence() {
         reopened.safe_snapshot().payload(),
         b"buffers=2;active=src/lib.rs"
     );
-    assert!(reopened
-        .interrupted_actions()
-        .iter()
-        .all(|entry| !entry.replay_allowed()));
-    assert!(reopened
-        .recorded_processes()
-        .iter()
-        .all(|entry| !entry.claims_alive()));
+    assert!(
+        reopened
+            .interrupted_actions()
+            .iter()
+            .all(|entry| !entry.replay_allowed())
+    );
+    assert!(
+        reopened
+            .recorded_processes()
+            .iter()
+            .all(|entry| !entry.claims_alive())
+    );
     assert_eq!(
         reopened.recorded_processes()[0].service_name(),
         "forge-core"

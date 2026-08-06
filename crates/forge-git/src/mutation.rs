@@ -8,7 +8,7 @@ use forge_bridge::git_mutation::{
     GitMutationArgumentError, GitMutationRequest, NativeGitMutationAdapter,
     NativeGitMutationInvocationError, NativeGitMutationOutput,
 };
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::RepositoryId;
 use forge_protocol::paths::RepositoryRelativePath;
 use std::collections::BTreeSet;
@@ -690,7 +690,7 @@ impl GitRepositoryMutator {
                     path: target.to_path_buf(),
                     kind: error.kind(),
                     message: error.to_string(),
-                })
+                });
             }
         }
         let Some(parent) = target.parent() else {
@@ -840,14 +840,14 @@ fn inspect_file_state(path: &Path) -> Result<ExpectedWorktreeState, GitMutationE
     let metadata = match fs::symlink_metadata(path) {
         Ok(metadata) => metadata,
         Err(error) if error.kind() == io::ErrorKind::NotFound => {
-            return Ok(ExpectedWorktreeState::Missing)
+            return Ok(ExpectedWorktreeState::Missing);
         }
         Err(error) => {
             return Err(GitMutationError::WorktreePathIo {
                 path: path.to_path_buf(),
                 kind: error.kind(),
                 message: error.to_string(),
-            })
+            });
         }
     };
     if metadata.file_type().is_symlink() {

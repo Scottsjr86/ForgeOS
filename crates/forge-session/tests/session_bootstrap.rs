@@ -1,7 +1,7 @@
 use forge_session::bootstrap::{
-    launch_session, DisplayBackend, SessionEnvironment, SessionEnvironmentError,
-    SessionLaunchError, SessionLaunchRequest, DEFAULT_SESSION_LAUNCHER, DISPLAY_MANAGER_ENTRY,
-    SESSION_PATH,
+    DEFAULT_SESSION_LAUNCHER, DISPLAY_MANAGER_ENTRY, DisplayBackend, SESSION_PATH,
+    SessionEnvironment, SessionEnvironmentError, SessionLaunchError, SessionLaunchRequest,
+    launch_session,
 };
 use std::ffi::{OsStr, OsString};
 use std::fs;
@@ -256,12 +256,16 @@ fn desktop_entry_is_fixed_shell_free_and_packaging_ready() {
     assert!(DISPLAY_MANAGER_ENTRY.contains("Name=ForgeOS\n"));
     let exec_line = format!("Exec={DEFAULT_SESSION_LAUNCHER}");
     let try_exec_line = format!("TryExec={DEFAULT_SESSION_LAUNCHER}");
-    assert!(DISPLAY_MANAGER_ENTRY
-        .lines()
-        .any(|line| line == exec_line.as_str()));
-    assert!(DISPLAY_MANAGER_ENTRY
-        .lines()
-        .any(|line| line == try_exec_line.as_str()));
+    assert!(
+        DISPLAY_MANAGER_ENTRY
+            .lines()
+            .any(|line| line == exec_line.as_str())
+    );
+    assert!(
+        DISPLAY_MANAGER_ENTRY
+            .lines()
+            .any(|line| line == try_exec_line.as_str())
+    );
     assert!(!DISPLAY_MANAGER_ENTRY.contains("sh -c"));
     assert!(!DISPLAY_MANAGER_ENTRY.contains("$HOME"));
     assert!(!DISPLAY_MANAGER_ENTRY.contains("%f"));

@@ -1,8 +1,8 @@
 //! Nyx-owned permission decisions and immutable resume responses.
 
 use super::support::{
-    ensure_schema, validate_hash, validate_route_id, validate_text, verify_hash,
-    verify_immutable_checkpoint, NyxPermissionProtocolError,
+    NyxPermissionProtocolError, ensure_schema, validate_hash, validate_route_id, validate_text,
+    verify_hash, verify_immutable_checkpoint,
 };
 use super::{
     NyxPermissionCheckpoint, NyxPermissionCheckpointStatus, NyxScopedToolRequest, SCHEMA_DECISION,

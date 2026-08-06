@@ -1,5 +1,5 @@
-use forge_protocol::envelopes::{RequestEnvelope, CURRENT_PROTOCOL_VERSION};
-use forge_protocol::identities::{CommandId, TaskId, IDENTITY_BYTES};
+use forge_protocol::envelopes::{CURRENT_PROTOCOL_VERSION, RequestEnvelope};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, TaskId};
 
 #[test]
 fn forge_core_consumes_the_typed_v1_protocol_contract() {

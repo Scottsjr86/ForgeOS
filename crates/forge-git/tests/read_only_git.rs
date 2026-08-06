@@ -5,7 +5,7 @@ use forge_git::diff::DiffScope;
 use forge_git::repository::{GitInspectError, GitInspectOperation, GitRepositoryInspector};
 use forge_git::status::{GitBranch, GitStatusEntryKind};
 use forge_git::worktree::GitWorktreeState;
-use forge_protocol::identities::{RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, RepositoryId};
 use std::ffi::OsString;
 use std::fs;
 use std::io::Write;
@@ -266,10 +266,11 @@ fn worktree_diff_exposes_typed_entry_and_exact_patch_bytes() {
     assert_eq!(entry.status().code(), b'M');
     assert_eq!(entry.source_path().as_bytes(), b"tracked.txt");
     assert_eq!(entry.destination_path(), None);
-    assert!(diff
-        .patch_bytes()
-        .windows(7)
-        .any(|window| window == b"+second"));
+    assert!(
+        diff.patch_bytes()
+            .windows(7)
+            .any(|window| window == b"+second")
+    );
 }
 
 #[test]
@@ -286,14 +287,18 @@ fn staged_and_worktree_diffs_remain_distinct() {
     let staged = inspector.inspect_diff(DiffScope::Staged).unwrap();
     let worktree = inspector.inspect_diff(DiffScope::Worktree).unwrap();
     assert_ne!(staged.patch_bytes(), worktree.patch_bytes());
-    assert!(staged
-        .patch_bytes()
-        .windows(7)
-        .any(|window| window == b"+staged"));
-    assert!(worktree
-        .patch_bytes()
-        .windows(9)
-        .any(|window| window == b"+worktree"));
+    assert!(
+        staged
+            .patch_bytes()
+            .windows(7)
+            .any(|window| window == b"+staged")
+    );
+    assert!(
+        worktree
+            .patch_bytes()
+            .windows(9)
+            .any(|window| window == b"+worktree")
+    );
 }
 
 #[test]
@@ -321,10 +326,11 @@ fn exact_revision_range_diff_is_typed_and_binary_safe() {
         .inspect_diff(DiffScope::between(first, second))
         .unwrap();
     assert_eq!(diff.entries().len(), 1);
-    assert!(diff
-        .patch_bytes()
-        .windows(10)
-        .any(|window| window == b"+committed"));
+    assert!(
+        diff.patch_bytes()
+            .windows(10)
+            .any(|window| window == b"+committed")
+    );
 }
 
 #[test]

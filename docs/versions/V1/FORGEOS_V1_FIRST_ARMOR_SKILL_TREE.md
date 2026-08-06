@@ -998,7 +998,11 @@ never closes the node.
 - **Required Nyx evidence before Forge closure:** `API-SYS-020`, `API-SYS-021`, `API-SYS-022`, `API-SYS-027`, `ROUTING-REG-012`, `PERSIST-SESSION-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** ForgeOS may not call local model runtimes directly, own the model registry, store canonical Nyx conversation state, or synthesize stream events.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-SESSION-201`
-- **Current state:** `AVAILABLE`
+- **Current state:** `ACTIVE`
+- **Verified gate input:** `docs/versions/V1/skills/FORGEOS-V1-NYX-200/NYX_GATE_INPUT.json`
+- **Active slice:** `FORGEOS-V1-NYX-200-SLICE-001`
+- **First blocker:** `forge-nyx-client` has no authenticated typed model, session,
+  conversation, message-history, or ordered native response-event adapter.
 - **Must be true:** ForgeOS discovers Nyx, lists available local models, selects one,
   creates a session, streams responses, handles errors, and restores conversation
   identity.
@@ -1358,11 +1362,13 @@ never closes the node.
 - **Repository boundary:** ForgeOS may not invent terminal agent status, calculate provider truth from prose, or keep a competing canonical agent run record.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-PATH-000`,
   `FORGEOS-V1-STATE-000`, `FORGEOS-V1-HASH-000`
-- **Current state:** `ACTIVE`
-- **Gate request:** `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_REQUEST.md`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator CI passed with 81 suites, 397 tests passed, 0 failed,
+  4 ignored, and the independent real Nyx deferred-run cancel/list witness passed.
+- **Source records:**
+  `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/CLOSURE_AND_SPEC.md` and
+  `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/USER_GUIDE_SOURCE.md`
 - **Verified gate input:** `docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_INPUT.json`
-- **Active slice:** `FORGEOS-V1-AGENT-100-SLICE-001`
-- **First blocker:** `forge-nyx-client` has no public remote-agent API adapter or independent reconciliation for Nyx-owned task, source, budget, route, cost, and terminal-state records.
 - **Must be true:** Task identity, provider, model, source revision, worktree, scope,
   budget, status, response, and cost are durable and inspectable.
 - **Must not be true:** A task may not continue after cancellation or exceed its
@@ -1644,23 +1650,24 @@ CLOSED
   FORGEOS-V1-VERIFY-200
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
+  FORGEOS-V1-AGENT-100
 
 ACTIVE
-  FORGEOS-V1-AGENT-100
-ACTIVE_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_PUBLIC_REMOTE_AGENT_API_ADAPTER_OR_INDEPENDENT_RECORD_RECONCILIATION
-ACTIVE_SLICE=FORGEOS-V1-AGENT-100-SLICE-001
-NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-AGENT-100/NYX_GATE_INPUT.json
+  FORGEOS-V1-NYX-200
+ACTIVE_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_AUTHENTICATED_TYPED_MODEL_SESSION_CONVERSATION_OR_ORDERED_EVENT_ADAPTER
+ACTIVE_SLICE=FORGEOS-V1-NYX-200-SLICE-001
+NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-NYX-200/NYX_GATE_INPUT.json
 
 AVAILABLE
-  FORGEOS-V1-NYX-200
+  none
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-`FORGEOS-V1-AGENT-100` is the only active ForgeOS source skill. The Nyx-owned
-gate is verified; the active work is limited to the thin client adapter and
-independent response verification.
+`FORGEOS-V1-NYX-200` is the only active ForgeOS source skill. The Nyx-owned
+gate is verified; the active work is limited to the authenticated thin client,
+ordered response-event consumption, and independent identity verification.
 
 ## 9. Skill worksheet update fields
 

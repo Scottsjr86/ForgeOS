@@ -61,7 +61,10 @@ impl fmt::Display for NyxPermissionProtocolError {
                 context,
                 field,
                 detail,
-            } => write!(formatter, "Nyx {context} field '{field}' is invalid: {detail}"),
+            } => write!(
+                formatter,
+                "Nyx {context} field '{field}' is invalid: {detail}"
+            ),
             Self::HashMismatch {
                 field,
                 expected,
@@ -71,10 +74,16 @@ impl fmt::Display for NyxPermissionProtocolError {
                 "Nyx permission hash '{field}' is '{found}', independently computed '{expected}'"
             ),
             Self::ImmutableMismatch { field } => {
-                write!(formatter, "Nyx permission immutable field '{field}' changed")
+                write!(
+                    formatter,
+                    "Nyx permission immutable field '{field}' changed"
+                )
             }
             Self::InvalidStatusFields(status) => {
-                write!(formatter, "Nyx permission checkpoint fields contradict {status:?}")
+                write!(
+                    formatter,
+                    "Nyx permission checkpoint fields contradict {status:?}"
+                )
             }
             Self::UnexpectedStatus { expected, found } => write!(
                 formatter,

@@ -3,7 +3,7 @@ use forge_editor::buffers::{BufferId, BufferRegistry, DiskVersion, DocumentKey, 
 use forge_project::paths::RepositoryBoundary;
 use forge_project::repository_view::RepositoryBrowser;
 use forge_project::text_search::TextSearchQuery;
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryPathRequest;
 use std::fs;
 use std::path::PathBuf;

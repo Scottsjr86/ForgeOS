@@ -2,7 +2,7 @@ use forge_core::commands::{
     CommandAuthorityClass, CommandCancellationPolicy, CommandEnvironmentPolicy,
     CommandEnvironmentVariable, CommandTimeout, CommandWorkingDirectory, RegisteredCommand,
 };
-use forge_protocol::identities::{CommandId, ProcessId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProcessId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use forge_terminal::commands::{CommandDirectoryBinding, CommandLaunchError, CommandLaunchPayload};
 use std::collections::BTreeMap;
@@ -114,9 +114,11 @@ fn parent_environment_is_cleared_and_undeclared_secrets_are_ignored() {
         pairs,
         vec![("PATH", "/usr/bin:/bin"), ("RUST_BACKTRACE", "1")]
     );
-    assert!(!pairs
-        .iter()
-        .any(|(name, _)| *name == "AWS_SECRET_ACCESS_KEY"));
+    assert!(
+        !pairs
+            .iter()
+            .any(|(name, _)| *name == "AWS_SECRET_ACCESS_KEY")
+    );
 }
 
 #[test]
@@ -213,10 +215,9 @@ fn literal_environment_values_do_not_read_the_host_source() {
         "env",
         ["--null"],
         CommandWorkingDirectory::repository_root(),
-        CommandEnvironmentPolicy::clear(vec![CommandEnvironmentVariable::literal(
-            "TOKEN", "declared",
-        )
-        .unwrap()])
+        CommandEnvironmentPolicy::clear(vec![
+            CommandEnvironmentVariable::literal("TOKEN", "declared").unwrap(),
+        ])
         .unwrap(),
         CommandTimeout::Unlimited,
         CommandCancellationPolicy::TerminateProcessGroup,

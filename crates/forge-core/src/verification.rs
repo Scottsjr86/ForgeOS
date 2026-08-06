@@ -5,10 +5,10 @@
 //! consumed by these records.
 
 use crate::state::{StateRecord, StateRecordError};
-use forge_protocol::hashes::{hash_canonical_bytes, CanonicalHashInput, ContentHash, HashDomain};
+use forge_protocol::hashes::{CanonicalHashInput, ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId};
 use forge_protocol::processes::ProcessFailureStage;
-use std::collections::{btree_map::Entry, BTreeMap};
+use std::collections::{BTreeMap, btree_map::Entry};
 use std::fmt;
 
 const RECORD_MAGIC: &[u8; 8] = b"FGVERIFY";

@@ -101,7 +101,7 @@ impl ManagedServiceRuntime {
                 return Err(ManagedServiceRuntimeError::InvalidTransition {
                     operation: "request_start",
                     state: state.clone(),
-                })
+                });
             }
         };
         self.state = ManagedServiceRuntimeState::StartRequested { attempt };
@@ -216,13 +216,13 @@ impl ManagedServiceRuntime {
                 return Err(ManagedServiceRuntimeError::ProcessMismatch {
                     expected: *expected,
                     actual: process_id,
-                })
+                });
             }
             state => {
                 return Err(ManagedServiceRuntimeError::InvalidTransition {
                     operation: "record_runtime_exit",
                     state: state.clone(),
-                })
+                });
             }
         };
         self.transition_after_failure(attempt, failure);
@@ -245,7 +245,7 @@ impl ManagedServiceRuntime {
                 return Err(ManagedServiceRuntimeError::InvalidTransition {
                     operation: "request_stop",
                     state: state.clone(),
-                })
+                });
             }
         };
         self.state = ManagedServiceRuntimeState::StopRequested {
@@ -294,7 +294,7 @@ impl ManagedServiceRuntime {
                 return Err(ManagedServiceRuntimeError::InvalidTransition {
                     operation,
                     state: state.clone(),
-                })
+                });
             }
         };
         if expected == actual {

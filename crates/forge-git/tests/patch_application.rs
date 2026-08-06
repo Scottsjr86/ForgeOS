@@ -2,8 +2,8 @@
 
 use forge_git::patches::{GitPatchApplier, PatchApplyError};
 use forge_git::repository::GitRepositoryInspector;
-use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
-use forge_protocol::identities::{PatchId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::hashes::{HashDomain, hash_canonical_bytes};
+use forge_protocol::identities::{IDENTITY_BYTES, PatchId, RepositoryId};
 use forge_protocol::patches::{PatchBaseRevision, PatchEnvelope, PatchFileAction, PatchFileRecord};
 use forge_protocol::paths::RepositoryRelativePath;
 use std::fs;

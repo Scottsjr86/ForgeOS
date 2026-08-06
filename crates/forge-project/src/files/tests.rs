@@ -1,6 +1,6 @@
 use super::*;
 use forge_core::projects::LanguageProfile;
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 static FIXTURE_COUNTER: AtomicU64 = AtomicU64::new(0);

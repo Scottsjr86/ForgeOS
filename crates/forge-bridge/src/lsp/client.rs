@@ -1,6 +1,6 @@
 use super::features::{
-    location_sort_key, CompletionItem, CompletionResult, DefinitionResult, LspLocation,
-    WorkspaceSymbol, WorkspaceSymbolResult,
+    CompletionItem, CompletionResult, DefinitionResult, LspLocation, WorkspaceSymbol,
+    WorkspaceSymbolResult, location_sort_key,
 };
 use super::protocol::LspConnection;
 use super::types::{
@@ -9,7 +9,7 @@ use super::types::{
 };
 use forge_protocol::identities::{ProcessId, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::path::Path;
 use std::time::Duration;

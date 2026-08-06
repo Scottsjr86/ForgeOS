@@ -10,7 +10,7 @@ use forge_core::recovery::{
     InterruptedAction, InterruptedEffectState, RecordedProcess, RecoveredProcessState,
     RecoveryActionKind,
 };
-use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
+use forge_protocol::hashes::{HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{ProcessId, SessionId};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -538,7 +538,7 @@ impl SessionSupervisor {
                     service: service.clone(),
                     status: state.public_status(),
                     operation: "record_start_failed",
-                })
+                });
             }
             None => return Err(SupervisorError::UnknownService(service.clone())),
         };
@@ -596,7 +596,7 @@ impl SessionSupervisor {
                     service: service.clone(),
                     status: state.public_status(),
                     operation: "record_readiness_failed",
-                })
+                });
             }
             None => return Err(SupervisorError::UnknownService(service.clone())),
         };
@@ -669,7 +669,7 @@ impl SessionSupervisor {
                     service: service.clone(),
                     status: state.public_status(),
                     operation: "record_stopped",
-                })
+                });
             }
             None => return Err(SupervisorError::UnknownService(service.clone())),
         };
@@ -727,7 +727,7 @@ impl SessionSupervisor {
                     service: service.clone(),
                     status: state.public_status(),
                     operation: "record_stop_failed",
-                })
+                });
             }
             None => return Err(SupervisorError::UnknownService(service.clone())),
         };
@@ -777,7 +777,7 @@ impl SessionSupervisor {
                     service: service.clone(),
                     status: state.public_status(),
                     operation: "record_unexpected_exit",
-                })
+                });
             }
             None => return Err(SupervisorError::UnknownService(service.clone())),
         };

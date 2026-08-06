@@ -528,10 +528,12 @@ fn real_rust_analyzer_proves_diagnostics_definition_completion_and_symbols() {
     let symbols = client
         .request_workspace_symbols("helper")
         .expect("real workspace symbols");
-    assert!(symbols
-        .symbols()
-        .iter()
-        .any(|symbol| symbol.name() == "helper"));
+    assert!(
+        symbols
+            .symbols()
+            .iter()
+            .any(|symbol| symbol.name() == "helper")
+    );
     client.close().expect("close real rust-analyzer");
     fs::remove_dir_all(root).expect("remove real workspace");
 }

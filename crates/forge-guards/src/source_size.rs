@@ -299,7 +299,7 @@ fn relative_or_full(root: &Path, path: &Path) -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use super::{classify_line_count, count_physical_lines, ModuleStatus};
+    use super::{ModuleStatus, classify_line_count, count_physical_lines};
 
     #[test]
     fn classifies_exact_contract_boundaries() {

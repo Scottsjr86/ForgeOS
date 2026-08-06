@@ -3,15 +3,14 @@ use forge_core::commands::{
     CommandEnvironmentVariable, CommandTimeout, CommandWorkingDirectory, RegisteredCommand,
 };
 use forge_core::project_registry::{
-    PersistedCommandDefinition, PersistedRepositoryObject, PersistentProjectEntry,
-    ProjectRegistryState, ProjectRegistryStateError, SafeWorkspaceSnapshot,
-    PROJECT_REGISTRY_RECORD_TYPE,
+    PROJECT_REGISTRY_RECORD_TYPE, PersistedCommandDefinition, PersistedRepositoryObject,
+    PersistentProjectEntry, ProjectRegistryState, ProjectRegistryStateError, SafeWorkspaceSnapshot,
 };
 use forge_core::projects::{
     AllowedProjectRoot, LanguageProfile, ManifestCommand, ProjectManifest, ProjectSetting,
 };
-use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
-use forge_protocol::identities::{CommandId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::hashes::{HashDomain, hash_canonical_bytes};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProjectId, RepositoryId};
 use std::time::Duration;
 
 fn project_id(byte: u8) -> ProjectId {

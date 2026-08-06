@@ -4,14 +4,14 @@
 //! routing, execution, cancellation, budgets, cost, persistence, and terminal state.
 
 use crate::remote_agent::{
-    decode_remote_agent, NyxRemoteAgentProtocolError, NyxRemoteAgentRunControl,
-    NyxRemoteAgentRunCreate, NyxRemoteAgentRunList, NyxRemoteAgentRunRecord,
-    REMOTE_AGENT_CANCEL_PATH_LABEL, REMOTE_AGENT_CONTINUE_PATH_LABEL,
-    REMOTE_AGENT_RUN_PATH_LABEL, REMOTE_AGENT_RUNS_PATH,
+    NyxRemoteAgentProtocolError, NyxRemoteAgentRunControl, NyxRemoteAgentRunCreate,
+    NyxRemoteAgentRunList, NyxRemoteAgentRunRecord, REMOTE_AGENT_CANCEL_PATH_LABEL,
+    REMOTE_AGENT_CONTINUE_PATH_LABEL, REMOTE_AGENT_RUN_PATH_LABEL, REMOTE_AGENT_RUNS_PATH,
+    decode_remote_agent,
 };
 use crate::transport::{
-    request_json, NyxClientConfig, NyxHttpMethod, NyxIncompatibility, NyxJsonRequestFailure,
-    NyxUnavailableReason,
+    NyxClientConfig, NyxHttpMethod, NyxIncompatibility, NyxJsonRequestFailure,
+    NyxUnavailableReason, request_json,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -53,10 +53,7 @@ impl NyxRemoteAgentClient {
         Ok(runs)
     }
 
-    pub fn run(
-        &self,
-        run_id: &str,
-    ) -> Result<NyxRemoteAgentRunRecord, NyxRemoteAgentClientError> {
+    pub fn run(&self, run_id: &str) -> Result<NyxRemoteAgentRunRecord, NyxRemoteAgentClientError> {
         validate_path_segment("run_id", run_id)?;
         let path = format!("{REMOTE_AGENT_RUNS_PATH}/{run_id}");
         let response = self.get(REMOTE_AGENT_RUN_PATH_LABEL, &path, 200)?;
@@ -126,7 +123,13 @@ impl NyxRemoteAgentClient {
         path: &str,
         expected_status: u16,
     ) -> Result<Vec<u8>, NyxRemoteAgentClientError> {
-        self.exchange::<Value>(NyxHttpMethod::Get, path_label, path, None, &[expected_status])
+        self.exchange::<Value>(
+            NyxHttpMethod::Get,
+            path_label,
+            path,
+            None,
+            &[expected_status],
+        )
     }
 
     fn post<T: Serialize>(

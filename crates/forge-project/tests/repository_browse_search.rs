@@ -6,7 +6,7 @@ use forge_project::repository_view::{
     RepositoryScanIssueKind,
 };
 use forge_project::text_search::{RepositorySearchIssue, TextSearchQuery, TextSearchQueryError};
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::paths::{RepositoryPathError, RepositoryPathRequest};
 use std::ffi::OsString;
 use std::fs::{self, OpenOptions};
@@ -211,10 +211,11 @@ fn symlink_escape_is_reported_and_never_searched() {
     let tree = browser
         .tree(&RepositoryBrowseScope::approved_roots())
         .expect("safe tree with rejected link");
-    assert!(tree
-        .entries()
-        .iter()
-        .all(|entry| { entry.relative_path().as_path() != Path::new("src/escape.txt") }));
+    assert!(
+        tree.entries()
+            .iter()
+            .all(|entry| { entry.relative_path().as_path() != Path::new("src/escape.txt") })
+    );
     assert!(tree.issues().iter().any(|issue| {
         issue.relative_path().as_path() == Path::new("src/escape.txt")
             && matches!(issue.kind(), RepositoryScanIssueKind::SymlinkRejected)

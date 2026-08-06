@@ -6,6 +6,8 @@
 
 mod canonical_json;
 
+pub mod conversation;
+pub mod conversation_client;
 pub mod patches;
 pub mod permission;
 pub mod permission_client;

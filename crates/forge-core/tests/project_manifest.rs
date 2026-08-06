@@ -1,6 +1,6 @@
 use forge_core::projects::{
-    AllowedProjectRoot, LanguageProfile, ManifestCommand, ProjectManifest, ProjectManifestError,
-    ProjectSetting, PROJECT_MANIFEST_RECORD_TYPE, PROJECT_MANIFEST_SCHEMA_VERSION,
+    AllowedProjectRoot, LanguageProfile, ManifestCommand, PROJECT_MANIFEST_RECORD_TYPE,
+    PROJECT_MANIFEST_SCHEMA_VERSION, ProjectManifest, ProjectManifestError, ProjectSetting,
 };
 use forge_protocol::identities::{CommandId, ProjectId, RepositoryId};
 

@@ -7,7 +7,7 @@
 
 use crate::buffers::{BufferId, ContentVersion, DocumentKey, EditorBuffer};
 use forge_bridge::parsing::{RustParseError, RustSyntaxParser, RustSyntaxSnapshot};
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use std::fmt;
 
 /// Incremental parse state attached to one editor buffer.

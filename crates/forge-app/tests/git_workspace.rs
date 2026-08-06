@@ -4,7 +4,7 @@ use forge_app::composition::git_workspace::{ProjectGitWorkspace, ProjectGitWorks
 use forge_core::projects::{AllowedProjectRoot, LanguageProfile, ProjectManifest};
 use forge_git::status::GitBranch;
 use forge_project::paths::RepositoryBoundary;
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
@@ -133,24 +133,30 @@ fn project_workspace_reads_exact_registered_repository_state() {
             .as_str(),
         native_head.trim()
     );
-    assert!(snapshot
-        .inspection()
-        .status()
-        .entries()
-        .iter()
-        .any(|entry| entry.path().as_bytes() == b"outside.txt"));
-    assert!(snapshot
-        .inspection()
-        .worktree_diff()
-        .entries()
-        .iter()
-        .any(|entry| entry.source_path().as_bytes() == b"src/lib.rs"));
-    assert!(snapshot
-        .inspection()
-        .staged_diff()
-        .entries()
-        .iter()
-        .any(|entry| entry.source_path().as_bytes() == b"src/staged.rs"));
+    assert!(
+        snapshot
+            .inspection()
+            .status()
+            .entries()
+            .iter()
+            .any(|entry| entry.path().as_bytes() == b"outside.txt")
+    );
+    assert!(
+        snapshot
+            .inspection()
+            .worktree_diff()
+            .entries()
+            .iter()
+            .any(|entry| entry.source_path().as_bytes() == b"src/lib.rs")
+    );
+    assert!(
+        snapshot
+            .inspection()
+            .staged_diff()
+            .entries()
+            .iter()
+            .any(|entry| entry.source_path().as_bytes() == b"src/staged.rs")
+    );
 }
 
 #[test]

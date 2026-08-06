@@ -1,13 +1,14 @@
 //! HTTP transport for the separate Nyx_Server process.
 //!
-//! ForgeOS performs three read-only public-contract requests. Transport success
-//! alone is never compatibility: response headers, status, schema IDs, versions,
-//! health, capabilities, engines, and providers are all validated.
+//! ForgeOS consumes versioned Nyx public-contract surfaces over a small HTTP
+//! transport. Transport success alone is never compatibility: status, headers,
+//! schema IDs, versions, and payload-specific invariants are validated by the
+//! owning client before any response becomes trusted ForgeOS input.
 
 use crate::protocol::{
-    assemble_report, decode_capabilities, decode_health, decode_incompatible_versions,
-    decode_version, NyxProtocolError, NyxProtocolVersion, NyxServiceReport, CAPABILITIES_PATH,
-    HEADER_NYX_CONTRACT_VERSION, HEALTH_PATH, VERSION_PATH,
+    CAPABILITIES_PATH, HEADER_NYX_CONTRACT_VERSION, HEALTH_PATH, NyxProtocolError,
+    NyxProtocolVersion, NyxServiceReport, VERSION_PATH, assemble_report, decode_capabilities,
+    decode_health, decode_incompatible_versions, decode_version,
 };
 use std::collections::BTreeMap;
 use std::fmt;
@@ -42,6 +43,15 @@ impl NyxHttpMethod {
 pub(crate) struct NyxJsonResponse {
     pub(crate) status: u16,
     pub(crate) contract_version: NyxProtocolVersion,
+    pub(crate) body: Vec<u8>,
+}
+
+#[derive(Debug)]
+pub(crate) struct NyxSseResponse {
+    pub(crate) status: u16,
+    pub(crate) contract_version: NyxProtocolVersion,
+    pub(crate) content_type: Option<String>,
+    pub(crate) stream_schema: Option<String>,
     pub(crate) body: Vec<u8>,
 }
 
@@ -83,6 +93,7 @@ pub struct NyxClientConfig {
     supported_versions: Vec<NyxProtocolVersion>,
     io_timeout: Duration,
     maximum_response_bytes: usize,
+    bearer_token: Option<String>,
 }
 
 impl NyxClientConfig {
@@ -105,6 +116,7 @@ impl NyxClientConfig {
             supported_versions,
             io_timeout: DEFAULT_IO_TIMEOUT,
             maximum_response_bytes: DEFAULT_MAX_RESPONSE_BYTES,
+            bearer_token: None,
         })
     }
 
@@ -116,6 +128,22 @@ impl NyxClientConfig {
     pub fn with_maximum_response_bytes(mut self, maximum: usize) -> Self {
         self.maximum_response_bytes = maximum;
         self
+    }
+
+    pub fn with_bearer_token(mut self, token: impl Into<String>) -> Result<Self, NyxProtocolError> {
+        let token = token.into();
+        if token.is_empty()
+            || token != token.trim()
+            || !token.bytes().all(|byte| byte.is_ascii_graphic())
+        {
+            return Err(NyxProtocolError::InvalidField {
+                context: "client configuration",
+                field: "bearer_token",
+                detail: "must be non-empty visible ASCII without surrounding whitespace".to_owned(),
+            });
+        }
+        self.bearer_token = Some(token);
+        Ok(self)
     }
 
     pub fn endpoint(&self) -> &NyxTransportEndpoint {
@@ -132,6 +160,10 @@ impl NyxClientConfig {
 
     pub const fn maximum_response_bytes(&self) -> usize {
         self.maximum_response_bytes
+    }
+
+    pub fn bearer_token(&self) -> Option<&str> {
+        self.bearer_token.as_deref()
     }
 
     pub(crate) fn preferred_version(&self) -> NyxProtocolVersion {
@@ -301,7 +333,7 @@ pub(crate) fn request_json(
     requested: NyxProtocolVersion,
     body: Option<&[u8]>,
 ) -> Result<NyxJsonResponse, NyxJsonRequestFailure> {
-    let request = build_json_request(config, method, path, requested, body);
+    let request = build_http_request(config, method, path, requested, "application/json", body);
     let bytes =
         connect_and_exchange(config, &request).map_err(NyxJsonRequestFailure::Unavailable)?;
     let response = parse_http_response(&bytes).map_err(|detail| {
@@ -359,6 +391,64 @@ pub(crate) fn request_json(
     })
 }
 
+pub(crate) fn request_sse(
+    config: &NyxClientConfig,
+    path_label: &'static str,
+    path: &str,
+    requested: NyxProtocolVersion,
+    body: &[u8],
+) -> Result<NyxSseResponse, NyxJsonRequestFailure> {
+    let request = build_http_request(
+        config,
+        NyxHttpMethod::Post,
+        path,
+        requested,
+        "text/event-stream",
+        Some(body),
+    );
+    let bytes =
+        connect_and_exchange(config, &request).map_err(NyxJsonRequestFailure::Unavailable)?;
+    let response = parse_http_response(&bytes).map_err(|detail| {
+        NyxJsonRequestFailure::Incompatible(NyxIncompatibility::MalformedResponse {
+            path: path_label,
+            detail,
+        })
+    })?;
+    let contract_version = response
+        .headers
+        .get(HEADER_NYX_CONTRACT_VERSION)
+        .map(|contract_text| {
+            NyxProtocolVersion::parse(contract_text).map_err(|error| malformed(path_label, error))
+        })
+        .transpose()?
+        .unwrap_or(requested);
+    if response.status == 426 {
+        let supported = decode_incompatible_versions(&response.body)
+            .map_err(|error| malformed(path_label, error))?;
+        return Err(NyxJsonRequestFailure::Incompatible(
+            NyxIncompatibility::RejectedContract {
+                requested,
+                supported,
+            },
+        ));
+    }
+    if !config.supports_major(contract_version.major()) {
+        return Err(NyxJsonRequestFailure::Incompatible(
+            NyxIncompatibility::UnsupportedNegotiatedProtocol {
+                requested,
+                negotiated: contract_version,
+            },
+        ));
+    }
+    Ok(NyxSseResponse {
+        status: response.status,
+        contract_version,
+        content_type: response.headers.get("content-type").cloned(),
+        stream_schema: response.headers.get("x-nyx-stream-schema").cloned(),
+        body: response.body,
+    })
+}
+
 fn verify_header(
     path: &'static str,
     header: NyxProtocolVersion,
@@ -379,20 +469,26 @@ fn malformed(path: &'static str, error: NyxProtocolError) -> NyxJsonRequestFailu
     })
 }
 
-fn build_json_request(
+fn build_http_request(
     config: &NyxClientConfig,
     method: NyxHttpMethod,
     path: &str,
     requested: NyxProtocolVersion,
+    accept: &str,
     body: Option<&[u8]>,
 ) -> Vec<u8> {
     let body = body.unwrap_or_default();
     let mut request = format!(
-        "{} {path} HTTP/1.1\r\nHost: {}\r\nAccept: application/json\r\n{}: {requested}\r\n",
+        "{} {path} HTTP/1.1\r\nHost: {}\r\nAccept: {accept}\r\n{}: {requested}\r\n",
         method.as_str(),
         config.endpoint.host_header(),
         HEADER_NYX_CONTRACT_VERSION,
     );
+    if let Some(token) = config.bearer_token() {
+        request.push_str("Authorization: Bearer ");
+        request.push_str(token);
+        request.push_str("\r\n");
+    }
     if matches!(method, NyxHttpMethod::Post) {
         request.push_str("Content-Type: application/json\r\n");
         request.push_str(&format!("Content-Length: {}\r\n", body.len()));

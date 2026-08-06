@@ -1,8 +1,8 @@
 //! Display-manager entrypoint for a dedicated ForgeOS session.
 
 use forge_session::bootstrap::{
-    launch_session, SessionEnvironment, SessionLaunchError, SessionLaunchRequest,
-    DEFAULT_COMPOSITION_ROOT,
+    DEFAULT_COMPOSITION_ROOT, SessionEnvironment, SessionLaunchError, SessionLaunchRequest,
+    launch_session,
 };
 use std::env;
 use std::ffi::{OsStr, OsString};

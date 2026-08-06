@@ -4,7 +4,7 @@
 //! Linux filesystem effect: synced staging files, atomic replacement, explicit
 //! legacy migration, interrupted-write visibility, and previous-state recovery.
 
-use forge_core::state::{migrate_legacy_v0, StateRecord, StateRecordError};
+use forge_core::state::{StateRecord, StateRecordError, migrate_legacy_v0};
 use std::ffi::{OsStr, OsString};
 use std::fmt;
 use std::fs::{self, File, OpenOptions};

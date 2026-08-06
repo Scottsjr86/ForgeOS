@@ -11,7 +11,7 @@ use forge_core::commands::{
 use forge_core::projects::{AllowedProjectRoot, LanguageProfile, ProjectManifest};
 use forge_core::verification::VerificationOutcome;
 use forge_project::paths::RepositoryBoundary;
-use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProcessId, ProjectId, RepositoryId};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};

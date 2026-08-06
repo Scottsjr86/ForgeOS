@@ -9,7 +9,7 @@ use crate::commands::{
     CommandEnvironmentPolicy, CommandEnvironmentVariable, CommandTimeout, CommandWorkingDirectory,
     RegisteredCommand,
 };
-use forge_protocol::identities::{CommandId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, RepositoryId};
 use forge_protocol::paths::{RepositoryPathError, RepositoryRelativePath};
 use std::fmt;
 use std::path::Path;
@@ -294,7 +294,7 @@ mod tests {
             ["check"],
             CommandWorkingDirectory::repository_root(),
             CommandEnvironmentPolicy::clear(vec![
-                CommandEnvironmentVariable::inherit("PATH").unwrap()
+                CommandEnvironmentVariable::inherit("PATH").unwrap(),
             ])
             .unwrap(),
             CommandTimeout::after(Duration::from_secs(30)).unwrap(),

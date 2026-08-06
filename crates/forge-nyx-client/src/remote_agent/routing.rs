@@ -1,5 +1,5 @@
 use super::support::{
-    ensure_schema, validate_canonical_strings, validate_text, NyxRemoteAgentProtocolError,
+    NyxRemoteAgentProtocolError, ensure_schema, validate_canonical_strings, validate_text,
 };
 use serde::{Deserialize, Serialize};
 
@@ -323,11 +323,7 @@ impl NyxRouteCandidate {
         self.capabilities.validate()?;
         self.declared_cost.validate()?;
         validate_text("route candidate", "health", &self.health)?;
-        validate_text(
-            "route candidate",
-            "policy_posture",
-            &self.policy_posture,
-        )?;
+        validate_text("route candidate", "policy_posture", &self.policy_posture)?;
         validate_canonical_strings(
             "route candidate measured signals",
             "measured_signals",

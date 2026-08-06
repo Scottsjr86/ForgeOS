@@ -3,7 +3,7 @@ use forge_core::commands::{
     CommandEnvironmentPolicy, CommandEnvironmentVariable, CommandRegistration, CommandRegistry,
     CommandRegistryError, CommandTimeout, CommandWorkingDirectory, RegisteredCommand,
 };
-use forge_protocol::identities::{CommandId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use std::time::Duration;
 

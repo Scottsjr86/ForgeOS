@@ -1,10 +1,10 @@
 //! Deterministic versioned request, result, and error envelopes.
 
 use crate::errors::{
-    decode_protocol_error, encode_protocol_error, malformed_from_wire, EnvelopeViolation,
-    ProtocolError,
+    EnvelopeViolation, ProtocolError, decode_protocol_error, encode_protocol_error,
+    malformed_from_wire,
 };
-use crate::identities::{CommandId, ResultId, TaskId, IDENTITY_BYTES};
+use crate::identities::{CommandId, IDENTITY_BYTES, ResultId, TaskId};
 use crate::wire::{Decoder, Encoder};
 
 const MAGIC: [u8; 4] = *b"FGOS";

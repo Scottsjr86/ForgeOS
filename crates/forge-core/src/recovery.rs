@@ -8,7 +8,7 @@ use crate::hashing::state_record_hash;
 use crate::project_registry::{ProjectRegistryStateError, SafeWorkspaceSnapshot};
 use crate::state::{StateRecord, StateRecordError};
 use forge_protocol::hashes::ContentHash;
-use forge_protocol::identities::{ProcessId, ProjectId, SessionId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProcessId, ProjectId, SessionId};
 use std::collections::BTreeSet;
 use std::fmt;
 
@@ -142,10 +142,10 @@ impl RecordedProcess {
         validate_service_name(&service_name)?;
         match (prior_process_id, state) {
             (None, RecoveredProcessState::RequiresRevalidation) => {
-                return Err(WorkspaceRecoveryError::MissingPriorProcessId)
+                return Err(WorkspaceRecoveryError::MissingPriorProcessId);
             }
             (Some(_), RecoveredProcessState::ConfirmedStopped) => {
-                return Err(WorkspaceRecoveryError::StoppedProcessRetainsIdentity)
+                return Err(WorkspaceRecoveryError::StoppedProcessRetainsIdentity);
             }
             _ => {}
         }

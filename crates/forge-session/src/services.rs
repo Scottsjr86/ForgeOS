@@ -328,7 +328,10 @@ impl fmt::Display for ServicePlanError {
             Self::UnknownDependency {
                 service,
                 dependency,
-            } => write!(formatter, "service {service} depends on unknown {dependency}"),
+            } => write!(
+                formatter,
+                "service {service} depends on unknown {dependency}"
+            ),
             Self::DependencyOrder {
                 service,
                 service_order,

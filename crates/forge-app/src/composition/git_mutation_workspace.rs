@@ -11,15 +11,15 @@ use crate::composition::git_workspace::{
 use forge_core::projects::ProjectManifest;
 use forge_git::inspection::GitInspectionSnapshot;
 use forge_git::mutation::{
-    expected_file_state, CommitRequest, CreateWorktreeRequest, GitBranchName, GitCommitIdentity,
-    GitMutationError, GitMutationOutcome, GitPathExpectation, GitRepositoryMutator,
-    RemoveWorktreeConfirmation, RemoveWorktreeRequest, RestoreConfirmation, RestoreRequest,
-    StageRequest, UnstageRequest,
+    CommitRequest, CreateWorktreeRequest, GitBranchName, GitCommitIdentity, GitMutationError,
+    GitMutationOutcome, GitPathExpectation, GitRepositoryMutator, RemoveWorktreeConfirmation,
+    RemoveWorktreeRequest, RestoreConfirmation, RestoreRequest, StageRequest, UnstageRequest,
+    expected_file_state,
 };
 use forge_git::status::{GitStatusEntry, GitStatusEntryKind};
 use forge_git::types::GitObjectId;
 use forge_project::paths::{RepositoryBoundary, RepositoryBoundaryError};
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use std::collections::BTreeSet;

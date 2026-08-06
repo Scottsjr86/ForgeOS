@@ -1,7 +1,7 @@
 #![cfg(unix)]
 
 use forge_project::paths::{RepositoryBoundary, RepositoryBoundaryError};
-use forge_protocol::identities::{RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, RepositoryId};
 use forge_protocol::paths::{RepositoryPathError, RepositoryPathRequest};
 use std::fs;
 use std::path::{Path, PathBuf};

@@ -6,7 +6,7 @@
 //! authority class. Changing any of those fields requires an explicit replacement
 //! against the expected prior definition identity.
 
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{CommandId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use std::collections::BTreeMap;

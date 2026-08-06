@@ -1,9 +1,9 @@
 use forge_nyx_client::protocol::{NyxAvailability, NyxHealth, NyxProtocolVersion};
 use forge_nyx_client::transport::{
-    probe_nyx, NyxClientConfig, NyxIncompatibility, NyxProbeOutcome, NyxProbeStatus,
-    NyxTransportEndpoint, NyxUnavailableReason,
+    NyxClientConfig, NyxIncompatibility, NyxProbeOutcome, NyxProbeStatus, NyxTransportEndpoint,
+    NyxUnavailableReason, probe_nyx,
 };
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::io::{Read, Write};
 use std::net::{SocketAddr, TcpListener};
 use std::sync::Arc;
@@ -440,8 +440,10 @@ fn real_nyx_public_api_gate() {
         .expect("real Nyx must return a compatible health and capability report");
     assert_eq!(response.selected_protocol(), version(1, 0));
     assert!(!response.server_version().is_empty());
-    assert!(response
-        .capabilities()
-        .iter()
-        .any(|capability| capability.capability_id() == "nyx.native.health"));
+    assert!(
+        response
+            .capabilities()
+            .iter()
+            .any(|capability| capability.capability_id() == "nyx.native.health")
+    );
 }

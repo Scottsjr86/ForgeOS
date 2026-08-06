@@ -5,7 +5,7 @@
 //! native Git invocation remain outside this crate.
 
 use crate::hashes::{
-    hash_canonical_bytes, CanonicalHashInput, ContentHash, HashContractError, HashDomain,
+    CanonicalHashInput, ContentHash, HashContractError, HashDomain, hash_canonical_bytes,
 };
 use crate::identities::{PatchId, RepositoryId};
 use crate::paths::RepositoryRelativePath;

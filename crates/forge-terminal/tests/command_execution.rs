@@ -6,7 +6,7 @@ use forge_core::commands::{
     CommandEnvironmentVariable, CommandTimeout, CommandWorkingDirectory, RegisteredCommand,
 };
 use forge_protocol::hashes::ContentHash;
-use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProcessId, ProjectId, RepositoryId};
 use forge_protocol::processes::ProcessOutcome;
 use forge_terminal::commands::CommandDirectoryBinding;
 use forge_terminal::execution::{CommandRunError, CommandRunRegistry, CommandSourceBinding};

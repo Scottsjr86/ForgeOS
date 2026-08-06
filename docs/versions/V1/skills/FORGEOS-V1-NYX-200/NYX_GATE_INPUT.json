@@ -1,0 +1,96 @@
+{
+  "schema": "forgeos.nyx_cross_repo_gate_input.v1",
+  "contract_id": "FORGEOS-V1-NYX-SERVER-CROSS-REPO-CONTRACT",
+  "forge_skill_id": "FORGEOS-V1-NYX-200",
+  "nyx_gate_id": "NYX-GATE-FORGEOS-V1-NYX-200",
+  "nyx_source_archive": "Nyx_Server_base_20(1).tar",
+  "nyx_source_archive_sha256": "971e3b95b5cff49c53d9422fc842c6899e6081305f3129a8cd8400dcc72225b2",
+  "public_contract_version": "1.0",
+  "required_request_header": "x-nyx-contract-version",
+  "public_endpoints": {
+    "models": "GET /v1/nyx/models",
+    "sessions": "GET|POST /v1/nyx/sessions",
+    "session": "GET /v1/nyx/sessions/:session_id",
+    "session_control": "POST /v1/nyx/sessions/:session_id/select|close|restore",
+    "conversations": "GET|POST /v1/nyx/sessions/:session_id/conversations",
+    "conversation": "GET /v1/nyx/conversations/:conversation_id",
+    "conversation_control": "POST /v1/nyx/conversations/:conversation_id/select|close|restore",
+    "messages": "GET|POST /v1/nyx/sessions/:session_id/conversations/:conversation_id/messages",
+    "openai_models": "GET /v1/models",
+    "openai_chat": "POST /v1/chat/completions"
+  },
+  "stream_event_schema": "nyx.openai_chat_stream_event.v1: response.created -> optional response.output_text.delta -> zero or more response.tool_call -> response.completed -> [DONE]; sequence starts at 0 and increments by 1",
+  "native_event_schema": "nyx.conversation_event.v1: sequence starts at 0, increments by 1, and ends in exactly one terminal response_completed, response_failed, or response_cancelled event",
+  "banked_skills": [
+    {
+      "skill_id": "API-SYS-020",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-SYS-020-proof-local-conversation-gate-v1.json",
+      "sha256": "4696ac37e9b39f863db64e897c1874e3721d510f5e1ad18197eebdfcd3f960b1"
+    },
+    {
+      "skill_id": "API-SYS-021",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-SYS-021-proof-local-conversation-gate-v1.json",
+      "sha256": "ed8b97f0ebba4d4a10f240dc4a6f79bec81dd87052784d62f902f20291b333ca"
+    },
+    {
+      "skill_id": "API-SYS-022",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-SYS-022-proof-local-conversation-gate-v1.json",
+      "sha256": "e962ad62fc4745b121ef3ed10d455d4e317b5261e4c73003b5b0a85cf72000cd"
+    },
+    {
+      "skill_id": "API-SYS-027",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/API-SYS-027-proof-local-conversation-gate-v1.json",
+      "sha256": "c7f323f61e7f4407e9fa48f8ba4c80395a5d740b3f66202954dcf0008bbf8ff0"
+    },
+    {
+      "skill_id": "ROUTING-REG-012",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/ROUTING-REG-012-proof-local-conversation-gate-v1.json",
+      "sha256": "044f639ebdcd5b5a53bbfad791540f87f664dec96b84b8cd9af1240021635336"
+    },
+    {
+      "skill_id": "PERSIST-SESSION-001",
+      "minimum_proof": "PROOF_SYSTEM",
+      "receipt": "docs/workflow/skill_trees/receipts/PERSIST-SESSION-001-proof-local-conversation-gate-v1.json",
+      "sha256": "f9ee9fac249a2fbe258f9b2b9782f93831b8ac0dc717c02f36cc2f570052791d"
+    }
+  ],
+  "real_server_witness": {
+    "command": "python3 scripts/run_local_conversation_gate_system_witness.py --out experiments/skills/api/runs/local-conversation-gate-v1/real_server_witness_v1.json",
+    "result": "PASS",
+    "path": "experiments/skills/api/runs/local-conversation-gate-v1/real_server_witness_v1.json",
+    "sha256": "98f03a6e765f12f33f70edde871938dbe7b3a81f7039d378e88f98d1849b23c4"
+  },
+  "nyx_ci": {
+    "command": "python3 scripts/run_ci.py professional",
+    "result": "PASS"
+  },
+  "standalone_chat_dev_result": "PASS",
+  "wiring_preflight": {
+    "canonical_owner": "Nyx_Server",
+    "nyx_engine_families": ["API", "ROUTING", "PERSISTENCE", "AGENT"],
+    "forgeos_role": "authenticated_thin_http_client_typed_presenter_and_independent_contract_verifier",
+    "transport": "HTTP/1.1 over configured local TCP or Unix socket",
+    "inspected_nyx_paths": [
+      "crates/nyx_protocol/src/conversation.rs",
+      "crates/nyx_protocol/src/session.rs",
+      "crates/nyx_server/src/http/conversations.rs",
+      "crates/nyx_server/src/http/openai_chat.rs",
+      "scripts/run_local_conversation_gate_system_witness.py",
+      "experiments/skills/api/runs/local-conversation-gate-v1/real_server_witness_v1.json"
+    ]
+  },
+  "ownership_preflight": {
+    "nyx_server_remains_independent": true,
+    "forgeos_calls_model_runtime_directly": false,
+    "forgeos_persists_competing_conversation_state": false,
+    "forgeos_owns_model_registry": false,
+    "forgeos_synthesizes_stream_events": false,
+    "forgeos_routes_models_around_nyx": false
+  },
+  "forge_validation_state": "OPERATOR_VALIDATION_PENDING"
+}

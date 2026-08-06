@@ -4,7 +4,7 @@
 //! domain-separated SHA-256 identity without adding effects or host metadata.
 
 use crate::state::StateRecord;
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 
 /// Stable snapshot identity over the exact current-schema state record bytes.
 pub fn state_record_hash(record: &StateRecord) -> ContentHash {

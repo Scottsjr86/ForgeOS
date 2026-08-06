@@ -7,7 +7,7 @@
 use forge_bridge::processes::ProcessExecutionContext;
 use forge_bridge::service_process::{ManagedServiceProcess, ManagedServiceProcessError};
 use forge_nyx_client::transport::{
-    probe_nyx, NyxClientConfig, NyxProbeOutcome, NyxUnavailableReason,
+    NyxClientConfig, NyxProbeOutcome, NyxUnavailableReason, probe_nyx,
 };
 use forge_protocol::identities::{ProcessId, SessionId};
 use forge_protocol::processes::{ProcessExit, ProcessSpawnRequest};

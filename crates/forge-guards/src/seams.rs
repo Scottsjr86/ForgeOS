@@ -430,9 +430,11 @@ mod tests {
         for package in REVIEWED_SUBSYSTEM_PACKAGES {
             let allowed = reviewed_reachability(package);
             assert!(allowed.contains(package), "{package} must reach itself");
-            assert!(allowed
-                .iter()
-                .all(|target| REVIEWED_SUBSYSTEM_PACKAGES.contains(target)));
+            assert!(
+                allowed
+                    .iter()
+                    .all(|target| REVIEWED_SUBSYSTEM_PACKAGES.contains(target))
+            );
         }
     }
 

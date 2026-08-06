@@ -149,7 +149,10 @@ impl fmt::Display for ManagedTerminalError {
         match self {
             Self::Pty(error) => error.fmt(formatter),
             Self::MissingRecord(terminal_id) => {
-                write!(formatter, "managed terminal {terminal_id} has no metadata record")
+                write!(
+                    formatter,
+                    "managed terminal {terminal_id} has no metadata record"
+                )
             }
             Self::BindingMismatch {
                 terminal_id,

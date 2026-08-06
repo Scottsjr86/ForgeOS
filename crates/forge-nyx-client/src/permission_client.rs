@@ -5,15 +5,15 @@
 //! no tool around Nyx.
 
 use crate::permission::{
-    decode_permission, NyxPermissionAuditReport, NyxPermissionCheckpoint,
-    NyxPermissionCheckpointCreate, NyxPermissionDecision, NyxPermissionDecisionKind,
-    NyxPermissionProtocolError, NyxPermissionResolution, NyxPermissionResume,
-    NyxPermissionResumeResult, PERMISSION_AUDIT_PATH, PERMISSION_CHECKPOINTS_PATH,
-    PERMISSION_CHECKPOINT_PATH_LABEL, PERMISSION_RESOLVE_PATH_LABEL, PERMISSION_RESUME_PATH,
+    NyxPermissionAuditReport, NyxPermissionCheckpoint, NyxPermissionCheckpointCreate,
+    NyxPermissionDecision, NyxPermissionDecisionKind, NyxPermissionProtocolError,
+    NyxPermissionResolution, NyxPermissionResume, NyxPermissionResumeResult, PERMISSION_AUDIT_PATH,
+    PERMISSION_CHECKPOINT_PATH_LABEL, PERMISSION_CHECKPOINTS_PATH, PERMISSION_RESOLVE_PATH_LABEL,
+    PERMISSION_RESUME_PATH, decode_permission,
 };
 use crate::transport::{
-    request_json, NyxClientConfig, NyxHttpMethod, NyxIncompatibility, NyxJsonRequestFailure,
-    NyxUnavailableReason,
+    NyxClientConfig, NyxHttpMethod, NyxIncompatibility, NyxJsonRequestFailure,
+    NyxUnavailableReason, request_json,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value;

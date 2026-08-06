@@ -15,7 +15,7 @@ use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, ExitStatus, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{mpsc, Arc};
+use std::sync::{Arc, mpsc};
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -610,9 +610,11 @@ mod tests {
         );
         assert_eq!(execution.output().stdout(), b"out");
         assert_eq!(execution.output().stderr(), b"err");
-        assert!(chunks
-            .iter()
-            .all(|chunk| chunk.process_id() == process_id(1)));
+        assert!(
+            chunks
+                .iter()
+                .all(|chunk| chunk.process_id() == process_id(1))
+        );
         for stream in [ProcessStream::Stdout, ProcessStream::Stderr] {
             let sequences = chunks
                 .iter()

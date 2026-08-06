@@ -308,7 +308,11 @@ impl fmt::Display for RepositoryBoundaryError {
                 path.display()
             ),
             Self::RootSymlink { path } => {
-                write!(formatter, "repository root is a symlink: {}", path.display())
+                write!(
+                    formatter,
+                    "repository root is a symlink: {}",
+                    path.display()
+                )
             }
             Self::RootNotDirectory { path } => write!(
                 formatter,

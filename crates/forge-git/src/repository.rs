@@ -4,9 +4,9 @@
 //! directory identity, revalidates it before every command, invokes only the fixed
 //! read operations exposed by `forge-bridge`, and preserves native Git failures.
 
-use crate::diff::{parse_diff, DiffScope, GitDiff};
-use crate::status::{parse_status, GitHead, GitStatusSnapshot};
-use crate::worktree::{parse_worktrees, GitWorktreeSnapshot};
+use crate::diff::{DiffScope, GitDiff, parse_diff};
+use crate::status::{GitHead, GitStatusSnapshot, parse_status};
+use crate::worktree::{GitWorktreeSnapshot, parse_worktrees};
 use forge_bridge::git::{
     GitDiffInvocation, GitReadRequest, NativeGitAdapter, NativeGitExit, NativeGitInvocationError,
     NativeGitOutput,
@@ -110,12 +110,24 @@ impl fmt::Display for GitInspectError {
                 path,
                 message,
                 ..
-            } => write!(formatter, "failed to {operation} {}: {message}", path.display()),
+            } => write!(
+                formatter,
+                "failed to {operation} {}: {message}",
+                path.display()
+            ),
             Self::RootSymlink(path) => {
-                write!(formatter, "Git repository root may not be a symlink: {}", path.display())
+                write!(
+                    formatter,
+                    "Git repository root may not be a symlink: {}",
+                    path.display()
+                )
             }
             Self::RootNotDirectory(path) => {
-                write!(formatter, "Git repository root is not a directory: {}", path.display())
+                write!(
+                    formatter,
+                    "Git repository root is not a directory: {}",
+                    path.display()
+                )
             }
             Self::RootIdentityChanged {
                 expected_device,
@@ -140,7 +152,11 @@ impl fmt::Display for GitInspectError {
                 failure.exit.signal()
             ),
             Self::MalformedOutput { operation, message } => {
-                write!(formatter, "native Git {} output is malformed: {message}", operation.label())
+                write!(
+                    formatter,
+                    "native Git {} output is malformed: {message}",
+                    operation.label()
+                )
             }
         }
     }

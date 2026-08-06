@@ -13,7 +13,7 @@ use forge_core::commands::{CommandAuthorityClass, CommandCancellationPolicy, Reg
 use forge_protocol::hashes::ContentHash;
 use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId};
 use forge_protocol::processes::{ProcessExecution, ProcessOutputChunk, ProcessSpawnRequest};
-use std::collections::{btree_map::Entry, BTreeMap};
+use std::collections::{BTreeMap, btree_map::Entry};
 use std::fmt;
 use std::path::Path;
 

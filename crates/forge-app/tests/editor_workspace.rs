@@ -7,7 +7,7 @@ use forge_editor::buffers::{
 };
 use forge_project::files::ProjectFileAccess;
 use forge_project::paths::RepositoryBoundary;
-use forge_protocol::identities::{ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryPathRequest;
 use std::fs;
 use std::path::{Path, PathBuf};

@@ -1,4 +1,4 @@
-use forge_protocol::identities::{ProcessId, SessionId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProcessId, SessionId};
 use forge_session::lifecycle::{
     LifecycleAction, ServiceFailure, ServiceFailureStage, ServiceStatus, SessionPhase,
     SessionSupervisor, StopReason, SupervisorError,

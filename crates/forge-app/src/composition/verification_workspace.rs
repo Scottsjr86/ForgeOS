@@ -19,7 +19,7 @@ use forge_core::verification::{
     VerificationRecord, VerificationRecordError, VerificationSourceState,
 };
 use forge_project::paths::RepositoryBoundary;
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId};
 use forge_protocol::processes::ProcessOutcome;
 use forge_terminal::execution::CommandRunRecord;

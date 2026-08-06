@@ -52,7 +52,7 @@ impl NyxPatchOffer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use forge_protocol::hashes::{hash_canonical_bytes, HashDomain};
+    use forge_protocol::hashes::{HashDomain, hash_canonical_bytes};
     use forge_protocol::identities::IDENTITY_BYTES;
     use forge_protocol::patches::{PatchFileAction, PatchFileRecord};
     use forge_protocol::paths::RepositoryRelativePath;

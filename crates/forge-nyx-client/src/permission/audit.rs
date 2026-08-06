@@ -1,7 +1,7 @@
 //! Nyx-owned permission audit records decoded by the Forge client.
 
 use super::support::{
-    ensure_schema, validate_hash, validate_route_id, validate_text, NyxPermissionProtocolError,
+    NyxPermissionProtocolError, ensure_schema, validate_hash, validate_route_id, validate_text,
 };
 use super::{NyxPermissionCheckpointStatus, SCHEMA_AUDIT_EVENT, SCHEMA_AUDIT_REPORT};
 use serde::{Deserialize, Serialize};

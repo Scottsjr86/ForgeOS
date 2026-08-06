@@ -125,9 +125,11 @@ os.write(1, b'ECHO' + data + b'SIZE' + str(size[0]).encode() + b'x' + str(size[1
         .unwrap();
     let output = collect_until(&mut registry, id, b"SIZE31x97\x00");
     let expected_echo = [b"ECHO".as_slice(), input.as_slice()].concat();
-    assert!(output
-        .windows(expected_echo.len())
-        .any(|window| window == expected_echo.as_slice()));
+    assert!(
+        output
+            .windows(expected_echo.len())
+            .any(|window| window == expected_echo.as_slice())
+    );
     wait_exit(&mut registry, id);
     let exit = registry
         .session_mut(id)
@@ -149,9 +151,11 @@ fn working_directory_is_applied_exactly() {
     let output = collect_until(&mut registry, id, b"\x00");
     let expected = fs::canonicalize(cwd.path()).unwrap();
     let expected_bytes = expected.as_os_str().as_bytes();
-    assert!(output
-        .windows(expected_bytes.len())
-        .any(|window| window == expected_bytes));
+    assert!(
+        output
+            .windows(expected_bytes.len())
+            .any(|window| window == expected_bytes)
+    );
 }
 
 #[test]

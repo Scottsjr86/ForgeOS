@@ -3,7 +3,7 @@
 use forge_git::inspection::GitRepositoryInspectionError;
 use forge_git::repository::GitRepositoryInspector;
 use forge_git::status::{GitBranch, GitStatusEntryKind};
-use forge_protocol::identities::{RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, RepositoryId};
 use std::fs;
 use std::io::Write;
 use std::os::unix::fs::PermissionsExt;
@@ -120,41 +120,55 @@ fn stable_inspection_binds_status_branch_revision_and_both_diff_scopes() {
     ));
     assert!(first.status().head().revision().is_some());
     assert!(!first.is_clean());
-    assert!(first
-        .status()
-        .entries()
-        .iter()
-        .any(|entry| entry.path().as_bytes() == b"tracked.txt"));
-    assert!(first
-        .status()
-        .entries()
-        .iter()
-        .any(|entry| entry.path().as_bytes() == b"staged.txt"));
-    assert!(first
-        .status()
-        .entries()
-        .iter()
-        .any(|entry| entry.path().as_bytes() == b"untracked.txt"));
-    assert!(first
-        .worktree_diff()
-        .entries()
-        .iter()
-        .any(|entry| entry.source_path().as_bytes() == b"tracked.txt"));
-    assert!(first
-        .staged_diff()
-        .entries()
-        .iter()
-        .any(|entry| entry.source_path().as_bytes() == b"staged.txt"));
-    assert!(first
-        .worktree_diff()
-        .patch_bytes()
-        .windows(b"tracked.txt".len())
-        .any(|window| window == b"tracked.txt"));
-    assert!(first
-        .staged_diff()
-        .patch_bytes()
-        .windows(b"staged.txt".len())
-        .any(|window| window == b"staged.txt"));
+    assert!(
+        first
+            .status()
+            .entries()
+            .iter()
+            .any(|entry| entry.path().as_bytes() == b"tracked.txt")
+    );
+    assert!(
+        first
+            .status()
+            .entries()
+            .iter()
+            .any(|entry| entry.path().as_bytes() == b"staged.txt")
+    );
+    assert!(
+        first
+            .status()
+            .entries()
+            .iter()
+            .any(|entry| entry.path().as_bytes() == b"untracked.txt")
+    );
+    assert!(
+        first
+            .worktree_diff()
+            .entries()
+            .iter()
+            .any(|entry| entry.source_path().as_bytes() == b"tracked.txt")
+    );
+    assert!(
+        first
+            .staged_diff()
+            .entries()
+            .iter()
+            .any(|entry| entry.source_path().as_bytes() == b"staged.txt")
+    );
+    assert!(
+        first
+            .worktree_diff()
+            .patch_bytes()
+            .windows(b"tracked.txt".len())
+            .any(|window| window == b"tracked.txt")
+    );
+    assert!(
+        first
+            .staged_diff()
+            .patch_bytes()
+            .windows(b"staged.txt".len())
+            .any(|window| window == b"staged.txt")
+    );
 }
 
 #[test]

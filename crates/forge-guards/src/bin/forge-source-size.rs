@@ -2,7 +2,7 @@ use std::env;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use forge_guards::source_size::{scan_authored_rust, ModuleStatus};
+use forge_guards::source_size::{ModuleStatus, scan_authored_rust};
 
 const USAGE: &str = "Usage: forge-source-size [--root <path>] [--deny-warnings]\n\
 \n\

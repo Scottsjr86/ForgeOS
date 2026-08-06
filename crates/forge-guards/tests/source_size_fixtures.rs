@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use forge_guards::source_size::{scan_authored_rust, ModuleStatus};
+use forge_guards::source_size::{ModuleStatus, scan_authored_rust};
 
 static FIXTURE_SEQUENCE: AtomicUsize = AtomicUsize::new(0);
 

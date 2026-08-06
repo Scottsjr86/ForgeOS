@@ -1,6 +1,6 @@
 #![cfg(target_os = "linux")]
 
-use forge_protocol::identities::{ProjectId, RepositoryId, TerminalId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, ProjectId, RepositoryId, TerminalId};
 use forge_terminal::managed::{
     ManagedTerminalError, ManagedTerminalHandle, ManagedTerminalRegistry,
     ManagedTerminalSpawnRequest,
@@ -118,12 +118,16 @@ fn multiple_project_bound_terminals_preserve_identity_and_output() {
         second
     );
 
-    assert!(collect_until(&mut registry, first, b"FIRST\x00")
-        .windows(6)
-        .any(|window| window == b"FIRST\x00"));
-    assert!(collect_until(&mut registry, second, b"SECOND\x00")
-        .windows(7)
-        .any(|window| window == b"SECOND\x00"));
+    assert!(
+        collect_until(&mut registry, first, b"FIRST\x00")
+            .windows(6)
+            .any(|window| window == b"FIRST\x00")
+    );
+    assert!(
+        collect_until(&mut registry, second, b"SECOND\x00")
+            .windows(7)
+            .any(|window| window == b"SECOND\x00")
+    );
 
     let handles: Vec<_> = registry.handles().collect();
     assert_eq!(handles, vec![first, second]);

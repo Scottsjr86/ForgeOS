@@ -4,8 +4,8 @@ use std::fmt;
 
 use crate::envelopes::EnvelopeKind;
 use crate::identities::{
-    canonical_text_is_valid, DuplicateIdentity, IdentityKind, IdentityParseError,
-    IdentityParseFailure,
+    DuplicateIdentity, IdentityKind, IdentityParseError, IdentityParseFailure,
+    canonical_text_is_valid,
 };
 use crate::wire::{Decoder, Encoder, WireError};
 

@@ -11,7 +11,7 @@ use forge_core::commands::{
 use forge_core::projects::{AllowedProjectRoot, LanguageProfile, ProjectManifest};
 use forge_project::paths::RepositoryBoundary;
 use forge_protocol::hashes::ContentHash;
-use forge_protocol::identities::{CommandId, ProcessId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProcessId, ProjectId, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use forge_protocol::processes::ProcessOutcome;
 use std::collections::BTreeMap;
@@ -79,7 +79,7 @@ impl Fixture {
             ["-c", script],
             working_directory,
             CommandEnvironmentPolicy::clear(vec![
-                CommandEnvironmentVariable::inherit("TOKEN").unwrap()
+                CommandEnvironmentVariable::inherit("TOKEN").unwrap(),
             ])
             .unwrap(),
             CommandTimeout::Unlimited,

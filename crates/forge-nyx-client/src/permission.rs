@@ -18,8 +18,8 @@ pub use decision::{
     NyxPermissionDecision, NyxPermissionDecisionKind, NyxPermissionResolution, NyxPermissionResume,
     NyxPermissionResumeResult,
 };
-pub(crate) use support::decode_permission;
 pub use support::NyxPermissionProtocolError;
+pub(crate) use support::decode_permission;
 
 use support::{
     canonical_strings, ensure_schema, hash_json, validate_canonical_strings, validate_hash,

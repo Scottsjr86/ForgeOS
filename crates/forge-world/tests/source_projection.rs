@@ -9,7 +9,7 @@ use forge_core::project_registry::{
 use forge_core::projects::{
     AllowedProjectRoot, LanguageProfile, ManifestCommand, ProjectManifest, ProjectSetting,
 };
-use forge_protocol::identities::{CommandId, ProjectId, RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{CommandId, IDENTITY_BYTES, ProjectId, RepositoryId};
 use forge_protocol::intents::ForgeUserIntent;
 use forge_world::interaction::{WorldActionError, WorldActionRouter, WorldInputAction};
 use forge_world::presentation::{

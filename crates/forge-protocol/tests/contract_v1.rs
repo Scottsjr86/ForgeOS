@@ -1,11 +1,11 @@
 use forge_protocol::envelopes::{
-    EnvelopeKind, ErrorEnvelope, RequestEnvelope, ResultEnvelope, CURRENT_PROTOCOL_VERSION,
+    CURRENT_PROTOCOL_VERSION, EnvelopeKind, ErrorEnvelope, RequestEnvelope, ResultEnvelope,
 };
 use forge_protocol::errors::{EnvelopeViolation, ProtocolError, ProtocolErrorCode};
 use forge_protocol::events::EventRecord;
 use forge_protocol::identities::{
-    ensure_unique, CommandId, EventId, IdentityKind, PatchId, ProcessId, ProjectId, RepositoryId,
-    ResultId, SessionId, TaskId, TerminalId, IDENTITY_BYTES,
+    CommandId, EventId, IDENTITY_BYTES, IdentityKind, PatchId, ProcessId, ProjectId, RepositoryId,
+    ResultId, SessionId, TaskId, TerminalId, ensure_unique,
 };
 
 #[test]

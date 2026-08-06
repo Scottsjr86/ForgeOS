@@ -11,11 +11,11 @@ mod routing;
 mod support;
 
 pub use routing::{
-    NyxBackendCapabilities, NyxBackendIdentity, NyxRouteCandidate, NyxRouteCost,
-    NyxRoutableModelIdentity,
+    NyxBackendCapabilities, NyxBackendIdentity, NyxRoutableModelIdentity, NyxRouteCandidate,
+    NyxRouteCost,
 };
-pub(crate) use support::decode_remote_agent;
 pub use support::NyxRemoteAgentProtocolError;
+pub(crate) use support::decode_remote_agent;
 
 use support::{
     canonical_strings, ensure_schema, raw_json_sha256, validate_canonical_strings, validate_hash,
@@ -758,7 +758,10 @@ impl NyxRemoteAgentRunRecord {
             || (self.state == NyxRemoteAgentRunState::BudgetHit
                 && audit_tail == Some("budget_hit_preflight"));
         if self.audit.is_empty()
-            || self.audit.iter().any(|entry| entry.is_empty() || entry.trim() != entry)
+            || self
+                .audit
+                .iter()
+                .any(|entry| entry.is_empty() || entry.trim() != entry)
             || self.audit.first().map(String::as_str) != Some("accepted")
             || !tail_matches
         {
@@ -769,7 +772,10 @@ impl NyxRemoteAgentRunRecord {
             });
         }
         if self.state.is_terminal() {
-            if self.terminal_at.as_deref().is_none_or(|value| value.trim().is_empty())
+            if self
+                .terminal_at
+                .as_deref()
+                .is_none_or(|value| value.trim().is_empty())
                 || self.continuation_allowed
             {
                 return Err(NyxRemoteAgentProtocolError::InvalidField {

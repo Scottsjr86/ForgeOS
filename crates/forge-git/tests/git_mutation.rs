@@ -2,14 +2,14 @@
 
 use forge_bridge::git_mutation::NativeGitMutationFailureStage;
 use forge_git::mutation::{
-    expected_file_state, staged_patch_identity, CommitRequest, CreateWorktreeRequest,
-    ExpectedWorktreeState, GitBranchName, GitCommitIdentity, GitMutationError,
-    GitMutationOperation, GitPathExpectation, GitRepositoryMutator, RemoveWorktreeConfirmation,
-    RemoveWorktreeRequest, RestoreConfirmation, RestoreRequest, StageRequest, UnstageRequest,
+    CommitRequest, CreateWorktreeRequest, ExpectedWorktreeState, GitBranchName, GitCommitIdentity,
+    GitMutationError, GitMutationOperation, GitPathExpectation, GitRepositoryMutator,
+    RemoveWorktreeConfirmation, RemoveWorktreeRequest, RestoreConfirmation, RestoreRequest,
+    StageRequest, UnstageRequest, expected_file_state, staged_patch_identity,
 };
 use forge_git::repository::GitRepositoryInspector;
 use forge_git::status::GitStatusEntryKind;
-use forge_protocol::identities::{RepositoryId, IDENTITY_BYTES};
+use forge_protocol::identities::{IDENTITY_BYTES, RepositoryId};
 use forge_protocol::paths::RepositoryRelativePath;
 use std::ffi::OsString;
 use std::fs;
@@ -187,11 +187,13 @@ fn changed_worktree_bytes_reject_stale_stage_without_index_mutation() {
         error,
         GitMutationError::WorktreePathChanged { .. }
     ));
-    assert!(repository
-        .inspector()
-        .inspect_diff(forge_git::diff::DiffScope::Staged)
-        .unwrap()
-        .is_empty());
+    assert!(
+        repository
+            .inspector()
+            .inspect_diff(forge_git::diff::DiffScope::Staged)
+            .unwrap()
+            .is_empty()
+    );
 }
 
 #[test]
@@ -449,11 +451,13 @@ fn clean_linked_worktree_can_be_removed_without_force() {
     .unwrap();
     let outcome = repository.mutator().remove_worktree(remove).unwrap();
     assert!(!target.exists());
-    assert!(outcome
-        .worktrees()
-        .worktrees()
-        .iter()
-        .all(|worktree| worktree.path().as_bytes() != target.as_os_str().as_bytes()));
+    assert!(
+        outcome
+            .worktrees()
+            .worktrees()
+            .iter()
+            .all(|worktree| worktree.path().as_bytes() != target.as_os_str().as_bytes())
+    );
 }
 
 #[test]

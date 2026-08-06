@@ -8,7 +8,7 @@
 
 use crate::paths::{FileSystemObjectId, RepositoryBoundary, RepositoryBoundaryError};
 use forge_core::projects::{AllowedProjectRoot, ProjectManifest};
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{ProjectId, RepositoryId};
 use forge_protocol::paths::{RepositoryPathRequest, RepositoryRelativePath};
 use std::ffi::{OsStr, OsString};

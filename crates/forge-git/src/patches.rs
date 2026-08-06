@@ -11,7 +11,7 @@ use crate::types::GitObjectId;
 use forge_bridge::patch::{
     NativePatchAdapter, NativePatchInvocationError, NativePatchOperation, NativePatchOutput,
 };
-use forge_protocol::hashes::{hash_canonical_bytes, ContentHash, HashDomain};
+use forge_protocol::hashes::{ContentHash, HashDomain, hash_canonical_bytes};
 use forge_protocol::identities::{PatchId, RepositoryId};
 use forge_protocol::patches::{PatchEnvelope, PatchFileAction, PatchFileRecord};
 use forge_protocol::paths::RepositoryRelativePath;
@@ -180,16 +180,27 @@ impl fmt::Display for PatchApplyError {
                 "binary or NUL-bearing patches require a later reviewed binary-patch contract",
             ),
             Self::FileTableMismatch { message } => {
-                write!(formatter, "patch file table does not match payload: {message}")
+                write!(
+                    formatter,
+                    "patch file table does not match payload: {message}"
+                )
             }
             Self::PathIo {
                 operation,
                 path,
                 message,
                 ..
-            } => write!(formatter, "failed to {operation} {}: {message}", path.display()),
+            } => write!(
+                formatter,
+                "failed to {operation} {}: {message}",
+                path.display()
+            ),
             Self::PathSymlink(path) => {
-                write!(formatter, "patch path may not traverse a symlink: {}", path.display())
+                write!(
+                    formatter,
+                    "patch path may not traverse a symlink: {}",
+                    path.display()
+                )
             }
             Self::PathNotRegular(path) => write!(
                 formatter,
@@ -226,9 +237,7 @@ impl fmt::Display for PatchApplyError {
                 "native Git patch apply invocation failed: {error}; rolled_back={rolled_back}"
             ),
             Self::NativeCheckFailed {
-                exit_code,
-                signal,
-                ..
+                exit_code, signal, ..
             } => write!(
                 formatter,
                 "native Git patch check failed with code {exit_code:?} signal {signal:?}"
