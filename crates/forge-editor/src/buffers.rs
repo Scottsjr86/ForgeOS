@@ -582,6 +582,10 @@ impl BufferRegistry {
         self.buffers.is_empty()
     }
 
+    pub fn iter(&self) -> impl ExactSizeIterator<Item = (&BufferId, &EditorBuffer)> {
+        self.buffers.iter()
+    }
+
     pub fn get(&self, id: BufferId) -> Option<&EditorBuffer> {
         self.buffers.get(&id)
     }
@@ -636,6 +640,52 @@ impl BufferRegistry {
         self.documents.insert(document.clone(), id);
         self.buffers
             .insert(id, EditorBuffer::new_missing(id, document));
+        Ok(OpenBufferResult::Opened(id))
+    }
+
+    /// Restores one unsaved buffer generation without touching repository files.
+    pub fn restore_recovered(
+        &mut self,
+        id: BufferId,
+        document: DocumentKey,
+        content_version: u64,
+        cursor: CursorState,
+        bytes: Vec<u8>,
+        synchronization: SynchronizationState,
+    ) -> Result<OpenBufferResult, BufferError> {
+        if content_version == 0 {
+            return Err(BufferError::InvalidRecoveredContentVersion);
+        }
+        if matches!(synchronization, SynchronizationState::Clean { .. }) {
+            return Err(BufferError::RecoveredBufferMustBeDirty);
+        }
+        if let SynchronizationState::Dirty {
+            base: DiskBaseline::Existing(disk),
+        } = synchronization
+        {
+            if disk.matches(&bytes) {
+                return Err(BufferError::RecoveredBufferMustBeDirty);
+            }
+        }
+        validate_cursor(cursor, bytes.len())?;
+        if let Some(existing_id) = self.documents.get(&document).copied() {
+            return Err(BufferError::RecoveredDocumentAlreadyOpen(existing_id));
+        }
+        self.ensure_id_available(id, &document)?;
+        self.documents.insert(document.clone(), id);
+        self.buffers.insert(
+            id,
+            EditorBuffer {
+                id,
+                document,
+                bytes,
+                content_version: ContentVersion(content_version),
+                cursor,
+                synchronization,
+                pending_save: None,
+                last_save: SaveOutcome::NotRequested,
+            },
+        );
         Ok(OpenBufferResult::Opened(id))
     }
 
@@ -697,6 +747,9 @@ impl BufferRegistry {
 /// Exact buffer-state transition failure.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BufferError {
+    InvalidRecoveredContentVersion,
+    RecoveredBufferMustBeDirty,
+    RecoveredDocumentAlreadyOpen(BufferId),
     DuplicateBufferId {
         id: BufferId,
         existing: DocumentKey,
@@ -734,6 +787,16 @@ pub enum BufferError {
 impl fmt::Display for BufferError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InvalidRecoveredContentVersion => {
+                formatter.write_str("recovered content version must be nonzero")
+            }
+            Self::RecoveredBufferMustBeDirty => {
+                formatter.write_str("only dirty or conflicted buffers may be restored")
+            }
+            Self::RecoveredDocumentAlreadyOpen(buffer_id) => write!(
+                formatter,
+                "recovered document is already open as buffer {buffer_id}"
+            ),
             Self::DuplicateBufferId { id, .. } => {
                 write!(formatter, "buffer identity {id} is already in use")
             }

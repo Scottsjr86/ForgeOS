@@ -4,16 +4,23 @@
 //! owns repository boundaries and atomic file replacement. This module joins
 //! those public contracts without moving either authority into the other crate.
 
+use forge_core::workspace_recovery::{RecoveredBuffer, RecoveredDiskBaseline};
 use forge_editor::buffers::{
-    BufferError, BufferId, BufferRegistry, ContentVersion, DiscardConfirmation, DiskBaseline,
-    DiskVersion, DocumentKey, EditorBuffer, OpenBufferResult, SaveFailure, SynchronizationState,
+    BufferError, BufferId, BufferRegistry, ContentVersion, CursorState, DiscardConfirmation,
+    DiskBaseline, DiskVersion, DocumentKey, EditorBuffer, OpenBufferResult, SaveFailure,
+    SaveOutcome, SynchronizationState,
 };
 use forge_project::files::{
     FileExpectation, FileRevision, ProjectFileAccess, ProjectFileError, WriteDurability,
 };
 use forge_protocol::paths::{RepositoryPathError, RepositoryPathRequest};
 use std::collections::BTreeMap;
+use std::ffi::OsString;
 use std::fmt;
+use std::path::PathBuf;
+
+#[cfg(unix)]
+use std::os::unix::ffi::{OsStrExt, OsStringExt};
 
 /// Result of one committed editor save.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -57,6 +64,14 @@ impl EditorWorkspace {
             buffers: BufferRegistry::new(),
             file_expectations: BTreeMap::new(),
         }
+    }
+
+    pub const fn project_id(&self) -> forge_protocol::identities::ProjectId {
+        self.files.project_id()
+    }
+
+    pub const fn repository_id(&self) -> forge_protocol::identities::RepositoryId {
+        self.files.repository_id()
     }
 
     pub fn buffers(&self) -> &BufferRegistry {
@@ -223,6 +238,94 @@ impl EditorWorkspace {
         }
     }
 
+    /// Captures only unsaved buffer state for a durable recovery payload.
+    pub fn recovery_buffers(&self) -> Result<Vec<RecoveredBuffer>, EditorWorkspaceError> {
+        let mut recovered = Vec::new();
+        for (_, buffer) in self.buffers.iter() {
+            if !buffer.synchronization().is_dirty() {
+                continue;
+            }
+            if matches!(buffer.last_save(), SaveOutcome::Pending { .. }) {
+                return Err(EditorWorkspaceError::PendingSaveRequiresJournal(
+                    buffer.id(),
+                ));
+            }
+            let (base, observed) = recovery_synchronization(buffer.synchronization());
+            recovered.push(RecoveredBuffer::new(
+                *buffer.id().as_bytes(),
+                path_bytes(buffer.document().relative_path().as_path()),
+                buffer.content_version().get(),
+                buffer.cursor().anchor() as u64,
+                buffer.cursor().head() as u64,
+                base,
+                observed,
+                buffer.bytes().to_vec(),
+            )?);
+        }
+        Ok(recovered)
+    }
+
+    /// Restores all unsaved buffers atomically, then compares each saved baseline
+    /// with current repository bytes. No disk content is replaced.
+    pub fn restore_recovered_buffers(
+        &mut self,
+        recovered: &[RecoveredBuffer],
+    ) -> Result<Vec<(BufferId, SynchronizationState)>, EditorWorkspaceError> {
+        if !self.buffers.is_empty() {
+            return Err(EditorWorkspaceError::RecoveryRequiresEmptyWorkspace);
+        }
+        let mut buffers = BufferRegistry::new();
+        let mut expectations = BTreeMap::new();
+        let mut states = Vec::with_capacity(recovered.len());
+        for entry in recovered {
+            let relative = path_from_bytes(entry.relative_path());
+            let relative = forge_protocol::paths::RepositoryRelativePath::new(&relative)
+                .map_err(EditorWorkspaceError::InvalidDocumentPath)?;
+            let document = DocumentKey::new(self.files.repository_id(), relative.clone());
+            let buffer_id = BufferId::from_bytes(*entry.buffer_id());
+            buffers.restore_recovered(
+                buffer_id,
+                document,
+                entry.content_version(),
+                CursorState::new(
+                    usize::try_from(entry.cursor_anchor())
+                        .map_err(|_| EditorWorkspaceError::RecoveredCursorOverflow)?,
+                    usize::try_from(entry.cursor_head())
+                        .map_err(|_| EditorWorkspaceError::RecoveredCursorOverflow)?,
+                ),
+                entry.bytes().to_vec(),
+                recovered_synchronization(entry),
+            )?;
+            let request =
+                RepositoryPathRequest::new(self.files.repository_id(), relative.as_path())
+                    .map_err(EditorWorkspaceError::InvalidDocumentPath)?;
+            let (observed, exact) = match self.files.read(&request) {
+                Ok(snapshot) => (
+                    DiskBaseline::Existing(disk_version(snapshot.revision())),
+                    FileExpectation::Exact(snapshot.revision()),
+                ),
+                Err(ProjectFileError::Missing { .. }) => {
+                    (DiskBaseline::Missing, FileExpectation::Missing)
+                }
+                Err(error) => return Err(EditorWorkspaceError::File(error)),
+            };
+            let buffer = buffers
+                .get_mut(buffer_id)
+                .expect("recovered buffer was inserted");
+            buffer.observe_disk(observed);
+            let state = buffer.synchronization();
+            if !matches!(state, SynchronizationState::Conflict { .. })
+                && state.expected_disk() == observed
+            {
+                expectations.insert(buffer_id, exact);
+            }
+            states.push((buffer_id, state));
+        }
+        self.buffers = buffers;
+        self.file_expectations = expectations;
+        Ok(states)
+    }
+
     /// Closes only a clean buffer and removes its exact file precondition.
     pub fn close_clean(
         &mut self,
@@ -297,6 +400,10 @@ impl EditorWorkspace {
 #[derive(Debug)]
 pub enum EditorWorkspaceError {
     Buffer(BufferError),
+    Recovery(forge_core::workspace_recovery::WorkspacePayloadError),
+    PendingSaveRequiresJournal(BufferId),
+    RecoveredCursorOverflow,
+    RecoveryRequiresEmptyWorkspace,
     File(ProjectFileError),
     InvalidDocumentPath(RepositoryPathError),
     MissingFileExpectation(BufferId),
@@ -315,6 +422,17 @@ impl fmt::Display for EditorWorkspaceError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Buffer(error) => write!(formatter, "editor buffer error: {error}"),
+            Self::Recovery(error) => write!(formatter, "workspace recovery error: {error}"),
+            Self::PendingSaveRequiresJournal(buffer_id) => write!(
+                formatter,
+                "buffer {buffer_id} has a pending save that must be journaled before recovery capture"
+            ),
+            Self::RecoveredCursorOverflow => {
+                formatter.write_str("recovered cursor does not fit this host")
+            }
+            Self::RecoveryRequiresEmptyWorkspace => {
+                formatter.write_str("workspace recovery requires an empty editor registry")
+            }
             Self::File(error) => write!(formatter, "project file error: {error}"),
             Self::InvalidDocumentPath(error) => {
                 write!(formatter, "editor document path is invalid: {error}")
@@ -347,6 +465,12 @@ impl From<BufferError> for EditorWorkspaceError {
     }
 }
 
+impl From<forge_core::workspace_recovery::WorkspacePayloadError> for EditorWorkspaceError {
+    fn from(error: forge_core::workspace_recovery::WorkspacePayloadError) -> Self {
+        Self::Recovery(error)
+    }
+}
+
 impl From<ProjectFileError> for EditorWorkspaceError {
     fn from(error: ProjectFileError) -> Self {
         Self::File(error)
@@ -357,6 +481,69 @@ fn opened_buffer_id(result: OpenBufferResult) -> BufferId {
     match result {
         OpenBufferResult::Opened(buffer_id) | OpenBufferResult::Existing(buffer_id) => buffer_id,
     }
+}
+
+fn recovery_synchronization(
+    synchronization: SynchronizationState,
+) -> (RecoveredDiskBaseline, Option<RecoveredDiskBaseline>) {
+    match synchronization {
+        SynchronizationState::Clean { .. } => unreachable!("clean buffers are not recovered"),
+        SynchronizationState::Dirty { base } => (recovery_baseline(base), None),
+        SynchronizationState::Conflict { base, observed } => {
+            (recovery_baseline(base), Some(recovery_baseline(observed)))
+        }
+    }
+}
+
+fn recovered_synchronization(recovered: &RecoveredBuffer) -> SynchronizationState {
+    let base = editor_baseline(recovered.base());
+    match recovered.observed() {
+        Some(observed) => SynchronizationState::Conflict {
+            base,
+            observed: editor_baseline(observed),
+        },
+        None => SynchronizationState::Dirty { base },
+    }
+}
+
+fn recovery_baseline(baseline: DiskBaseline) -> RecoveredDiskBaseline {
+    match baseline {
+        DiskBaseline::Missing => RecoveredDiskBaseline::Missing,
+        DiskBaseline::Existing(disk) => RecoveredDiskBaseline::Existing {
+            content_hash: disk.content_hash(),
+            length: disk.length(),
+        },
+    }
+}
+
+fn editor_baseline(baseline: RecoveredDiskBaseline) -> DiskBaseline {
+    match baseline {
+        RecoveredDiskBaseline::Missing => DiskBaseline::Missing,
+        RecoveredDiskBaseline::Existing {
+            content_hash,
+            length,
+        } => DiskBaseline::Existing(DiskVersion::new(content_hash, length)),
+    }
+}
+
+#[cfg(unix)]
+fn path_bytes(path: &std::path::Path) -> Vec<u8> {
+    path.as_os_str().as_bytes().to_vec()
+}
+
+#[cfg(not(unix))]
+fn path_bytes(path: &std::path::Path) -> Vec<u8> {
+    path.to_string_lossy().as_bytes().to_vec()
+}
+
+#[cfg(unix)]
+fn path_from_bytes(bytes: &[u8]) -> PathBuf {
+    PathBuf::from(OsString::from_vec(bytes.to_vec()))
+}
+
+#[cfg(not(unix))]
+fn path_from_bytes(bytes: &[u8]) -> PathBuf {
+    PathBuf::from(String::from_utf8_lossy(bytes).into_owned())
 }
 
 fn disk_version(revision: FileRevision) -> DiskVersion {

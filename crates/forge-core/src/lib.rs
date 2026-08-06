@@ -13,4 +13,5 @@ pub mod projects;
 pub mod recovery;
 pub mod state;
 pub mod verification;
+pub mod workspace_recovery;
 pub mod workspaces;

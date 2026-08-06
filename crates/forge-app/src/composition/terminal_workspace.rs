@@ -5,6 +5,7 @@
 //! project-bound launch from those public contracts.
 
 use forge_core::projects::{AllowedProjectRoot, ProjectManifest};
+use forge_core::workspace_recovery::{RecoveredTerminal, RecoveredTerminalState};
 use forge_project::paths::{RepositoryBoundary, RepositoryBoundaryError};
 use forge_protocol::identities::{ProjectId, RepositoryId, TerminalId};
 use forge_protocol::paths::{RepositoryPathError, RepositoryPathRequest, RepositoryRelativePath};
@@ -12,12 +13,15 @@ use forge_terminal::managed::{
     ManagedTerminalError, ManagedTerminalHandle, ManagedTerminalRegistry,
     ManagedTerminalSpawnRequest, ManagedTerminalView,
 };
-use forge_terminal::pty::{PtyDimensions, PtyRequestError, PtySpawnRequest};
+use forge_terminal::pty::{PtyDimensions, PtyLifecycle, PtyRequestError, PtySpawnRequest};
 use std::ffi::OsString;
 use std::fmt;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
+
+#[cfg(unix)]
+use std::os::unix::ffi::OsStrExt;
 
 /// A working directory selected from the project's declared repository scope.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -184,6 +188,38 @@ impl ProjectTerminalWorkspace {
         self.terminals.remove_exited(handle).map_err(Into::into)
     }
 
+    /// Captures non-live terminal metadata for explicit restart recovery.
+    pub fn recovery_terminals(
+        &self,
+    ) -> Result<Vec<RecoveredTerminal>, ProjectTerminalWorkspaceError> {
+        self.boundary.revalidate()?;
+        let mut recovered = Vec::new();
+        for handle in self.terminals.handles() {
+            let view = self.terminals.view(handle)?;
+            let relative = view
+                .working_directory()
+                .strip_prefix(self.boundary.canonical_root())
+                .map_err(|_| {
+                    ProjectTerminalWorkspaceError::WorkingDirectoryOutsideAllowedRoots(
+                        view.working_directory().to_path_buf(),
+                    )
+                })?;
+            let state = match view.lifecycle() {
+                PtyLifecycle::Running { .. } => RecoveredTerminalState::RequiresRestart,
+                PtyLifecycle::Exited(exit) => RecoveredTerminalState::Exited {
+                    code: exit.code(),
+                    terminated_by_operator: exit.terminated_by_operator(),
+                },
+            };
+            recovered.push(RecoveredTerminal::new(
+                handle.terminal_id(),
+                path_bytes(relative),
+                state,
+            )?);
+        }
+        Ok(recovered)
+    }
+
     fn resolve_working_directory(
         &self,
         requested: &TerminalWorkingDirectory,
@@ -235,6 +271,16 @@ impl ProjectTerminalWorkspace {
     }
 }
 
+#[cfg(unix)]
+fn path_bytes(path: &Path) -> Vec<u8> {
+    path.as_os_str().as_bytes().to_vec()
+}
+
+#[cfg(not(unix))]
+fn path_bytes(path: &Path) -> Vec<u8> {
+    path.to_string_lossy().as_bytes().to_vec()
+}
+
 fn is_allowed_relative(
     requested: &RepositoryRelativePath,
     allowed_roots: &[AllowedProjectRoot],
@@ -256,6 +302,7 @@ pub enum ProjectTerminalWorkspaceError {
     Boundary(RepositoryBoundaryError),
     PtyRequest(PtyRequestError),
     Terminal(ManagedTerminalError),
+    Recovery(forge_core::workspace_recovery::WorkspacePayloadError),
     WorkingDirectoryOutsideAllowedRoots(PathBuf),
     WorkingDirectoryNotDirectory(PathBuf),
     WorkingDirectoryIo {
@@ -275,6 +322,7 @@ impl fmt::Display for ProjectTerminalWorkspaceError {
             Self::Boundary(error) => error.fmt(formatter),
             Self::PtyRequest(error) => error.fmt(formatter),
             Self::Terminal(error) => error.fmt(formatter),
+            Self::Recovery(error) => error.fmt(formatter),
             Self::WorkingDirectoryOutsideAllowedRoots(path) => write!(
                 formatter,
                 "terminal working directory is outside declared project roots: {}",
@@ -317,5 +365,11 @@ impl From<PtyRequestError> for ProjectTerminalWorkspaceError {
 impl From<ManagedTerminalError> for ProjectTerminalWorkspaceError {
     fn from(error: ManagedTerminalError) -> Self {
         Self::Terminal(error)
+    }
+}
+
+impl From<forge_core::workspace_recovery::WorkspacePayloadError> for ProjectTerminalWorkspaceError {
+    fn from(error: forge_core::workspace_recovery::WorkspacePayloadError) -> Self {
+        Self::Recovery(error)
     }
 }

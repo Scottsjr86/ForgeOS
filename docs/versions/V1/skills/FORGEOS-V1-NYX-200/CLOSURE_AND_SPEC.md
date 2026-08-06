@@ -1,7 +1,7 @@
 # FORGEOS-V1-NYX-200 Closure and Specification
 
-Status: `ACTIVE`
-Validation: `OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
+Validation: `OPERATOR_AND_REAL_SERVER_PROVED`
 Cross-repo gate input: `NYX_GATE_INPUT.json`
 
 ## Bounded capability
@@ -41,3 +41,11 @@ message, read history, close the session, and restore the same identity.
 This slice does not call a model runtime directly, choose a route around Nyx,
 persist canonical conversation state, synthesize native or SSE events, own server
 identities, or implement Nyx chat behavior inside ForgeOS.
+
+## Closure evidence
+
+- Forge behavior CI: 82 suites, 419 passed, 0 failed, 5 ignored.
+- Real Nyx witness: passed against the independent Nyx process.
+- Stream proof: contiguous sequences 0, 1, 2 ending in `response.completed` and `[DONE]`.
+- Persistence proof: exact user and assistant messages remained bound to the Nyx-owned session and conversation.
+- Restart proof: the same session identity restored successfully.

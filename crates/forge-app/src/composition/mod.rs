@@ -9,6 +9,7 @@ pub mod git_workspace;
 pub mod nyx_service;
 pub mod terminal_workspace;
 pub mod verification_workspace;
+pub mod workspace_recovery;
 
 /// Enters the ForgeOS composition root.
 ///

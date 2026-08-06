@@ -6,6 +6,7 @@
 
 use forge_bridge::processes::ProcessExecutionContext;
 use forge_bridge::service_process::{ManagedServiceProcess, ManagedServiceProcessError};
+use forge_core::workspace_recovery::{RecoveredService, RecoveredServiceState};
 use forge_nyx_client::transport::{
     NyxClientConfig, NyxProbeOutcome, NyxUnavailableReason, probe_nyx,
 };
@@ -129,6 +130,27 @@ impl ManagedNyxService {
 
     pub fn state(&self) -> &ManagedServiceRuntimeState {
         self.runtime.state()
+    }
+
+    /// Captures Nyx lifecycle as non-live recovery metadata.
+    pub fn recovery_service(
+        &self,
+    ) -> Result<RecoveredService, forge_core::workspace_recovery::WorkspacePayloadError> {
+        let (prior_process_id, state) = match self.runtime.state() {
+            ManagedServiceRuntimeState::Stopped => (None, RecoveredServiceState::Stopped),
+            ManagedServiceRuntimeState::Running { process_id, .. }
+            | ManagedServiceRuntimeState::Ready { process_id, .. }
+            | ManagedServiceRuntimeState::StopRequested { process_id, .. } => (
+                Some(*process_id),
+                RecoveredServiceState::RequiresRevalidation,
+            ),
+            ManagedServiceRuntimeState::StartRequested { .. }
+            | ManagedServiceRuntimeState::RestartPending { .. } => {
+                (None, RecoveredServiceState::RestartPending)
+            }
+            ManagedServiceRuntimeState::Failed { .. } => (None, RecoveredServiceState::Failed),
+        };
+        RecoveredService::new("nyx-server", prior_process_id, state)
     }
 
     /// Starts one exact Nyx process after proving the endpoint is not already served.

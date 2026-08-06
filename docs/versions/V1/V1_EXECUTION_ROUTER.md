@@ -128,47 +128,37 @@ CANONICAL_SKILL_TREE=docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
 REGISTERED_SKILL_COUNT=67
 GLOBAL_ACTIVE_SKILL_LIMIT=3
 ACTIVE_SKILL_LIMIT_PER_LANE=1
-CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-NYX-101,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-AGENT-100]
-AVAILABLE_SKILLS=[]
+CLOSED_SKILLS=[FORGEOS-V1-ARCH-000,FORGEOS-V1-ARCH-001,FORGEOS-V1-GUARD-000,FORGEOS-V1-GUARD-001,FORGEOS-V1-GUARD-002,FORGEOS-V1-CONTRACT-000,FORGEOS-V1-PROCESS-000,FORGEOS-V1-PATH-000,FORGEOS-V1-STATE-000,FORGEOS-V1-HASH-000,FORGEOS-V1-PROJECT-100,FORGEOS-V1-FILE-100,FORGEOS-V1-EDITOR-100,FORGEOS-V1-PARSER-100,FORGEOS-V1-LSP-100,FORGEOS-V1-TERMINAL-100,FORGEOS-V1-COMMAND-100,FORGEOS-V1-SESSION-100,FORGEOS-V1-GIT-100,FORGEOS-V1-GIT-101,FORGEOS-V1-PATCH-100,FORGEOS-V1-PROJECT-200,FORGEOS-V1-NYX-100,FORGEOS-V1-NYX-101,FORGEOS-V1-WORLD-100,FORGEOS-V1-RECOVERY-100,FORGEOS-V1-FILE-200,FORGEOS-V1-EDITOR-200,FORGEOS-V1-EDITOR-201,FORGEOS-V1-TERMINAL-200,FORGEOS-V1-COMMAND-200,FORGEOS-V1-GIT-200,FORGEOS-V1-GIT-201,FORGEOS-V1-VERIFY-200,FORGEOS-V1-SESSION-200,FORGEOS-V1-SESSION-201,FORGEOS-V1-AGENT-100,FORGEOS-V1-NYX-200]
+AVAILABLE_SKILLS=[FORGEOS-V1-NYX-201,FORGEOS-V1-AGENT-200,FORGEOS-V1-WORLD-200]
 BLOCKED_SKILLS=[]
-ACTIVE_SKILLS=[FORGEOS-V1-NYX-200]
-ACTIVE_BATON_OWNER=FORGEOS-V1-NYX-200
+ACTIVE_SKILLS=[FORGEOS-V1-RECOVERY-200]
+ACTIVE_BATON_OWNER=FORGEOS-V1-RECOVERY-200
 ACTIVE_REPOSITORY=Forge_OS_V1
-ACTIVE_LANE=LOCAL_CONVERSATION
-ACTIVE_SLICE=FORGEOS-V1-NYX-200-SLICE-001
-SOURCE_WORK_AUTHORIZED=YES_FOR_DECLARED_FORGE_CLIENT_PATHS_ONLY
+ACTIVE_LANE=SESSION_AND_RECOVERY
+ACTIVE_SLICE=FORGEOS-V1-RECOVERY-200-SLICE-001
+SOURCE_WORK_AUTHORIZED=YES_FOR_DECLARED_RECOVERY_PATHS_ONLY
 QUEUED_FIRST_SKILL=NONE
-NEXT_ACTION=IMPLEMENT_AND_VALIDATE_THIN_NYX_LOCAL_CONVERSATION_CLIENT
-FINAL_ACTIVATION_REQUIRED=NO_GATE_ALREADY_VERIFIED
-NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-NYX-200/NYX_GATE_INPUT.json
+NEXT_ACTION=IMPLEMENT_AND_VALIDATE_DURABLE_WORKSPACE_AND_SERVICE_RECOVERY
+FINAL_ACTIVATION_REQUIRED=NO
+NYX_GATE_INPUT=NONE_ACTIVE
 CI_ENTRYPOINT=python3 scripts/run_ci.py
 CI_ALLOWED=[BEHAVIOR_TESTS,GOLDENS,STRUCTURAL_GUARDS]
 CI_FORBIDDEN=[DOCUMENTATION,GIT_STATE,FORMATTING,MARKDOWN_STATUS]
 ```
 
-All Tier-0 foundations, all three structural guards, project registration,
-boundary-safe file access, editor buffer identity, incremental Rust parsing, the
-Rust Analyzer process/JSON-RPC foundation, native PTY support, immutable
-registered-command policy, deterministic session lifecycle, native Git inspection
-and mutation primitives, stable patch application, persistent project registry and
-workspace restoration, Nyx public health/version discovery, source-backed Forge
-World projection, recovery, repository browsing/search, multi-buffer atomic save,
-Rust language intelligence, managed project terminals, registered command execution,
-consistent Git inspection, safe Git mutation, version-bound verification, dedicated
-session bootstrap, managed external Nyx lifecycle, Nyx-owned permission and exact
-resume consumption, and the thin remote-agent run client are closed.
+All Tier-0 foundations, all Tier-1 mechanisms, and the Tier-2 path through project,
+editor, terminal, command, Git, verification, session, permissions, remote-agent,
+and Nyx local-conversation clients are closed.
 
-The operator ran Forge behavior CI with 81 suites, 397 tests passed, 0 failed, and
-4 ignored, then ran the independent real Nyx remote-agent witness successfully. The
-witness created one exact deferred run, read and listed it, cancelled it, and proved
-that the terminal record could not continue. Therefore `FORGEOS-V1-AGENT-100` is
-closed.
+The operator ran Forge behavior CI with 82 suites, 419 tests passed, 0 failed, and
+5 ignored, then ran the independent real Nyx conversation witness successfully.
+The witness consumed contiguous OpenAI-compatible stream events, retained exact
+model attribution, persisted native user and assistant messages, and restored the
+same Nyx-owned session identity. Therefore `FORGEOS-V1-NYX-200` is closed.
 
-Nyx_Server returned system proof for `API-SYS-020`, `API-SYS-021`, `API-SYS-022`,
-`API-SYS-027`, `ROUTING-REG-012`, and `PERSIST-SESSION-001` from
-`Nyx_Server_base_20(1).tar`. The router activates the thin ForgeOS conversation
-client slice. Nyx remains authoritative for model catalog truth, routing, chat
-execution, identities, native response events, OpenAI-compatible SSE frames, and persistence.
+The router selected `FORGEOS-V1-RECOVERY-200` over the other newly available Tier-2
+nodes because it has the same dependency depth, uses already proved local contracts,
+and introduces no new renderer or external subsystem dependency.
 
 ## 3. Current-source intake law
 
@@ -840,84 +830,84 @@ may not proceed until the Nyx contract reports all required Nyx skills `BANKED` 
 
 ## 16. Current registered frontier
 
-The remote-agent client is closed and the Nyx local-conversation gate is verified.
-The active slice is the thin authenticated ForgeOS conversation client adapter.
+The local conversation client is closed. Durable workspace and service recovery is
+the sole active slice.
 
 ```yaml
-skill_id: FORGEOS-V1-NYX-200
+skill_id: FORGEOS-V1-RECOVERY-200
 state: ACTIVE
-lane: LOCAL_CONVERSATION
-owning_subsystem: forge-nyx-client, nyx_server
+lane: SESSION_AND_RECOVERY
+owning_subsystem: forge-session, forge-project, forge-app
 source_repository: Forge_OS_V1
 source_revision: newest clean ForgeOS archive supplied in this thread
 worktree_or_branch: active single-skill worktree
-active_slice: FORGEOS-V1-NYX-200-SLICE-001
+active_slice: FORGEOS-V1-RECOVERY-200-SLICE-001
 direct_prerequisites:
-  - FORGEOS-V1-NYX-100
+  - FORGEOS-V1-RECOVERY-100
+  - FORGEOS-V1-PROJECT-200
   - FORGEOS-V1-SESSION-201
+  - FORGEOS-V1-TERMINAL-200
+  - FORGEOS-V1-NYX-200
 originating_path_or_probe: >
-  Consume Nyx's public model catalog, session and conversation lifecycle, message
-  history, and ordered native response events while rejecting malformed,
-  contradictory, unauthenticated, or cross-session state.
+  Capture one canonical workspace recovery image, restart the product composition,
+  restore unsaved editor bytes, and present terminal, service, and interrupted-action
+  evidence without replaying or claiming old processes are live.
 first_blocker: >
-  forge-nyx-client has no authenticated typed model, session, conversation,
-  message-history, or ordered native response-event adapter.
+  ForgeOS can atomically store one safe recovery record but has no product path that
+  restores dirty editor bytes and non-live terminal or Nyx service metadata together.
 allowed_paths:
-  - crates/forge-nyx-client/src/lib.rs
-  - crates/forge-nyx-client/src/transport.rs
-  - crates/forge-nyx-client/src/conversation.rs
-  - crates/forge-nyx-client/src/conversation/**
-  - crates/forge-nyx-client/src/conversation_client.rs
-  - crates/forge-nyx-client/tests/nyx_conversations.rs
+  - crates/forge-core/src/lib.rs
+  - crates/forge-core/src/workspace_recovery.rs
+  - crates/forge-core/tests/durable_workspace_state.rs
+  - crates/forge-editor/src/buffers.rs
+  - crates/forge-app/src/composition/mod.rs
+  - crates/forge-app/src/composition/editor_workspace.rs
+  - crates/forge-app/src/composition/terminal_workspace.rs
+  - crates/forge-app/src/composition/nyx_service.rs
+  - crates/forge-app/src/composition/workspace_recovery.rs
+  - crates/forge-app/tests/workspace_recovery.rs
   - docs/workflow/WORKFLOW_AUTHORITY.md
   - docs/ForgeOS_header.md
   - docs/versions/V1/V1_EXECUTION_ROUTER.md
   - docs/versions/V1/FORGEOS_V1_FIRST_ARMOR_SKILL_TREE.md
   - docs/versions/V1/ForgeOS_V1_Skill_Status_Master_List.md
-  - docs/versions/V1/skills/FORGEOS-V1-AGENT-100/**
   - docs/versions/V1/skills/FORGEOS-V1-NYX-200/**
+  - docs/versions/V1/skills/FORGEOS-V1-RECOVERY-200/**
 forbidden_paths:
   - Nyx_Server source
-  - Forge-owned canonical model registry
-  - Forge-owned canonical session or conversation ledger
-  - direct ForgeOS model-runtime or provider calls
-  - ForgeOS-generated response events
-  - model routing or generation inside forge-nyx-client
+  - command replay or automatic tool execution
+  - process resurrection or PID reuse
+  - repository file replacement during restore
+  - a second persistence implementation outside the existing atomic store
 must_pass:
-  - bearer authentication is emitted only from validated configuration
-  - model catalog ordering and model attribution validate exactly
-  - session and conversation identities remain server-owned and cross-boundary safe
-  - message history remains ordered and bound to one session and conversation
-  - native response events start at sequence zero, remain contiguous, and end once
-  - missing models remain explicit Nyx server errors
-  - close and restore preserve exact server-owned identity
+  - durable payload encoding is canonical and rejects tampering
+  - dirty and conflicted buffers restore without writing repository files
+  - changed disk state becomes an explicit editor conflict
+  - running terminals restore only as requires-restart metadata
+  - Nyx process state restores only as stopped, failed, restart-pending, or requiring revalidation
+  - interrupted actions remain inspect-only and non-replayable
+  - staged publication residue requires explicit discard
+  - a previous valid image can replace only a missing or invalid current image
   - Forge behavior CI passes
-  - independent real-Nyx client witness passes
 must_not_claim:
-  - Forge-owned model discovery or routing
-  - Forge-owned conversation persistence
-  - Forge-generated stream events
-  - project-aware tools or tool execution
-  - OpenAI SSE consumption through the native conversation adapter
+  - replayed commands or tools
+  - resurrected terminal or Nyx processes
+  - hidden data loss
+  - clean startup requiring recovery mode
 return_path: >
-  Run Forge behavior CI and the ignored real-Nyx local-conversation client witness,
-  then return exact command summaries and witness output for closure.
+  Run Forge behavior CI and return exact command summaries for operator closure.
 ```
 
-## 17. Cross-repository gate handling for Nyx local conversation authority
+## 17. NYX-200 closure and recovery selection
 
-`FORGEOS-V1-NYX-200` received its ForgeOS source slice only after the current Nyx
-repository proved all required gate skills. The Nyx implementation remains a general
-server capability for chat, development, CLI, editor, script, bot, and other clients.
-It does not depend on ForgeOS or encode Forge project truth as Nyx-owned canonical
-state.
+`FORGEOS-V1-NYX-200` closed only after Forge behavior CI and the independent real
+Nyx witness both passed. Nyx remains authoritative for models, routing, sessions,
+conversations, message persistence, and stream-event production.
 
-After the gate returned, ForgeOS activated only a thin authenticated client-adapter
-slice that consumes transient Nyx-owned model, session, conversation, message, and
-event records. Nyx remains authoritative for the model registry, routing, generation,
-identity allocation, OpenAI compatibility streaming, and durable conversation state.
-ForgeOS may validate and present those records but may not synthesize, persist, or
-repair them.
+Closing that node made `NYX-201`, `AGENT-200`, `WORLD-200`, and `RECOVERY-200`
+structurally available. The router selected recovery because it composes existing
+local authority boundaries with the smallest blast radius. The other three remain
+available and inactive.
 
 ## 18. Final closure routing
 

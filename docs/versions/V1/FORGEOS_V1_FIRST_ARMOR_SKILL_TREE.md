@@ -998,11 +998,14 @@ never closes the node.
 - **Required Nyx evidence before Forge closure:** `API-SYS-020`, `API-SYS-021`, `API-SYS-022`, `API-SYS-027`, `ROUTING-REG-012`, `PERSIST-SESSION-001`; each must be `BANKED` or `RELEASE_EARNED` with at least `PROOF_SYSTEM`.
 - **Repository boundary:** ForgeOS may not call local model runtimes directly, own the model registry, store canonical Nyx conversation state, or synthesize stream events.
 - **Prerequisites:** `FORGEOS-V1-NYX-100`, `FORGEOS-V1-SESSION-201`
-- **Current state:** `ACTIVE`
+- **Current state:** `CLOSED`
+- **Closure evidence:** Operator Forge CI passed with 82 suites, 419 tests passed,
+  0 failed, and 5 ignored. The independent real Nyx witness proved model discovery,
+  exact attribution, contiguous SSE events through `[DONE]`, native durable messages,
+  and restoration of the same server-owned session identity.
 - **Verified gate input:** `docs/versions/V1/skills/FORGEOS-V1-NYX-200/NYX_GATE_INPUT.json`
-- **Active slice:** `FORGEOS-V1-NYX-200-SLICE-001`
-- **First blocker:** `forge-nyx-client` has no authenticated typed model, session,
-  conversation, message-history, or ordered native response-event adapter.
+- **Source records:** `docs/versions/V1/skills/FORGEOS-V1-NYX-200/CLOSURE_AND_SPEC.md`
+  and `docs/versions/V1/skills/FORGEOS-V1-NYX-200/USER_GUIDE_SOURCE.md`
 - **Must be true:** ForgeOS discovers Nyx, lists available local models, selects one,
   creates a session, streams responses, handles errors, and restores conversation
   identity.
@@ -1124,7 +1127,11 @@ never closes the node.
 - **Owner:** `forge-session`, `forge-project`, `forge-nyx-client`
 - **Prerequisites:** `FORGEOS-V1-RECOVERY-100`, `FORGEOS-V1-PROJECT-200`,
   `FORGEOS-V1-SESSION-201`, `FORGEOS-V1-TERMINAL-200`, `FORGEOS-V1-NYX-200`
-- **Initial state:** `LOCKED`
+- **Current state:** `ACTIVE`
+- **Active slice:** `FORGEOS-V1-RECOVERY-200-SLICE-001`
+- **First blocker:** ForgeOS can atomically store one safe recovery record but has
+  no product path that restores dirty editor bytes and non-live terminal or Nyx
+  service metadata together.
 - **Must be true:** Safe workspace state, dirty buffers, service state, terminal
   metadata, and current project recover after declared crashes or restart.
 - **Must not be true:** Recovery may not replay commands, resurrect terminated
@@ -1651,23 +1658,25 @@ CLOSED
   FORGEOS-V1-SESSION-200
   FORGEOS-V1-SESSION-201
   FORGEOS-V1-AGENT-100
+  FORGEOS-V1-NYX-200
 
 ACTIVE
-  FORGEOS-V1-NYX-200
-ACTIVE_BLOCKER=FORGE_NYX_CLIENT_HAS_NO_AUTHENTICATED_TYPED_MODEL_SESSION_CONVERSATION_OR_ORDERED_EVENT_ADAPTER
-ACTIVE_SLICE=FORGEOS-V1-NYX-200-SLICE-001
-NYX_GATE_INPUT=docs/versions/V1/skills/FORGEOS-V1-NYX-200/NYX_GATE_INPUT.json
+  FORGEOS-V1-RECOVERY-200
+ACTIVE_BLOCKER=FORGEOS_CAN_STORE_A_SAFE_RECOVERY_RECORD_BUT_HAS_NO_PRODUCT_PATH_THAT_RESTORES_DIRTY_EDITOR_BYTES_AND_NON_LIVE_TERMINAL_OR_NYX_SERVICE_METADATA_TOGETHER
+ACTIVE_SLICE=FORGEOS-V1-RECOVERY-200-SLICE-001
 
 AVAILABLE
-  none
+  FORGEOS-V1-NYX-201
+  FORGEOS-V1-AGENT-200
+  FORGEOS-V1-WORLD-200
 
 LOCKED
   every node whose direct prerequisites are not closed
 ```
 
-`FORGEOS-V1-NYX-200` is the only active ForgeOS source skill. The Nyx-owned
-gate is verified; the active work is limited to the authenticated thin client,
-ordered response-event consumption, and independent identity verification.
+`FORGEOS-V1-RECOVERY-200` is the only active ForgeOS source skill. The work is
+limited to canonical recovery payloads, atomic publication, explicit recovery
+choices, dirty-buffer restoration, and non-live terminal/service metadata.
 
 ## 9. Skill worksheet update fields
 

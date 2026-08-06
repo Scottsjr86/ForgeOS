@@ -1,7 +1,7 @@
 # FORGEOS-V1-NYX-200 User Guide Source
 
-Status: `ACTIVE`
-Validation: `OPERATOR_VALIDATION_PENDING`
+Status: `CLOSED`
+Validation: `OPERATOR_AND_REAL_SERVER_PROVED`
 
 ForgeOS can authenticate to Nyx, list Nyx-provided models, create and restore Nyx
 sessions, select or close conversations, send persistent native messages, consume
